@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+
+{% block title %}{% trans username=username_perfil %}Perfil de @{{ username }}{% endtrans %} - PiVerse{% endblock %}
+
+{% block head_extra %}
+{{ super() }}
+<style>
+/* Estilos (consistentes con feed.html) */
+.reactions-container .reactions-palette { display: none; position: absolute; bottom: 100%; left: 0; margin-bottom: 5px; z-index: 10; white-space: nowrap; border-spacing: 2px; gap: 5px; }
+.reaction-icon-btn { font-size: 1.5rem; padding: 0.2rem 0.4rem; text-decoration: none; border: none; background: none; cursor: pointer; }
+.reaction-icon-btn:hover { transform: scale(1.2); transition: transform 0.1s ease-in-out; }
+.original-post-embed { border: 1px solid #e9ecef; padding: 1rem; margin-top: 0.5rem; border-radius: .25rem; background-color: #f8f9fa; }
+.shared-by-line { font-size: 0.9em; color: #6c757d; margin-bottom: 0.5rem; }
+.shared-by-line i { font-size: 1.1em; }
+.quote-content-box {
+    background-color: #f8f9fa;
+    border-left: 3px solid #6c757d;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+    border-radius: .25rem;
+    white-space: pre-wrap;
+}
+.post-section-link a {
+    font-size: 0.85em;
+    font-weight: 500;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        {# Sección de información del perfil #}
+        <div class="card shadow-sm p-4">
+             <div class="d-flex align-items-center mb-3">
+                {% if photo %}
+                    <img src="{{ url_for('static', filename='uploads/' + photo) }}" class="img-thumbnail rounded-circle me-3" style="width: 100px; height: 100px; object-fit: cover;" alt="{{ _('Foto de %(username)s', username=username_perfil) }}">
+                {% else %}
+                     <div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center me-3" style="width: 100px; height: 100px;">
+                        <i class="bi bi-person-fill text-white" style="font-size: 3rem;"></i>
+                    </div>
+                {% endif %}
+                <div>
+                    <h2 class="mb-0">@{{ username_perfil }}</h2>
+                    {% if es_propio_perfil %}
+                        <a href="{{ url_for('profile') }}" class="btn btn-sm btn-outline-secondary mt-1"><i class="bi bi-pencil-square"></i> {{ _('Editar mi perfil') }}</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% if bio %}<p class="lead" style="font-size: 1.1rem;">{{ bio }}</p>{% else %}<p class="text-muted">{{ _('Sin biografía.') }}</p>{% endif %}
+
+            {% if visitante_user_id and not es_propio_perfil %}
+                <div class="mt-3 d-flex align-items-center">
+                    {% if solicitud_pendiente_aqui %}
+                        <p class="mb-2"><strong>@{{ username_perfil }}</strong> {{ _('te ha enviado una solicitud de contacto.') }}</p>
+                        <div class="btn-group">
+                            <form method="post" action="{{ url_for('aceptar_solicitud', id_solicitante=profile_user_id) }}" class="d-inline"><button type="submit" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i> {{ _('Aceptar') }}</button></form>
+                            <form method="post" action="{{ url_for('rechazar_solicitud', id_solicitante=profile_user_id) }}" class="d-inline ms-1"><button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i> {{ _('Rechazar') }}</button></form>
+                        </div>
+                    {% elif contacto_estado == 'aceptado' %}
+                        <div class="btn-group" role="group">
+                            <form method="post" action="{{ url_for('iniciar_conversacion', receptor_id=profile_user_id) }}" class="d-inline"><input type="hidden" name="receptor_slug" value="{{ slug_del_perfil }}"><button type="submit" class="btn btn-sm btn-primary"><i class="bi bi-send"></i> {{ _('Enviar Mensaje') }}</button></form>
+                            <form method="post" action="{{ url_for('eliminar_contacto', id_otro_usuario=profile_user_id) }}" class="d-inline ms-1" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar este contacto?') }}');"><button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Eliminar contacto') }}"><i class="bi bi-person-dash-fill"></i></button></form>
+                        </div>
+                    {% elif contacto_estado == 'pendiente' %}
+                        <p class="text-muted fst-italic">{{ _('Solicitud de contacto enviada y pendiente de respuesta.') }}</p>
+                        <form method="post" action="{{ url_for('eliminar_contacto', id_otro_usuario=profile_user_id) }}" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres cancelar esta solicitud de contacto?') }}');"><button class="btn btn-sm btn-outline-warning">{{ _('Cancelar Solicitud') }}</button></form>
+                    {% elif puede_enviar_solicitud %}
+                        <form method="post" action="{{ url_for('enviar_solicitud', id_receptor_solicitud=profile_user_id) }}"><button class="btn btn-primary"><i class="bi bi-person-plus-fill"></i> {{ _('Enviar solicitud de contacto') }}</button></form>
+                    {% endif %}
+
+                    <div class="dropdown ms-auto">
+                        <button class="btn btn-sm btn-outline-secondary" type="button" id="moreActionsDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="{{ _('Más acciones') }}">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="moreActionsDropdown">
+                            {% if visitante_ha_bloqueado %}
+                                <li>
+                                    <form action="{{ url_for('unblock_user', user_to_unblock_id=profile_user_id) }}" method="POST" class="d-inline">
+                                        <button type="submit" class="dropdown-item text-warning">
+                                            <i class="bi bi-unlock-fill me-2"></i>{{ _('Desbloquear Usuario') }}
+                                        </button>
+                                    </form>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <form action="{{ url_for('block_user', user_to_block_id=profile_user_id) }}" method="POST" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres bloquear a este usuario? No podrás ver su contenido ni interactuar, y se eliminará de tus contactos si lo es.') }}');" class="d-inline">
+                                        <button type="submit" class="dropdown-item text-danger">
+                                            <i class="bi bi-ban me-2"></i>{{ _('Bloquear Usuario') }}
+                                        </button>
+                                    </form>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <hr>
+        <h4 class="mt-5 mb-3">{% trans username=username_perfil %}Actividad de @{{ username }}:{% endtrans %}</h4>
+
+        {% if publicaciones %}
+            {% for item in publicaciones %}
+                {% if item.item_type == 'original_post' %}
+                <div class="card shadow-sm mb-4" id="post-{{ item.id }}">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start mb-3">
+                            <div class="flex-grow-1 d-flex align-items-center">
+                                {% if item.photo %}
+                                    <img src="{{ url_for('static', filename='uploads/' + item.photo) }}" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;" alt="{{ _('Foto de %(username)s', username=item.username) }}">
+                                {% else %}
+                                    <div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center me-2" style="width: 40px; height: 40px;"><i class="bi bi-person-fill text-white fs-5"></i></div>
+                                {% endif %}
+                                {# --- INICIO BLOQUE MODIFICADO --- #}
+                                <div>
+                                    <strong><a href="{{ url_for('ver_perfil', slug_perfil=item.slug) }}" class="text-decoration-none text-dark">@{{ item.username }}</a></strong><br>
+                                    <small class="text-muted">
+                                        <a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.id) }}" class="text-decoration-none text-muted">{{ format_datetime(item.timestamp, 'medium') if item.timestamp else '' }}</a>
+                                        {% if item.section_name and item.section_slug %}
+                                            <span class="post-section-link">· {{ _('en') }} <a href="{{ url_for('view_section', slug_seccion=item.section_slug) }}" class="text-decoration-none">{{ item.section_name }}</a></span>
+                                        {% endif %}
+                                    </small>
+                                </div>
+                                {# --- FIN BLOQUE MODIFICADO --- #}
+                            </div>
+                            {% if session.user_id == item.autor_id_post %}
+                                <form method="POST" action="{{ url_for('delete_post', post_id=item.id) }}" class="ms-auto" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar esta publicación?') }}');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Eliminar') }}"><i class="bi bi-trash"></i></button>
+                                </form>
+                            {% endif %}
+                        </div>
+                        {% if item.image_filename %}
+                        <div class="my-2 text-center"><a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.id) }}"><img src="{{ url_for('static', filename='uploads/post_images/' + item.image_filename) }}" class="img-fluid rounded" alt="{{ _('Imagen de la publicación') }}" style="max-height: 400px; object-fit: contain;"></a></div>
+                        {% endif %}
+                        {% if item.content and item.content.strip() %}
+                            <p class="mb-1 mt-2" style="white-space: pre-wrap;"><a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.id) }}" class="text-decoration-none text-dark">{{ item.content | safe }}</a></p>
+                        {% endif %}
+                        <div class="mt-3 d-flex align-items-center">
+                             <div class="reactions-container d-inline-block position-relative me-2">
+                                 <button class="btn btn-sm {% if item.user_reaction %}btn-primary{% else %}btn-outline-primary{% endif %} reaction-trigger-btn">
+                                    {% if item.user_reaction and item.user_reaction.reaction_type == 'love' %} ❤️
+                                    {% elif item.user_reaction and item.user_reaction.reaction_type == 'haha' %} 😂
+                                    {% elif item.user_reaction and item.user_reaction.reaction_type == 'wow' %} 😮
+                                    {% elif item.user_reaction and item.user_reaction.reaction_type == 'sad' %} 😢
+                                    {% elif item.user_reaction and item.user_reaction.reaction_type == 'angry' %} 😠
+                                    {% elif item.user_reaction and item.user_reaction.reaction_type == 'like' %} 👍
+                                    {% else %}<i class="bi bi-hand-thumbs-up"></i>{% endif %}
+                                    {% if item.user_reaction %}{{ _(item.user_reaction.reaction_type.capitalize()) }}{% else %}{{ _('Reaccionar') }}{% endif %}
+                                    ({{ item.total_reactions }})
+                                </button>
+                                <div class="reactions-palette bg-white border rounded shadow-sm p-1">
+                                    {% set reaction_types = {'like': '👍', 'love': '❤️', 'haha': '😂', 'wow': '😮', 'sad': '😢', 'angry': '😠'} %}
+                                    {% for type, icon in reaction_types.items() %}<form method="POST" action="{{ url_for('react_to_post', post_id=item.id) }}" class="d-inline-block reaction-form"><input type="hidden" name="reaction_type" value="{{ type }}"><button type="submit" class="btn btn-link p-1 reaction-icon-btn" title="{{ _(type.capitalize()) }}">{{ icon }}</button></form>{% endfor %}
+                                </div>
+                            </div>
+                            <a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.id) }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-chat-dots"></i> {{ _('Comentarios') }}</a>
+                            <button type="button" class="btn btn-sm btn-outline-secondary share-trigger-btn ms-2"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#shareModal"
+                                    data-post-id="{{ item.id }}"
+                                    title="{{ _('Citar o compartir') }}">
+                                <i class="bi bi-arrow-repeat"></i> {% if item.share_count > 0 %}{{ item.share_count }}{% endif %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {% elif item.item_type == 'shared_post' %}
+                <div class="card shadow-sm mb-4" id="share-{{ item.share_id }}">
+                    <div class="card-body">
+                        <div class="shared-by-line">
+                            <i class="bi bi-arrow-repeat"></i>
+                            <a href="{{ url_for('ver_perfil', slug_perfil=item.sharer_slug) }}" class="text-decoration-none fw-bold">@{{ item.sharer_username }}</a>
+                            {{ _('compartió esto') }} {% if item.quote_content %} {{ _('con el siguiente comentario:') }} {% endif %}
+                            {% if item.share_timestamp %}
+                                <small class="text-muted">({{ format_datetime(item.share_timestamp, 'medium') if item.share_timestamp else '' }})</small>
+                            {% endif %}
+                        </div>
+                        
+                        {% if item.quote_content and item.quote_content.strip() %}
+                        <div class="quote-content-box">
+                            {{ item.quote_content | safe }}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="original-post-embed">
+                            <div class="d-flex align-items-start mb-3">
+                                <div class="flex-grow-1 d-flex align-items-center">
+                                    {% if item.original_post.photo %}
+                                        <img src="{{ url_for('static', filename='uploads/' + item.original_post.photo) }}" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;" alt="{{ _('Foto de %(username)s', username=item.original_post.username) }}">
+                                    {% else %}
+                                        <div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center me-2" style="width: 40px; height: 40px;"><i class="bi bi-person-fill text-white fs-5"></i></div>
+                                    {% endif %}
+                                    {# --- INICIO BLOQUE MODIFICADO --- #}
+                                    <div>
+                                        <strong><a href="{{ url_for('ver_perfil', slug_perfil=item.original_post.slug) }}" class="text-decoration-none text-dark">@{{ item.original_post.username }}</a></strong><br>
+                                        <small class="text-muted">
+                                            <a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.original_post.id) }}" class="text-decoration-none text-muted">{{ format_datetime(item.original_post.timestamp, 'medium') if item.original_post.timestamp else '' }}</a>
+                                            {% if item.original_post.section_name and item.original_post.section_slug %}
+                                                <span class="post-section-link">· {{ _('en') }} <a href="{{ url_for('view_section', slug_seccion=item.original_post.section_slug) }}" class="text-decoration-none">{{ item.original_post.section_name }}</a></span>
+                                            {% endif %}
+                                        </small>
+                                    </div>
+                                    {# --- FIN BLOQUE MODIFICADO --- #}
+                                </div>
+                            </div>
+                            {% if item.original_post.image_filename %}
+                            <div class="my-2 text-center"><a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.original_post.id) }}"><img src="{{ url_for('static', filename='uploads/post_images/' + item.original_post.image_filename) }}" class="img-fluid rounded" alt="{{ _('Imagen de la publicación') }}" style="max-height: 400px; object-fit: contain;"></a></div>
+                            {% endif %}
+                            {% if item.original_post.content and item.original_post.content.strip() %}
+                                <p class="mb-1 mt-2" style="white-space: pre-wrap;"><a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.original_post.id) }}" class="text-decoration-none text-dark">{{ item.original_post.content | safe }}</a></p>
+                            {% endif %}
+                            <div class="mt-3 d-flex align-items-center">
+                                <div class="reactions-container d-inline-block position-relative me-2">
+                                    <button class="btn btn-sm {% if item.original_post.user_reaction %}btn-primary{% else %}btn-outline-primary{% endif %} reaction-trigger-btn">
+                                        {% if item.original_post.user_reaction and item.original_post.user_reaction.reaction_type == 'love' %} ❤️
+                                        {% elif item.original_post.user_reaction and item.original_post.user_reaction.reaction_type == 'haha' %} 😂
+                                        {% elif item.original_post.user_reaction and item.original_post.user_reaction.reaction_type == 'wow' %} 😮
+                                        {% elif item.original_post.user_reaction and item.original_post.user_reaction.reaction_type == 'sad' %} 😢
+                                        {% elif item.original_post.user_reaction and item.original_post.user_reaction.reaction_type == 'angry' %} 😠
+                                        {% elif item.original_post.user_reaction and item.original_post.user_reaction.reaction_type == 'like' %} 👍
+                                        {% else %}<i class="bi bi-hand-thumbs-up"></i>{% endif %}
+                                        {% if item.original_post.user_reaction %}{{ _(item.original_post.user_reaction.reaction_type.capitalize()) }}{% else %}{{ _('Reaccionar') }}{% endif %}
+                                        ({{ item.original_post.total_reactions }})
+                                    </button>
+                                    <div class="reactions-palette bg-white border rounded shadow-sm p-1">
+                                        {% set reaction_types = {'like': '👍', 'love': '❤️', 'haha': '😂', 'wow': '😮', 'sad': '😢', 'angry': '😠'} %}
+                                        {% for type, icon in reaction_types.items() %}<form method="POST" action="{{ url_for('react_to_post', post_id=item.original_post.id) }}" class="d-inline-block reaction-form"><input type="hidden" name="reaction_type" value="{{ type }}"><button type="submit" class="btn btn-link p-1 reaction-icon-btn" title="{{ _(type.capitalize()) }}">{{ icon }}</button></form>{% endfor %}
+                                    </div>
+                                </div>
+                                <a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.original_post.id) }}#comments-{{item.original_post.id}}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-chat-dots"></i> {{ _('Comentarios') }}</a>
+                                <button type="button" class="btn btn-sm btn-outline-secondary share-trigger-btn ms-2"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#shareModal"
+                                        data-post-id="{{ item.original_post.id }}"
+                                        title="{{ _('Citar o compartir') }}">
+                                    <i class="bi bi-arrow-repeat"></i> {% if item.original_post.share_count > 0 %}{{ item.original_post.share_count }}{% endif %}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p class="text-center text-muted p-4">{{ _('Este usuario aún no tiene actividad (publicaciones o contenido compartido).') }}</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // El script del modal de compartir ya está en base.html.
+    // El script para las reacciones es el mismo que en el feed.
+    document.addEventListener('click', function(event) {
+        const triggerBtn = event.target.closest('.reaction-trigger-btn');
+        if (!triggerBtn) {
+            document.querySelectorAll('.reactions-palette').forEach(p => p.style.display = 'none');
+            return;
+        }
+        const palette = triggerBtn.nextElementSibling;
+        document.querySelectorAll('.reactions-palette').forEach(p => { if (p !== palette) p.style.display = 'none'; });
+        if (palette) palette.style.display = window.getComputedStyle(palette).display === 'none' ? 'flex' : 'none';
+    });
+});
+</script>
+{% endblock %}

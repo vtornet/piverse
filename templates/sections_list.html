@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ _('Secciones de Discusión') }} - PiVerse{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>{{ _('Secciones de Discusión') }}</h2>
+    </div>
+
+    {% if sections %}
+        <div class="list-group shadow-sm">
+            {% for section in sections %}
+                <a href="{{ url_for('view_section', slug_seccion=section.slug) }}" class="list-group-item list-group-item-action d-flex align-items-center py-3">
+                    
+                    <div class="me-3">
+                        {% if section.icon_filename %}
+                            <img src="{{ url_for('static', filename='images/icons/' + section.icon_filename) }}" 
+                                 alt="{{ _('Icono de %(section_name)s', section_name=section.name) }}" 
+                                 style="width: 48px; height: 48px; object-fit: contain;">
+                        {% else %}
+                            <div style="width: 48px; height: 48px; background-color: #eee; border-radius: 8px;"></div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="flex-grow-1">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ section.name }}</h5>
+                        </div>
+                        {% if section.description %}
+                            <p class="mb-1">{{ section.description }}</p>
+                        {% endif %}
+                        <small class="text-primary fw-bold">{{ _('Ver publicaciones') }} &rarr;</small>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center p-5">
+            <i class="bi bi-collection" style="font-size: 3rem;"></i>
+            <p class="lead mt-3">{{ _('Aún no hay secciones definidas.') }}</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

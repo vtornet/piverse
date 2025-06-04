@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ _('Registro') }} - PiVerse{% endblock %}
+
+{% block content %}
+<h2>{{ _('Registro') }}</h2>
+<form action="{{ url_for('register') }}" method="post" class="mb-3">
+    <div class="mb-3">
+        <label for="username" class="form-label">{{ _('Nombre de usuario:') }}</label> {# Asumo que este es el username para login, no el público #}
+        <input type="text" id="username" name="username" required class="form-control">
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">{{ _('Contraseña:') }}</label>
+        <input type="password" id="password" name="password" required class="form-control">
+    </div>
+    <button type="submit" class="btn btn-success">{{ _('Registrarse') }}</button>
+</form>
+<p>{% trans login_url=url_for('login') %}¿Ya tienes cuenta? <a href="{{ login_url }}">Inicia sesión aquí</a>{% endtrans %}</p>
+{% endblock %}
+
+

@@ -1,0 +1,96 @@
+{# templates/_macros.html #}
+
+{# ================================================================= #}
+{# =         MACRO PARA RENDERIZAR UN HILO DE COMENTARIOS          = #}
+{# ================================================================= #}
+{% macro render_comment_thread(comments_list, post_id_for_reply_form) %}
+    {% for comentario in comments_list %}
+        <div class="comment-container mb-3" id="comment-{{ comentario.id }}">
+            <div class="d-flex">
+                {% if comentario.photo %}
+                    <img src="{{ url_for('static', filename='uploads/' + comentario.photo) }}" class="rounded-circle me-2 mt-1" style="width: 30px; height: 30px; object-fit: cover;" alt="{{ _('Foto de %(username)s', username=comentario.username) }}">
+                {% else %}
+                    <div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center me-2 mt-1" style="width: 30px; height: 30px;">
+                        <i class="bi bi-person-fill text-white fs-6"></i>
+                    </div>
+                {% endif %}
+                <div class="flex-grow-1">
+                    <div class="bg-light p-2 rounded">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <strong><a href="{{ url_for('ver_perfil', slug_perfil=comentario.slug) }}" class="text-decoration-none text-dark">@{{ comentario.username }}</a></strong>
+                            </div>
+                            {% if session.user_id == comentario.user_id %}
+                            <form method="POST" action="{{ url_for('delete_comment', comment_id=comentario.id) }}" class="ms-2" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar este comentario y todas sus respuestas?') }}');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-1" title="{{ _('Eliminar comentario') }}">
+                                    <i class="bi bi-trash" style="font-size: 0.8rem;"></i>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                        <span style="white-space: pre-wrap;">{{ comentario.content | safe }}</span>
+                    </div>
+
+                    {# --- SECCIÓN DE ACCIONES DEL COMENTARIO MODIFICADA --- #}
+                    <div class="mt-1 d-flex align-items-center"> {# Cambiado: quitado justify-content-between para que el contador no se vaya al extremo si solo hay eso #}
+                        
+                        {# Botón de Reacción para Comentarios (estilo similar a posts) #}
+                        <div class="reactions-container d-inline-block position-relative me-2">
+                            {# MODIFICADO: Clases del botón y contenido para ser más prominente #}
+                            <button class="btn btn-sm {% if comentario.user_reaction %}btn-primary{% else %}btn-outline-primary{% endif %} reaction-trigger-btn">
+                                {% if comentario.user_reaction and comentario.user_reaction.reaction_type == 'love' %} ❤️
+                                {% elif comentario.user_reaction and comentario.user_reaction.reaction_type == 'haha' %} 😂
+                                {% elif comentario.user_reaction and comentario.user_reaction.reaction_type == 'wow' %} 😮
+                                {% elif comentario.user_reaction and comentario.user_reaction.reaction_type == 'sad' %} 😢
+                                {% elif comentario.user_reaction and comentario.user_reaction.reaction_type == 'angry' %} 😠
+                                {% elif comentario.user_reaction and comentario.user_reaction.reaction_type == 'like' %} 👍
+                                {% else %}
+                                    <i class="bi bi-hand-thumbs-up"></i> {# Icono por defecto #}
+                                {% endif %}
+                                
+                                {% if comentario.user_reaction %}
+                                    {{ _(comentario.user_reaction.reaction_type.capitalize()) }}
+                                {% else %}
+                                    {{ _('Reaccionar') }} {# Texto por defecto #}
+                                {% endif %}
+                                ({{ comentario.total_reactions }}) {# Contador dentro del botón #}
+                            </button>
+                            <div class="reactions-palette bg-white border rounded shadow-sm p-1" style="display: none; z-index: 20;">
+                                {% set reaction_types = {'like': '👍', 'love': '❤️', 'haha': '😂', 'wow': '😮', 'sad': '😢', 'angry': '😠'} %}
+                                {% for type, icon in reaction_types.items() %}
+                                <form method="POST" action="{{ url_for('react_to_comment', comment_id=comentario.id) }}" class="d-inline-block reaction-form">
+                                    <input type="hidden" name="reaction_type" value="{{ type }}">
+                                    <button type="submit" class="btn btn-link p-1 reaction-icon-btn" title="{{ _(type.capitalize()) }}">{{ icon }}</button>
+                                </form>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <a href="#comment-form-{{ post_id_for_reply_form }}-{{ comentario.id }}" class="reply-to-comment-btn small text-primary text-decoration-none" data-comment-id="{{ comentario.id }}" data-post-id="{{ post_id_for_reply_form }}" data-username-to-reply="{{ comentario.username }}" data-slug-to-reply="{{ comentario.slug }}">
+                            {{ _('Responder') }}
+                        </a>
+                        <small class="text-muted ms-auto">{{ comentario.timestamp }}</small> {# Movido timestamp al final para mejor flujo #}
+                    </div>
+                    {# --- FIN SECCIÓN MODIFICADA --- #}
+                    
+                    <div id="reply-form-container-{{ comentario.id }}" class="reply-form-container mt-2" style="display: none;">
+                        <form method="post" action="{{ url_for('comment', post_id=post_id_for_reply_form) }}">
+                            <input type="hidden" name="parent_comment_id" value="{{ comentario.id }}">
+                            <div class="input-group input-group-sm">
+                                <textarea name="content" class="form-control mentionable-input" rows="2" placeholder="{{ _('Escribe tu respuesta...') }}" required></textarea>
+                                <div class="mention-suggestions-list" style="display: none;"></div>
+                                <button type="submit" class="btn btn-sm btn-outline-primary">{{ _('Enviar Respuesta') }}</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    {% if comentario.replies %}
+                        <div class="comment-replies">
+                            {{ render_comment_thread(comentario.replies, post_id_for_reply_form) }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endmacro %}

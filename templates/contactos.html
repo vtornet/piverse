@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ _('Mis Contactos y Bloqueados') }} - PiVerse{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-8">
+            {# Título general de la página #}
+            <h2 class="mb-0">{{ _('Gestionar Contactos') }}</h2>
+        </div>
+        <div class="col-md-4">
+            {# El formulario de búsqueda se mantiene, pero solo afectará a la lista de contactos #}
+            <form method="GET" action="{{ url_for('contactos') }}" class="d-flex">
+                <input type="text" name="q" class="form-control me-2" placeholder="{{ _('Buscar en mis contactos...') }}" value="{{ search_term or '' }}">
+                <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+            </form>
+        </div>
+    </div>
+
+    {# --- INICIO DE LA ESTRUCTURA DE PESTAÑAS --- #}
+    
+    {# 1. Navegación de las pestañas #}
+    <ul class="nav nav-tabs" id="contactosTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="contactos-tab" data-bs-toggle="tab" data-bs-target="#contactos-pane" type="button" role="tab" aria-controls="contactos-pane" aria-selected="true">
+                <i class="bi bi-people-fill me-1"></i> {{ _('Mis Contactos') }} <span class="badge bg-secondary">{{ contactos|length }}</span>
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="bloqueados-tab" data-bs-toggle="tab" data-bs-target="#bloqueados-pane" type="button" role="tab" aria-controls="bloqueados-pane" aria-selected="false">
+                <i class="bi bi-person-x-fill me-1"></i> {{ _('Usuarios Bloqueados') }} <span class="badge bg-danger">{{ bloqueados|length }}</span>
+            </button>
+        </li>
+    </ul>
+
+    {# 2. Contenido de las pestañas #}
+    <div class="tab-content" id="contactosTabContent">
+        
+        {# Pestaña para la lista de Contactos #}
+        <div class="tab-pane fade show active" id="contactos-pane" role="tabpanel" aria-labelledby="contactos-tab" tabindex="0">
+            <div class="list-group list-group-flush shadow-sm">
+                {% if contactos %}
+                    {% for contacto in contactos %}
+                        <a href="{{ url_for('ver_perfil', slug_perfil=contacto.slug) }}" class="list-group-item list-group-item-action d-flex align-items-center py-3">
+                            {% if contacto.photo %}
+                                <img src="{{ url_for('static', filename='uploads/' + contacto.photo) }}" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;" alt="{{ _('Foto de %(username)s', username=contacto.username) }}">
+                            {% else %}
+                                <div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center me-3" style="width: 50px; height: 50px;">
+                                    <i class="bi bi-person-fill text-white" style="font-size: 1.5rem;"></i>
+                                </div>
+                            {% endif %}
+                            <div class="fw-bold">
+                                @{{ contacto.username }}
+                            </div>
+                        </a>
+                    {% endfor %}
+                {% else %}
+                    {% if search_term %}
+                        <div class="text-center p-5">
+                            <i class="bi bi-search" style="font-size: 3rem;"></i>
+                            <p class="lead mt-3">{% trans term=search_term %}No se encontraron contactos que coincidan con "<strong>{{ term }}</strong>".{% endtrans %}</p>
+                            <a href="{{ url_for('contactos') }}" class="btn btn-link">{{ _('Mostrar todos los contactos') }}</a>
+                        </div>
+                    {% else %}
+                        <div class="text-center p-5">
+                            <i class="bi bi-people" style="font-size: 3rem;"></i>
+                            <p class="lead mt-3">{{ _('Aún no tienes contactos.') }}</p>
+                            <p>{{ _('Puedes enviar solicitudes de contacto desde los perfiles de otros usuarios.') }}</p>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+
+        {# Pestaña para la lista de Bloqueados #}
+        <div class="tab-pane fade" id="bloqueados-pane" role="tabpanel" aria-labelledby="bloqueados-tab" tabindex="0">
+            <div class="list-group list-group-flush shadow-sm">
+                {% if bloqueados %}
+                    <div class="p-3 text-muted small">
+                        {{ _('Aquí puedes ver a los usuarios que has bloqueado. Si desbloqueas a alguien, podrás ver su contenido de nuevo, pero tendrás que volver a enviar una solicitud de contacto si deseas reconectar.') }}
+                    </div>
+                    {% for usuario in bloqueados %}
+                        <div class="list-group-item d-flex align-items-center justify-content-between py-3">
+                            <a href="{{ url_for('ver_perfil', slug_perfil=usuario.slug) }}" class="text-decoration-none text-dark d-flex align-items-center">
+                                {% if usuario.photo %}
+                                    <img src="{{ url_for('static', filename='uploads/' + usuario.photo) }}" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;" alt="{{ _('Foto de %(username)s', username=usuario.username) }}">
+                                {% else %}
+                                    <div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center me-3" style="width: 50px; height: 50px;">
+                                        <i class="bi bi-person-fill text-white" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="fw-bold">
+                                    @{{ usuario.username }}
+                                </div>
+                            </a>
+                            
+                            <form method="POST" action="{{ url_for('unblock_user', user_to_unblock_id=usuario.user_id) }}" class="ms-auto">
+                                <button type="submit" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-unlock"></i> {{ _('Desbloquear') }}
+                                </button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center p-5">
+                        <i class="bi bi-shield-check" style="font-size: 3rem;"></i>
+                        <p class="lead mt-3">{{ _('No has bloqueado a ningún usuario.') }}</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+    {# --- FIN DE LA ESTRUCTURA DE PESTAÑAS --- #}
+</div>
+{% endblock %}

@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import render_comment_thread %}
+
+{% block title %}{{ _('Resultados de Búsqueda para "%(query)s"', query=query) }} - PiVerse{% endblock %}
+
+{% block head_extra %}
+{{ super() }}
+{# Los estilos son similares a los de feed.html, asegúrate que las clases CSS como link-preview-card, etc., están en base.html #}
+<style>
+.mention-suggestions-list { position: absolute; background-color: white; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.15); z-index: 1000; width: auto; min-width: 200px; max-height: 200px; overflow-y: auto; margin-top: 2px; }
+.mention-suggestions-list ul { list-style: none; padding: 0; margin: 0; }
+.mention-suggestions-list li { padding: 8px 12px; cursor: pointer; display: flex; align-items: center; font-size: 0.9rem; }
+.mention-suggestions-list li:hover { background-color: #f5f5f5; }
+.mention-suggestions-list img { width: 24px; height: 24px; border-radius: 50%; margin-right: 8px; object-fit: cover; }
+.mention-suggestions-list .no-photo { width: 24px; height: 24px; border-radius: 50%; margin-right: 8px; background-color: #eee; display: inline-flex; align-items: center; justify-content: center; }
+.mention-suggestions-list .no-photo i { font-size: 12px; color: #777; }
+.comment-replies { margin-left: 40px; padding-left: 15px; border-left: 2px solid #eee; margin-top: 10px; }
+.comment-container { margin-bottom: 15px; }
+.reactions-container .reactions-palette { display: none; position: absolute; bottom: 100%; left: 0; margin-bottom: 5px; z-index: 10; white-space: nowrap; border-spacing: 2px; gap: 5px; }
+.reaction-icon-btn { font-size: 1.5rem; padding: 0.2rem 0.4rem; text-decoration: none; border: none; background: none; cursor: pointer; }
+.reaction-icon-btn:hover { transform: scale(1.2); transition: transform 0.1s ease-in-out; }
+.original-post-embed { border: 1px solid #e9ecef; padding: 1rem; border-radius: .25rem; background-color: #f8f9fa; }
+.shared-by-line { font-size: 0.9em; color: #6c757d; margin-bottom: 0.5rem; }
+.shared-by-line i { font-size: 1.1em; }
+.quote-content-box { background-color: #f0f0f0; border-left: 3px solid #0d6efd; padding: 0.75rem 1rem; margin-bottom: 0.75rem; border-radius: .25rem; white-space: pre-wrap; font-style: italic; }
+.post-section-link a { font-size: 0.85em; font-weight: 500; }
+.search-query-highlight { background-color: yellow; font-weight: bold; } /* Para resaltar el término buscado */
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        
+        <a href="{{ url_for('feed') }}" class="btn btn-outline-secondary btn-sm mb-3"><i class="bi bi-arrow-left"></i> {{ _('Volver al Feed') }}</a>
+
+        {% if query %}
+            <h2 class="mb-4">{% trans query=query %}Resultados de búsqueda para: "<strong>{{ query }}</strong>"{% endtrans %}</h2>
+        {% else %}
+            <h2 class="mb-4">{{ _('Búsqueda de Publicaciones') }}</h2>
+        {% endif %}
+
+        {% if posts %}
+            {% for item in posts %}
+                {# Lógica para mostrar item.item_type == 'original_post' #}
+                {% if item.item_type == 'original_post' %}
+                <div class="card shadow-sm mb-4" id="post-{{ item.id }}">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start mb-3">
+                            <div class="flex-grow-1 d-flex align-items-center">
+                                {% if item.photo %}
+                                    <img src="{{ url_for('static', filename='uploads/' + item.photo) }}" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;" alt="{{ _('Foto de %(username)s', username=item.username) }}">
+                                {% else %}
+                                    <div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center me-2" style="width: 40px; height: 40px;"><i class="bi bi-person-fill text-white fs-5"></i></div>
+                                {% endif %}
+                                <div>
+                                    <strong><a href="{{ url_for('ver_perfil', slug_perfil=item.slug) }}" class="text-decoration-none text-dark">@{{ item.username }}</a></strong><br>
+                                    <small class="text-muted">
+                                        <a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.id) }}" class="text-decoration-none text-muted">{{ format_datetime(item.timestamp, 'medium') if item.timestamp else '' }}</a>
+                                        {% if item.section_name and item.section_slug %}
+                                            <span class="post-section-link">· {{ _('en') }} <a href="{{ url_for('view_section', slug_seccion=item.section_slug) }}" class="text-decoration-none">{{ item.section_name }}</a></span>
+                                        {% endif %}
+                                    </small>
+                                </div>
+                            </div>
+                            {% if session.user_id == item.autor_id_post %}
+                            <form method="POST" action="{{ url_for('delete_post', post_id=item.id) }}" class="ms-auto" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar esta publicación?') }}');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Eliminar publicación') }}"><i class="bi bi-trash"></i></button>
+                            </form>
+                            {% endif %}
+                        </div>
+                        
+                        {% if item.content and item.content.strip() %}
+                            <p class="card-text mt-2" style="white-space: pre-wrap;">{{ item.content | safe }}</p> {# Considerar resaltar query aquí #}
+                        {% endif %}
+
+                        {% if item.image_filename %}
+                        <div class="mb-2 text-center"><img src="{{ url_for('static', filename='uploads/post_images/' + item.image_filename) }}" class="img-fluid rounded" alt="{{ _('Imagen de la publicación') }}" style="max-height: 450px; object-fit: contain; width: 100%;"></div>
+                        {% endif %}
+
+                        {% if item.preview_url %}
+                        <a href="{{ item.preview_url }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none">
+                            <div class="link-preview-card my-2">
+                                {% if item.preview_image_url %}
+                                <img src="{{ item.preview_image_url }}" class="link-preview-image" alt="{{ _('Imagen de previsualización') }}">
+                                {% endif %}
+                                <div class="link-preview-info">
+                                    <h6 class="link-preview-title mb-1">{{ item.preview_title or item.preview_url }}</h6>
+                                    <p class="link-preview-description text-muted small mb-1">{{ item.preview_description }}</p>
+                                    <small class="link-preview-url">{{ item.preview_url | replace('https://', '') | replace('http://', '') | truncate(40) }}</small>
+                                </div>
+                            </div>
+                        </a>
+                        {% endif %}
+                        
+                        <div class="mt-2 d-flex align-items-center">
+                            {# ... (botones de reacción, comentario, compartir - igual que en feed.html) ... #}
+                             <div class="reactions-container d-inline-block position-relative me-2">
+                                <button class="btn btn-sm {% if item.user_reaction %}btn-primary{% else %}btn-outline-primary{% endif %} reaction-trigger-btn">
+                                     {# ... iconos de reacción ... #}
+                                    {% if item.user_reaction and item.user_reaction.reaction_type == 'love' %} ❤️
+                                    {% elif item.user_reaction and item.user_reaction.reaction_type == 'haha' %} 😂
+                                    {% elif item.user_reaction and item.user_reaction.reaction_type == 'wow' %} 😮
+                                    {% elif item.user_reaction and item.user_reaction.reaction_type == 'sad' %} 😢
+                                    {% elif item.user_reaction and item.user_reaction.reaction_type == 'angry' %} 😠
+                                    {% elif item.user_reaction and item.user_reaction.reaction_type == 'like' %} 👍
+                                    {% else %}<i class="bi bi-hand-thumbs-up"></i>{% endif %}
+                                    {% if item.user_reaction %}{{ _(item.user_reaction.reaction_type.capitalize()) }}{% else %}{{ _('Reaccionar') }}{% endif %}
+                                    ({{ item.total_reactions }})
+                                </button>
+                                <div class="reactions-palette bg-white border rounded shadow-sm p-1">
+                                    {# ... formularios de reacción ... #}
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#comments-{{ item.id }}" aria-expanded="false" aria-controls="comments-{{ item.id }}">
+                                <i class="bi bi-chat-dots"></i> {{ _('Comentarios') }} ({{ item.comments|length }})
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary share-trigger-btn ms-2"
+                                    data-bs-toggle="modal" data-bs-target="#shareModal"
+                                    data-post-id="{{ item.id }}" title="{{ _('Citar o compartir') }}">
+                                <i class="bi bi-arrow-repeat"></i> {% if item.share_count > 0 %}{{ item.share_count }}{% endif %}
+                            </button>
+                        </div>
+                        <div class="collapse mt-3 ps-3 border-start" id="comments-{{ item.id }}">
+                            {# ... render_comment_thread(item.comments, item.id) ... #}
+                        </div>
+                        <form method="post" action="{{ url_for('comment', post_id=item.id) }}" class="mt-3" id="comment-form-{{ item.id }}-toplevel">
+                             {# ... input de comentario ... #}
+                        </form>
+                    </div>
+                </div>
+
+                {# Lógica para mostrar item.item_type == 'shared_post' #}
+                {% elif item.item_type == 'shared_post' %}
+                <div class="card shadow-sm mb-4" id="share-{{ item.share_id }}">
+                    <div class="card-body">
+                        <div class="shared-by-line">
+                            <i class="bi bi-arrow-repeat"></i>
+                            <a href="{{ url_for('ver_perfil', slug_perfil=item.sharer_slug) }}" class="text-decoration-none fw-bold">
+                                @{{ item.sharer_username }}
+                            </a>
+                            {{ _('compartió esto') }} {% if item.quote_content and item.quote_content.strip() %} {{ _('con el siguiente comentario:') }} {% endif %}
+                            <small class="text-muted">({{ format_datetime(item.share_timestamp, 'medium') if item.share_timestamp else '' }})</small>
+                        </div>
+
+                        {% if item.quote_content and item.quote_content.strip() %}
+                        <div class="quote-content-box">
+                            {{ item.quote_content | safe }} {# Considerar resaltar query aquí #}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="original-post-embed">
+                            {# ... (contenido del post original embebido - igual que en feed.html) ... #}
+                            {# Incluyendo su propia previsualización de enlace si la tuviera #}
+                            <div class="d-flex align-items-start mb-3"> {# Cabecera del post original #}
+                                {# ... autor, foto, timestamp del post original ... #}
+                            </div>
+                            {% if item.original_post.content and item.original_post.content.strip() %}
+                                <p class="card-text mt-2" style="white-space: pre-wrap;">{{ item.original_post.content | safe }}</p>
+                            {% endif %}
+                            {% if item.original_post.image_filename %}
+                                <div class="mb-2 text-center"><img src="{{ url_for('static', filename='uploads/post_images/' + item.original_post.image_filename) }}" class="img-fluid rounded" alt="{{ _('Imagen de la publicación') }}"></div>
+                            {% endif %}
+                            {% if item.original_post.preview_url %} {# Previsualización del post original #}
+                            <a href="{{ item.original_post.preview_url }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none">
+                                <div class="link-preview-card my-2">
+                                    {# ... imagen, título, descripción de previsualización del post original ... #}
+                                </div>
+                            </a>
+                            {% endif %}
+                            <div class="mt-2 d-flex align-items-center"> {# Acciones para el post original #}
+                                {# ... (botones de reacción, comentario, compartir para item.original_post - igual que en feed.html) ... #}
+                            </div>
+                            <div class="collapse mt-3 ps-3 border-start" id="comments-original-{{ item.original_post.id }}-in-share-{{ item.share_id }}">
+                                {# ... render_comment_thread(item.original_post.comments, item.original_post.id) ... #}
+                            </div>
+                            <form method="post" action="{{ url_for('comment', post_id=item.original_post.id) }}" class="mt-3" id="comment-form-original-{{ item.original_post.id }}-in-share-{{ item.share_id }}">
+                                {# ... input de comentario para el post original ... #}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% elif query %}
+            <div class="text-center p-5">
+                <i class="bi bi-search" style="font-size: 3rem;"></i>
+                <p class="lead mt-3">{% trans query=query %}No se encontraron publicaciones que coincidan con "<strong>{{ query }}</strong>".{% endtrans %}</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{# Los scripts para modales, reacciones, menciones, etc., pueden ser reutilizados de feed.html #}
+{# Asegúrate de que la lógica de `render_comment_thread` y los IDs de los formularios de comentario sean correctos #}
+<script>
+// Scripts JS idénticos o muy similares a los de feed.html para manejar:
+// - Apertura/cierre de paletas de reacciones
+// - Envío de formularios de reacción (si los botones están presentes y son funcionales)
+// - Funcionalidad de "Responder a comentario" (si los comentarios se cargan completamente)
+// - Autocompletado de menciones en los campos de comentario
+// - Modal de compartir
+document.addEventListener('DOMContentLoaded', function() {
+    // Script para "Responder" a comentarios (si la lógica de comentarios está completa aquí)
+    // ... (copiar de feed.html si es necesario) ...
+
+    // Script para paleta de reacciones (copiar de feed.html)
+    document.addEventListener('click', function(event) {
+        const triggerBtn = event.target.closest('.reaction-trigger-btn');
+        // ... (resto del script de feed.html) ...
+    });
+
+    // Script para autocompletado de menciones (copiar de feed.html)
+    // ... (resto del script de feed.html) ...
+});
+</script>
+{% endblock %}

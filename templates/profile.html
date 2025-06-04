@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ _('Mi perfil') }} - PiVerse{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">{{ _('Editar perfil') }}</h2>
+
+<form method="post" enctype="multipart/form-data" class="card p-4 shadow-sm">
+    <div class="mb-3">
+        <label for="username" class="form-label">{{ _('Nombre de usuario público') }}</label>
+        <input type="text" class="form-control" id="username" name="username" required minlength="3"
+               value="{{ profile[0] if profile else '' }}">
+    </div>
+
+    <div class="mb-3">
+        <label for="bio" class="form-label">{{ _('Biografía') }}</label>
+        <textarea class="form-control" id="bio" name="bio" rows="4">{{ profile[1] if profile else '' }}</textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="photo" class="form-label">{{ _('Imagen de perfil') }}</label>
+        <input class="form-control" type="file" id="photo" name="photo" accept="image/*">
+    </div>
+
+    {% if profile and profile[2] %}
+        <div class="mb-3">
+            <label class="form-label">{{ _('Vista previa actual:') }}</label><br>
+            <img src="{{ url_for('static', filename='uploads/' + profile[2]) }}" alt="{{ _('Imagen de perfil') }}" class="img-thumbnail" style="max-width: 200px;">
+        </div>
+    {% endif %}
+
+    <button type="submit" class="btn btn-primary">{{ _('Guardar cambios') }}</button>
+    
+</form>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ _('Iniciar sesión') }} - PiVerse{% endblock %}
+
+{% block content %}
+<h2>{{ _('Iniciar sesión') }}</h2>
+<form action="{{ url_for('login') }}" method="post" class="mb-3">
+    <div class="mb-3">
+        <label for="username" class="form-label">{{ _('Nombre de usuario:') }}</label>
+        <input type="text" id="username" name="username" required class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">{{ _('Contraseña:') }}</label>
+        <input type="password" id="password" name="password" required class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">{{ _('Entrar') }}</button>
+</form>
+<p>{% trans register_url=url_for('register') %}¿No tienes cuenta? <a href="{{ register_url }}">Regístrate aquí</a>{% endtrans %}</p>
+{% endblock %}
+
+
+
+

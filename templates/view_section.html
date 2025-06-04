@@ -1,0 +1,302 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import render_comment_thread %} {# Asegúrate que esta macro esté actualizada si es necesario #}
+
+{% block title %}{{ _('Sección:') }} {{ section_name }} - PiVerse{% endblock %}
+
+{% block head_extra %}
+{{ super() }}
+<style>
+/* Reutilizamos los mismos estilos que en feed.html para consistencia */
+.mention-suggestions-list { position: absolute; background-color: white; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.15); z-index: 1000; width: auto; min-width: 200px; max-height: 200px; overflow-y: auto; margin-top: 2px; }
+.mention-suggestions-list ul { list-style: none; padding: 0; margin: 0; }
+.mention-suggestions-list li { padding: 8px 12px; cursor: pointer; display: flex; align-items: center; font-size: 0.9rem; }
+.mention-suggestions-list li:hover { background-color: #f5f5f5; }
+.mention-suggestions-list img { width: 24px; height: 24px; border-radius: 50%; margin-right: 8px; object-fit: cover; }
+.mention-suggestions-list .no-photo { width: 24px; height: 24px; border-radius: 50%; margin-right: 8px; background-color: #eee; display: inline-flex; align-items: center; justify-content: center; }
+.mention-suggestions-list .no-photo i { font-size: 12px; color: #777; }
+.comment-replies { margin-left: 40px; padding-left: 15px; border-left: 2px solid #eee; margin-top: 10px; }
+.comment-container { margin-bottom: 15px; }
+.reactions-container .reactions-palette { display: none; position: absolute; bottom: 100%; left: 0; margin-bottom: 5px; z-index: 10; white-space: nowrap; border-spacing: 2px; gap: 5px; }
+.reaction-icon-btn { font-size: 1.5rem; padding: 0.2rem 0.4rem; text-decoration: none; border: none; background: none; cursor: pointer; }
+.reaction-icon-btn:hover { transform: scale(1.2); transition: transform 0.1s ease-in-out; }
+.original-post-embed { border: 1px solid #e9ecef; padding: 1rem; border-radius: .25rem; background-color: #f8f9fa; }
+.shared-by-line { font-size: 0.9em; color: #6c757d; margin-bottom: 0.5rem; }
+.shared-by-line i { font-size: 1.1em; }
+.quote-content-box {
+    background-color: #f0f0f0;
+    border-left: 3px solid #0d6efd;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+    border-radius: .25rem;
+    white-space: pre-wrap;
+    font-style: italic;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h2 class="mb-0">{{ _('Sección:') }} {{ section_name }}</h2>
+            <a href="{{ url_for('sections_list') }}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-list-ul"></i> {{ _('Ver todas las secciones') }}
+            </a>
+        </div>
+        <hr>
+
+        {# Formulario para nueva publicación (opcional, pero coherente con feed.html) #}
+        {# Este formulario necesitará la variable 'sections' pasada desde la ruta view_section #}
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title">{{ _('Nueva Publicación en esta Sección') }}</h5>
+                <form method="post" action="{{ url_for('post') }}" enctype="multipart/form-data">
+                    <input type="hidden" name="source_section_slug" value="{{ section_slug }}"> {# Para redirigir de vuelta aquí si es necesario #}
+                    <div class="mb-3 position-relative">
+                        <textarea class="form-control mentionable-input" name="content" rows="3" placeholder="{{ _('¿Qué estás pensando, %(username)s?', username=(display_username_session or _('Pionero'))) }}"></textarea>
+                        <div class="mention-suggestions-list" style="display: none;"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="post_image" class="form-label">{{ _('Añadir imagen (opcional)') }}</label>
+                        <input class="form-control" type="file" id="post_image" name="post_image" accept="image/png, image/jpeg, image/gif">
+                    </div>
+
+                    {# Selector de Sección - podría preseleccionar la sección actual #}
+                    {% if sections %}
+                    <div class="mb-3">
+                        <label for="section_id" class="form-label">{{ _('Sección') }}</label>
+                        <select class="form-select form-select-sm" name="section_id" id="section_id">
+                            {# <option value="">-- {{ _('Ninguna') }} --</option> #} {# Quizás no queremos 'Ninguna' aquí #}
+                            {% for section_opt in sections %}
+                                <option value="{{ section_opt.id }}" {% if section_opt.slug == section_slug %}selected{% endif %}>
+                                    {{ section_opt.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-send-fill"></i> {{ _('Publicar') }}</button>
+                </form>
+            </div>
+        </div>
+        <h4 class="mb-3">{{ _('Publicaciones en esta sección') }}</h4>
+        {% if posts %}
+            {% for item in posts %} {# Asumiendo que 'posts' aquí solo contendrá 'original_post' items #}
+                {% if item.item_type == 'original_post' %}
+                <div class="card shadow-sm mb-4" id="post-{{ item.id }}">
+                    <div class="card-body">
+                        {# Copia aquí la estructura completa de cómo muestras un 'original_post' en feed.html #}
+                        {# Esto incluye: autor, timestamp, contenido, imagen, botones de reacción/comentario/compartir, sección de comentarios #}
+                        <div class="d-flex align-items-start mb-3">
+                            <div class="flex-grow-1 d-flex align-items-center">
+                                {% if item.photo %}
+                                    <img src="{{ url_for('static', filename='uploads/' + item.photo) }}" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;" alt="{{ _('Foto de %(username)s', username=item.username) }}">
+                                {% else %}
+                                    <div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center me-2" style="width: 40px; height: 40px;"><i class="bi bi-person-fill text-white fs-5"></i></div>
+                                {% endif %}
+                                <div>
+                                    <strong><a href="{{ url_for('ver_perfil', slug_perfil=item.slug) }}" class="text-decoration-none text-dark">@{{ item.username }}</a></strong><br>
+                                    <a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.id) }}" class="text-decoration-none"><small class="text-muted">{{ format_datetime(item.timestamp, 'medium') if item.timestamp else '' }}</small></a>
+                                </div>
+                            </div>
+                            {% if session.user_id == item.autor_id_post %}
+                            <form method="POST" action="{{ url_for('delete_post', post_id=item.id) }}" class="ms-auto" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar esta publicación?') }}');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Eliminar publicación') }}"><i class="bi bi-trash"></i></button>
+                            </form>
+                            {% endif %}
+                        </div>
+                        {% if item.image_filename %}
+                        <div class="mb-2 text-center"><img src="{{ url_for('static', filename='uploads/post_images/' + item.image_filename) }}" class="img-fluid rounded" alt="{{ _('Imagen de la publicación') }}" style="max-height: 450px; object-fit: contain; width: 100%;"></div>
+                        {% endif %}
+                        {% if item.content and item.content.strip() %}
+                            <p class="card-text mt-2" style="white-space: pre-wrap;">{{ item.content | safe }}</p>
+                        {% endif %}
+                        <div class="mt-2 d-flex align-items-center">
+                            <div class="reactions-container d-inline-block position-relative me-2">
+                                <button class="btn btn-sm {% if item.user_reaction %}btn-primary{% else %}btn-outline-primary{% endif %} reaction-trigger-btn">
+                                    {% if item.user_reaction and item.user_reaction.reaction_type == 'love' %} ❤️
+                                    {% elif item.user_reaction and item.user_reaction.reaction_type == 'haha' %} 😂
+                                    {% elif item.user_reaction and item.user_reaction.reaction_type == 'wow' %} 😮
+                                    {% elif item.user_reaction and item.user_reaction.reaction_type == 'sad' %} 😢
+                                    {% elif item.user_reaction and item.user_reaction.reaction_type == 'angry' %} 😠
+                                    {% elif item.user_reaction and item.user_reaction.reaction_type == 'like' %} 👍
+                                    {% else %}<i class="bi bi-hand-thumbs-up"></i>{% endif %}
+                                    {% if item.user_reaction %}{{ _(item.user_reaction.reaction_type.capitalize()) }}{% else %}{{ _('Reaccionar') }}{% endif %}
+                                    ({{ item.total_reactions }})
+                                </button>
+                                <div class="reactions-palette bg-white border rounded shadow-sm p-1">
+                                    {% set reaction_types = {'like': '👍', 'love': '❤️', 'haha': '😂', 'wow': '😮', 'sad': '😢', 'angry': '😠'} %}
+                                    {% for type, icon in reaction_types.items() %}
+                                    <form method="POST" action="{{ url_for('react_to_post', post_id=item.id) }}" class="d-inline-block reaction-form">
+                                        <input type="hidden" name="reaction_type" value="{{ type }}">
+                                        <button type="submit" class="btn btn-link p-1 reaction-icon-btn" title="{{ _(type.capitalize()) }}">{{ icon }}</button>
+                                    </form>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#comments-{{ item.id }}" aria-expanded="false" aria-controls="comments-{{ item.id }}">
+                                <i class="bi bi-chat-dots"></i> {{ _('Comentarios') }} ({{ item.comments|length }})
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary share-trigger-btn ms-2"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#shareModal"
+                                    data-post-id="{{ item.id }}"
+                                    title="{{ _('Citar o compartir') }}">
+                                <i class="bi bi-arrow-repeat"></i> {% if item.share_count > 0 %}{{ item.share_count }}{% endif %}
+                            </button>
+                        </div>
+                        <div class="collapse mt-3 ps-3 border-start" id="comments-{{ item.id }}">
+                            {% if item.comments %}{{ render_comment_thread(item.comments, item.id) }}{% else %}<p class="small text-muted">{{ _('No hay comentarios aún. ¡Sé el primero!') }}</p>{% endif %}
+                        </div>
+                        <form method="post" action="{{ url_for('comment', post_id=item.id) }}" class="mt-3" id="comment-form-{{ item.id }}-toplevel">
+                            <div class="input-group position-relative">
+                                <input type="text" name="content" class="form-control form-control-sm mentionable-input" placeholder="{{ _('Escribe un comentario...') }}" required>
+                                <div class="mention-suggestions-list" style="display: none;"></div>
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">{{ _('Comentar') }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <div class="text-center p-5">
+                <i class="bi bi-chat-square-dots-fill" style="font-size: 3rem;"></i>
+                <p class="lead mt-3">{{ _('Aún no hay publicaciones en esta sección.') }}</p>
+                <p>{{ _('¡Sé el primero en publicar algo aquí!') }}</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Los scripts para menciones, reacciones, etc., son los mismos que en feed.html.
+    // Si los tienes centralizados en un archivo .js que se incluye en base.html, perfecto.
+    // Si no, copia aquí los scripts relevantes de feed.html (excepto el del modal de compartir que está en base.html).
+    
+    // Script para "Responder" a comentarios (copiado de feed.html)
+    document.querySelectorAll('.reply-to-comment-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const commentId = this.dataset.commentId;
+            const usernameToReply = this.dataset.usernameToReply || 'Usuario';
+            const slugToReply = this.dataset.slugToReply || '';
+            const replyFormContainer = document.getElementById(`reply-form-container-${commentId}`);
+            if (replyFormContainer) {
+                const textarea = replyFormContainer.querySelector('textarea[name="content"]');
+                const isHidden = replyFormContainer.style.display === 'none';
+                document.querySelectorAll('.reply-form-container').forEach(c => {
+                    if (c.id !== replyFormContainer.id) {
+                        c.style.display = 'none';
+                        c.querySelector('textarea[name="content"]').value = '';
+                    }
+                });
+                if (isHidden) {
+                    textarea.placeholder = `{{ _('Respondiendo a') }} @${usernameToReply}...`;
+                    textarea.value = `@${slugToReply} `;
+                    replyFormContainer.style.display = 'block';
+                    textarea.focus();
+                    const end = textarea.value.length;
+                    textarea.setSelectionRange(end, end);
+                } else {
+                    replyFormContainer.style.display = 'none';
+                    textarea.value = '';
+                }
+            }
+        });
+    });
+
+    // Script para paleta de reacciones (copiado de feed.html)
+    document.addEventListener('click', function(event) {
+        const triggerBtn = event.target.closest('.reaction-trigger-btn');
+        if (!triggerBtn) {
+            document.querySelectorAll('.reactions-palette').forEach(p => p.style.display = 'none');
+            return;
+        }
+        const palette = triggerBtn.nextElementSibling;
+        document.querySelectorAll('.reactions-palette').forEach(p => { if (p !== palette) p.style.display = 'none'; });
+        if (palette) palette.style.display = window.getComputedStyle(palette).display === 'none' ? 'flex' : 'none';
+    });
+
+    // Script para autocompletado de menciones (copiado de feed.html)
+    const mentionableInputs = document.querySelectorAll('.mentionable-input');
+    let currentActiveInput = null; 
+    let currentSuggestionsBox = null;
+    let debounceTimer;
+
+    function hideAllSuggestionBoxes() {
+        document.querySelectorAll('.mention-suggestions-list').forEach(box => {
+            box.innerHTML = '';
+            box.style.display = 'none';
+        });
+        currentSuggestionsBox = null;
+    }
+    
+    const mainContentContainerForMentions = document.querySelector('.row.justify-content-center'); 
+    if(mainContentContainerForMentions) {
+        mainContentContainerForMentions.addEventListener('input', function(e) {
+            if (!e.target.matches('.mentionable-input')) { return; }
+            currentActiveInput = e.target; 
+            const parentWrapper = currentActiveInput.closest('.input-group, .position-relative');
+            currentSuggestionsBox = parentWrapper ? parentWrapper.querySelector('.mention-suggestions-list') : null;
+            if (!currentSuggestionsBox) return;
+            const text = currentActiveInput.value;
+            const cursorPos = currentActiveInput.selectionStart;
+            let atPos = -1;
+            for (let i = cursorPos - 1; i >= 0; i--) {
+                if (text[i] === '@') { if (i === 0 || /\s/.test(text[i - 1])) { atPos = i; break; } }
+                if (/\s/.test(text[i])) break; 
+            }
+            if (atPos !== -1) {
+                const queryPart = text.substring(atPos + 1, cursorPos);
+                if (/^[a-zA-Z0-9_]*$/.test(queryPart) && queryPart.length >= 1) { 
+                    const query = queryPart;
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => {
+                        if (currentActiveInput !== e.target) return;
+                        fetch(`/api/users/mention_search?term=${encodeURIComponent(query)}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (currentActiveInput !== e.target || !currentSuggestionsBox) return;
+                                currentSuggestionsBox.innerHTML = '';
+                                if (data.length > 0) {
+                                    const ul = document.createElement('ul');
+                                    data.forEach(user => {
+                                        const li = document.createElement('li');
+                                        let photoHtml = user.photo ? `<img src="${user.photo}" alt="${user.username}">` : `<span class="no-photo"><i class="bi bi-person-fill"></i></span>`;
+                                        li.innerHTML = `${photoHtml}<span>${user.username} <small class="text-muted">(@${user.slug})</small></span>`;
+                                        li.addEventListener('mousedown', function(event) { 
+                                            event.preventDefault(); 
+                                            const mentionText = `@${user.slug} `;
+                                            currentActiveInput.value = text.substring(0, atPos) + mentionText + text.substring(cursorPos);
+                                            hideAllSuggestionBoxes(); 
+                                            currentActiveInput.focus();
+                                            const newCursorPos = atPos + mentionText.length;
+                                            currentActiveInput.setSelectionRange(newCursorPos, newCursorPos);
+                                        });
+                                        ul.appendChild(li);
+                                    });
+                                    currentSuggestionsBox.appendChild(ul);
+                                    currentSuggestionsBox.style.display = 'block';
+                                } else { currentSuggestionsBox.style.display = 'none'; }
+                            }).catch(error => { console.error('Error fetching mention suggestions:', error); if (currentSuggestionsBox) currentSuggestionsBox.style.display = 'none'; });
+                    }, 300);
+                } else { if (currentSuggestionsBox) currentSuggestionsBox.style.display = 'none'; }
+            } else { if (currentSuggestionsBox) currentSuggestionsBox.style.display = 'none'; }
+        });
+    }
+    document.addEventListener('click', function(event) {
+        if (currentActiveInput && !currentActiveInput.contains(event.target) && currentSuggestionsBox && !currentSuggestionsBox.contains(event.target)) {
+            hideAllSuggestionBoxes();
+        }
+    });
+    mentionableInputs.forEach(inputField => {
+        inputField.addEventListener('blur', function() { setTimeout(hideAllSuggestionBoxes, 150); });
+    });
+});
+</script>
+{% endblock %}

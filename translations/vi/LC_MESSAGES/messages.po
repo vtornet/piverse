@@ -1,0 +1,1467 @@
+# Vietnamese translations for PiVerse.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PiVerse project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PiVerse 1.0\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-06-03 17:07+0200\n"
+"PO-Revision-Date: 2025-06-02 20:10+0200\n"
+"Last-Translator: Gemini Assistant <EMAIL@ADDRESS>\n"
+"Language: vi\n"
+"Language-Team: vi <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: app.py:340 app.py:582 app.py:950 app.py:1066 app.py:1098 app.py:1309
+#: app.py:1358 app.py:1475 app.py:1588 app.py:1717 app.py:1790 app.py:1921
+#: app.py:1993 app.py:2139 templates/conversacion.html:3
+#: templates/conversacion.html:64 templates/conversacion.html:66
+msgid "Usuario"
+msgstr "Người dùng"
+
+#: app.py:358 app.py:953 app.py:2069
+msgid "publicación"
+msgstr "bài đăng"
+
+#: app.py:360
+#, python-format
+msgid "%(autor_link)s te mencionó en una %(contenido_link)s."
+msgstr "%(autor_link)s đã nhắc đến bạn trong một %(contenido_link)s."
+
+#: app.py:362
+msgid "comentario"
+msgstr "bình luận"
+
+#: app.py:364
+#, python-format
+msgid "%(autor_link)s te mencionó en un %(contenido_link)s."
+msgstr "%(autor_link)s đã nhắc đến bạn trong một %(contenido_link)s."
+
+#: app.py:409 templates/feed.html:48 templates/index.html:32
+#: templates/view_section.html:56
+msgid "Pionero"
+msgstr "Người tiên phong"
+
+#: app.py:453
+msgid "Idioma no soportado."
+msgstr "Ngôn ngữ không được hỗ trợ."
+
+#: app.py:470
+msgid "El nombre de usuario y la contraseña son obligatorios."
+msgstr "Tên người dùng và mật khẩu là bắt buộc."
+
+#: app.py:480
+msgid ""
+"¡Registro exitoso! Ahora puedes iniciar sesión y completar tu perfil "
+"público."
+msgstr ""
+"Đăng ký thành công! Bây giờ bạn có thể đăng nhập và hoàn tất hồ sơ công "
+"khai của mình."
+
+#: app.py:483
+msgid "Ese nombre de usuario para login ya existe. Por favor, elige otro."
+msgstr "Tên người dùng để đăng nhập đó đã tồn tại. Vui lòng chọn tên khác."
+
+#: app.py:504
+msgid "¡Bienvenido! Por favor, completa tu perfil público para continuar."
+msgstr "Chào mừng! Vui lòng hoàn tất hồ sơ công khai của bạn để tiếp tục."
+
+#: app.py:506
+msgid "Inicio de sesión exitoso."
+msgstr "Đăng nhập thành công."
+
+#: app.py:509
+msgid "Credenciales inválidas. Inténtalo de nuevo."
+msgstr "Thông tin đăng nhập không hợp lệ. Vui lòng thử lại."
+
+#: app.py:515
+msgid "Has cerrado sesión."
+msgstr "Bạn đã đăng xuất."
+
+#: app.py:527
+msgid "El nombre de usuario público no puede estar vacío."
+msgstr "Tên người dùng công khai không được để trống."
+
+#: app.py:531
+msgid ""
+"El nombre de usuario público debe contener caracteres alfanuméricos "
+"válidos."
+msgstr "Tên người dùng công khai phải chứa các ký tự chữ và số hợp lệ."
+
+#: app.py:539
+msgid "Ese nombre de usuario público o slug ya está en uso por otra persona."
+msgstr "Tên người dùng công khai hoặc slug đó đã được người khác sử dụng."
+
+#: app.py:547
+#, python-format
+msgid "Error al guardar la foto: %(error)s"
+msgstr "Lỗi khi lưu ảnh: %(error)s"
+
+#: app.py:557
+msgid "Perfil actualizado correctamente."
+msgstr "Hồ sơ đã được cập nhật chính xác."
+
+#: app.py:564
+msgid "Por favor, completa tu nombre de usuario público en el perfil."
+msgstr "Vui lòng hoàn tất tên người dùng công khai của bạn trong hồ sơ."
+
+#: app.py:578
+msgid "Debes completar tu perfil para ver el feed y publicar."
+msgstr "Bạn phải hoàn tất hồ sơ của mình để xem bảng tin và đăng bài."
+
+#: app.py:803
+msgid "Por favor, completa tu perfil antes de publicar."
+msgstr "Vui lòng hoàn tất hồ sơ của bạn trước khi đăng bài."
+
+#: app.py:817 app.py:840
+msgid ""
+"La publicación no puede estar completamente vacía. Añade texto o una "
+"imagen."
+msgstr "Bài đăng không được hoàn toàn trống. Thêm văn bản hoặc hình ảnh."
+
+#: app.py:833
+#, python-format
+msgid "Error al guardar la imagen de la publicación: %(error)s"
+msgstr "Lỗi khi lưu hình ảnh của bài đăng: %(error)s"
+
+#: app.py:836
+msgid "Tipo de archivo de imagen no permitido. Permitidos: png, jpg, jpeg, gif."
+msgstr "Loại tệp hình ảnh không được phép. Cho phép: png, jpg, jpeg, gif."
+
+#: app.py:854
+msgid "Publicación creada."
+msgstr "Bài đăng đã được tạo."
+
+#: app.py:860
+msgid "Debes iniciar sesión para eliminar publicaciones."
+msgstr "Bạn phải đăng nhập để xóa bài đăng."
+
+#: app.py:871 app.py:918 app.py:1809
+msgid "Publicación no encontrada."
+msgstr "Không tìm thấy bài đăng."
+
+#: app.py:878
+msgid "No tienes permiso para eliminar esta publicación."
+msgstr "Bạn không có quyền xóa bài đăng này."
+
+#: app.py:891
+msgid "Publicación eliminada correctamente."
+msgstr "Bài đăng đã được xóa chính xác."
+
+#: app.py:898
+msgid "Debes iniciar sesión para reaccionar."
+msgstr "Bạn phải đăng nhập để bày tỏ cảm xúc."
+
+#: app.py:903 app.py:1943
+msgid "Por favor, completa tu perfil antes de reaccionar."
+msgstr "Vui lòng hoàn tất hồ sơ của bạn trước khi bày tỏ cảm xúc."
+
+#: app.py:909 app.py:1949
+msgid "Tipo de reacción no válido."
+msgstr "Loại cảm xúc không hợp lệ."
+
+#: app.py:924 app.py:1034
+msgid "No puedes interactuar con este usuario o publicación."
+msgstr "Bạn không thể tương tác với người dùng hoặc bài đăng này."
+
+#: app.py:936
+msgid "Reacción eliminada."
+msgstr "Cảm xúc đã được xóa."
+
+#: app.py:940
+msgid "Reacción actualizada."
+msgstr "Cảm xúc đã được cập nhật."
+
+#: app.py:944
+msgid "Has reaccionado a la publicación."
+msgstr "Bạn đã bày tỏ cảm xúc với bài đăng."
+
+#: app.py:955
+#, python-format
+msgid "%(reactor_link)s reaccionó a tu %(post_link)s."
+msgstr "%(reactor_link)s đã bày tỏ cảm xúc với %(post_link)s của bạn."
+
+#: app.py:966
+msgid "Debes iniciar sesión para eliminar comentarios."
+msgstr "Bạn phải đăng nhập để xóa bình luận."
+
+#: app.py:977 app.py:1958
+msgid "Comentario no encontrado."
+msgstr "Không tìm thấy bình luận."
+
+#: app.py:984
+msgid "No tienes permiso para eliminar este comentario."
+msgstr "Bạn không có quyền xóa bình luận này."
+
+#: app.py:992
+msgid "Comentario eliminado correctamente."
+msgstr "Bình luận đã được xóa chính xác."
+
+#: app.py:1004
+msgid "Por favor, completa tu perfil antes de comentar."
+msgstr "Vui lòng hoàn tất hồ sơ của bạn trước khi bình luận."
+
+#: app.py:1015
+msgid "ID de comentario padre inválido."
+msgstr "ID bình luận cha không hợp lệ."
+
+#: app.py:1019
+msgid "El comentario no puede estar vacío."
+msgstr "Bình luận không được để trống."
+
+#: app.py:1028
+msgid "La publicación a la que intentas responder no existe."
+msgstr "Bài đăng bạn đang cố gắng trả lời không tồn tại."
+
+#: app.py:1041
+msgid "El comentario al que intentas responder no existe."
+msgstr "Bình luận bạn đang cố gắng trả lời không tồn tại."
+
+#: app.py:1046 app.py:1966
+msgid "No puedes interactuar con este usuario o comentario."
+msgstr "Bạn không thể tương tác với người dùng hoặc bình luận này."
+
+#: app.py:1069
+#, python-format
+msgid "una <a href=\"%(post_url)s\">publicación</a>"
+msgstr "một <a href=\"%(post_url)s\">bài đăng</a>"
+
+#: app.py:1071
+#, python-format
+msgid "%(replier_link)s ha respondido a tu comentario en %(post_link)s."
+msgstr "%(replier_link)s đã trả lời bình luận của bạn trong %(post_link)s."
+
+#: app.py:1077
+msgid "Comentario añadido."
+msgstr "Bình luận đã được thêm."
+
+#: app.py:1079
+#, python-format
+msgid "Error al guardar el comentario: %(error)s"
+msgstr "Lỗi khi lưu bình luận: %(error)s"
+
+#: app.py:1094
+msgid "No se puede acceder a un perfil sin un slug válido."
+msgstr "Không thể truy cập hồ sơ mà không có slug hợp lệ."
+
+#: app.py:1109
+msgid "Perfil no encontrado."
+msgstr "Không tìm thấy hồ sơ."
+
+#: app.py:1117
+msgid "No puedes ver el perfil de este usuario."
+msgstr "Bạn không thể xem hồ sơ của người dùng này."
+
+#: app.py:1280
+msgid "Por favor, completa tu perfil antes de enviar solicitudes."
+msgstr "Vui lòng hoàn tất hồ sơ của bạn trước khi gửi yêu cầu."
+
+#: app.py:1284
+msgid "No puedes enviarte una solicitud a ti mismo."
+msgstr "Bạn không thể tự gửi yêu cầu cho chính mình."
+
+#: app.py:1292 app.py:1347 app.py:1681
+msgid "No puedes interactuar con este usuario."
+msgstr "Bạn không thể tương tác với người dùng này."
+
+#: app.py:1299
+msgid "Ya existe una solicitud o conexión con este usuario."
+msgstr "Đã tồn tại một yêu cầu hoặc kết nối với người dùng này."
+
+#: app.py:1312
+#, python-format
+msgid "%(solicitante_link)s te ha enviado una solicitud de contacto."
+msgstr "%(solicitante_link)s đã gửi cho bạn một yêu cầu kết bạn."
+
+#: app.py:1318
+msgid "Solicitud de contacto enviada."
+msgstr "Yêu cầu kết bạn đã được gửi."
+
+#: app.py:1320
+msgid "Error al enviar la solicitud. Puede que ya exista una."
+msgstr "Lỗi khi gửi yêu cầu. Có thể đã tồn tại một yêu cầu."
+
+#: app.py:1333
+msgid "Contacto eliminado."
+msgstr "Liên hệ đã được xóa."
+
+#: app.py:1335
+msgid "No se encontró una relación de contacto para eliminar."
+msgstr "Không tìm thấy mối quan hệ liên hệ nào để xóa."
+
+#: app.py:1354
+msgid "Solicitud de contacto aceptada."
+msgstr "Yêu cầu kết bạn đã được chấp nhận."
+
+#: app.py:1361
+#, python-format
+msgid "%(receptor_link)s aceptó tu solicitud de contacto."
+msgstr "%(receptor_link)s đã chấp nhận yêu cầu kết bạn của bạn."
+
+#: app.py:1368
+msgid ""
+"No se pudo aceptar la solicitud (quizás ya no estaba pendiente o no era "
+"para ti)."
+msgstr ""
+"Không thể chấp nhận yêu cầu (có thể yêu cầu không còn chờ xử lý hoặc "
+"không dành cho bạn)."
+
+#: app.py:1381
+msgid "Solicitud de contacto rechazada."
+msgstr "Yêu cầu kết bạn đã bị từ chối."
+
+#: app.py:1383
+msgid ""
+"No se pudo rechazar la solicitud (quizás ya no estaba pendiente o no era "
+"para ti)."
+msgstr ""
+"Không thể từ chối yêu cầu (có thể yêu cầu không còn chờ xử lý hoặc không "
+"dành cho bạn)."
+
+#: app.py:1389
+msgid "Debes iniciar sesión para bloquear usuarios."
+msgstr "Bạn phải đăng nhập để chặn người dùng."
+
+#: app.py:1395
+msgid "No te puedes bloquear a ti mismo."
+msgstr "Bạn không thể tự chặn chính mình."
+
+#: app.py:1411
+msgid ""
+"Usuario bloqueado correctamente. Ya no verás sus publicaciones ni podrás "
+"interactuar con él/ella."
+msgstr ""
+"Người dùng đã bị chặn thành công. Bạn sẽ không còn thấy bài đăng của họ "
+"nữa và cũng không thể tương tác với họ."
+
+#: app.py:1414
+msgid "Este usuario ya está en tu lista de bloqueados."
+msgstr "Người dùng này đã có trong danh sách chặn của bạn."
+
+#: app.py:1418
+#, python-format
+msgid "Ha ocurrido un error al intentar bloquear al usuario: %(error)s"
+msgstr "Đã xảy ra lỗi khi cố gắng chặn người dùng: %(error)s"
+
+#: app.py:1425
+msgid "Debes iniciar sesión para desbloquear usuarios."
+msgstr "Bạn phải đăng nhập để bỏ chặn người dùng."
+
+#: app.py:1439
+msgid "Usuario desbloqueado correctamente."
+msgstr "Người dùng đã được bỏ chặn thành công."
+
+#: app.py:1441
+msgid "Este usuario no estaba en tu lista de bloqueados."
+msgstr "Người dùng này không có trong danh sách chặn của bạn."
+
+#: app.py:1445
+#, python-format
+msgid "Ha ocurrido un error al intentar desbloquear al usuario: %(error)s"
+msgstr "Đã xảy ra lỗi khi cố gắng bỏ chặn người dùng: %(error)s"
+
+#: app.py:1452 app.py:1783 app.py:2106
+msgid "Debes iniciar sesión para ver esta página."
+msgstr "Bạn phải đăng nhập để xem trang này."
+
+#: app.py:1469
+msgid "Por favor, completa tu perfil para ver tus contactos."
+msgstr "Vui lòng hoàn tất hồ sơ của bạn để xem danh bạ."
+
+#: app.py:1544 app.py:1647 app.py:1887
+msgid "Autenticación requerida"
+msgstr "Yêu cầu xác thực"
+
+#: app.py:1580 app.py:1714
+msgid "Debes iniciar sesión para ver tus mensajes."
+msgstr "Bạn phải đăng nhập để xem tin nhắn của mình."
+
+#: app.py:1584
+msgid "Por favor, completa tu perfil para usar la mensajería."
+msgstr "Vui lòng hoàn tất hồ sơ của bạn để sử dụng tin nhắn."
+
+#: app.py:1589
+msgid "No hay mensajes todavía."
+msgstr "Chưa có tin nhắn nào."
+
+#: app.py:1624
+#, python-format
+msgid "Tú: %(mensaje)s"
+msgstr "Bạn: %(mensaje)s"
+
+#: app.py:1664
+msgid "Notificación no encontrada, ya marcada como leída o sin permiso."
+msgstr "Không tìm thấy thông báo, đã được đánh dấu là đã đọc hoặc không có quyền."
+
+#: app.py:1669
+msgid "Debes iniciar sesión para enviar mensajes."
+msgstr "Bạn phải đăng nhập để gửi tin nhắn."
+
+#: app.py:1673
+msgid "No puedes iniciar una conversación contigo mismo."
+msgstr "Bạn không thể bắt đầu cuộc trò chuyện với chính mình."
+
+#: app.py:1690
+msgid "Solo puedes enviar mensajes a tus contactos."
+msgstr "Bạn chỉ có thể gửi tin nhắn cho các liên hệ của mình."
+
+#: app.py:1725
+msgid "No tienes permiso para ver esta conversación."
+msgstr "Bạn không có quyền xem cuộc trò chuyện này."
+
+#: app.py:1740
+msgid "No puedes ver esta conversación debido a la configuración de bloqueo."
+msgstr "Bạn không thể xem cuộc trò chuyện này do cài đặt chặn."
+
+#: app.py:1787
+msgid "Por favor, completa tu perfil para ver las publicaciones."
+msgstr "Vui lòng hoàn tất hồ sơ của bạn để xem các bài đăng."
+
+#: app.py:1815
+msgid "No puedes ver esta publicación debido a la configuración de bloqueo."
+msgstr "Bạn không thể xem bài đăng này do cài đặt chặn."
+
+#: app.py:1894
+msgid "Faltan datos: ID de conversación y cuerpo del mensaje son requeridos."
+msgstr "Thiếu dữ liệu: ID cuộc trò chuyện và nội dung tin nhắn là bắt buộc."
+
+#: app.py:1902
+msgid "No tienes permiso para enviar mensajes en esta conversación."
+msgstr "Bạn không có quyền gửi tin nhắn trong cuộc trò chuyện này."
+
+#: app.py:1910
+msgid "No puedes enviar mensajes a este usuario."
+msgstr "Bạn không thể gửi tin nhắn cho người dùng này."
+
+#: app.py:1938
+msgid "Debes iniciar sesión para reaccionar a los comentarios."
+msgstr "Bạn phải đăng nhập để bày tỏ cảm xúc với các bình luận."
+
+#: app.py:1979
+msgid "Reacción al comentario eliminada."
+msgstr "Cảm xúc với bình luận đã được xóa."
+
+#: app.py:1983
+msgid "Reacción al comentario actualizada."
+msgstr "Cảm xúc với bình luận đã được cập nhật."
+
+#: app.py:1987
+msgid "Has reaccionado al comentario."
+msgstr "Bạn đã bày tỏ cảm xúc với bình luận."
+
+#: app.py:1997
+#, python-format
+msgid "%(reactor_link)s reaccionó a tu %(comment_link_html)s."
+msgstr "%(reactor_link)s đã bày tỏ cảm xúc với %(comment_link_html)s của bạn."
+
+#: app.py:2015
+msgid "Debes iniciar sesión para compartir publicaciones."
+msgstr "Bạn phải đăng nhập để chia sẻ bài đăng."
+
+#: app.py:2021
+msgid "Por favor, completa tu perfil antes de compartir publicaciones."
+msgstr "Vui lòng hoàn tất hồ sơ của bạn trước khi chia sẻ bài đăng."
+
+#: app.py:2035
+msgid "La publicación que intentas compartir no existe."
+msgstr "Bài đăng bạn đang cố gắng chia sẻ không tồn tại."
+
+#: app.py:2042
+msgid "No puedes interactuar con esta publicación."
+msgstr "Bạn không thể tương tác với bài đăng này."
+
+#: app.py:2065
+msgid "Alguien"
+msgstr "Ai đó"
+
+#: app.py:2073
+#, fuzzy, python-format
+msgid "%(sharer_link)s ha citado tu %(post_link)s."
+msgstr "%(sharer_link)s đã chia sẻ %(post_link)s của bạn."
+
+#: app.py:2076
+#, python-format
+msgid "%(sharer_link)s ha compartido tu %(post_link)s."
+msgstr "%(sharer_link)s đã chia sẻ %(post_link)s của bạn."
+
+#: app.py:2088
+#, fuzzy
+msgid "Publicación citada correctamente."
+msgstr "Bài đăng đã được xóa chính xác."
+
+#: app.py:2090
+msgid "Publicación compartida correctamente."
+msgstr "Bài đăng đã được chia sẻ thành công."
+
+#: app.py:2093
+msgid ""
+"Ya has compartido esta publicación anteriormente. Si quieres añadir o "
+"cambiar una cita, primero deberías eliminar el compartido anterior "
+"(función no implementada)."
+msgstr ""
+
+#: app.py:2096
+#, python-format
+msgid "Ha ocurrido un error al intentar compartir la publicación: %(error)s"
+msgstr "Đã xảy ra lỗi khi cố gắng chia sẻ bài đăng: %(error)s"
+
+#: app.py:2109
+#, fuzzy
+msgid "Por favor, completa tu perfil para ver las secciones."
+msgstr "Vui lòng hoàn tất hồ sơ của bạn để xem các bài đăng."
+
+#: app.py:2135
+#, fuzzy
+msgid "Debes completar tu perfil para ver el contenido de las secciones."
+msgstr "Bạn phải hoàn tất hồ sơ của mình để xem bảng tin và đăng bài."
+
+#: app.py:2149
+#, fuzzy
+msgid "Sección no encontrada."
+msgstr "Không tìm thấy bài đăng."
+
+#: templates/_macros.html:11 templates/contactos.html:47
+#: templates/contactos.html:87 templates/conversacion.html:64
+#: templates/feed.html:83 templates/feed.html:173 templates/mensajes.html:16
+#: templates/ver_perfil.html:35 templates/ver_perfil.html:110
+#: templates/ver_perfil.html:190 templates/ver_post.html:41
+#: templates/view_section.html:93
+#, python-format
+msgid "Foto de %(username)s"
+msgstr "Ảnh của %(username)s"
+
+#: templates/_macros.html:24
+msgid ""
+"¿Estás seguro de que quieres eliminar este comentario y todas sus "
+"respuestas?"
+msgstr ""
+"Bạn có chắc chắn muốn xóa bình luận này và tất cả các câu trả lời của nó "
+"không?"
+
+#: templates/_macros.html:25
+msgid "Eliminar comentario"
+msgstr "Xóa bình luận"
+
+#: templates/_macros.html:54 templates/feed.html:114 templates/feed.html:199
+#: templates/ver_perfil.html:144 templates/ver_perfil.html:219
+#: templates/ver_post.html:85 templates/view_section.html:124
+msgid "Reaccionar"
+msgstr "Bày tỏ cảm xúc"
+
+#: templates/_macros.html:70
+msgid "Responder"
+msgstr "Trả lời"
+
+#: templates/_macros.html:80
+msgid "Escribe tu respuesta..."
+msgstr "Viết câu trả lời của bạn..."
+
+#: templates/_macros.html:82
+msgid "Enviar Respuesta"
+msgstr "Gửi câu trả lời"
+
+#: templates/base.html:143 templates/index.html:8
+msgid "Logo de PiVerse"
+msgstr "Logo PiVerse"
+
+#: templates/base.html:146
+msgid "Alternar navegación"
+msgstr "Chuyển đổi điều hướng"
+
+#: templates/base.html:154 templates/notificaciones.html:7
+msgid "Notificaciones"
+msgstr "Thông báo"
+
+#: templates/base.html:158
+msgid "notificaciones no leídas"
+msgstr "thông báo chưa đọc"
+
+#: templates/base.html:165 templates/mensajes.html:9
+msgid "Mensajes"
+msgstr "Tin nhắn"
+
+#: templates/base.html:169
+msgid "mensajes no leídos"
+msgstr "tin nhắn chưa đọc"
+
+#: templates/base.html:174
+msgid "Inicio"
+msgstr "Trang chủ"
+
+#: templates/base.html:175
+msgid "Mi Perfil"
+msgstr "Hồ sơ của tôi"
+
+#: templates/base.html:176 templates/contactos.html:27
+msgid "Mis Contactos"
+msgstr "Danh bạ của tôi"
+
+#: templates/base.html:181
+#, fuzzy
+msgid "Secciones"
+msgstr "Hành động khác"
+
+#: templates/base.html:189 templates/base.html:220
+msgid "Idioma"
+msgstr "Ngôn ngữ"
+
+#: templates/base.html:205
+#, python-format
+msgid "Foto de perfil de %(username)s"
+msgstr "Ảnh hồ sơ của %(username)s"
+
+#: templates/base.html:209
+msgid "Completar perfil"
+msgstr "Hoàn tất hồ sơ"
+
+#: templates/base.html:215
+msgid "Cerrar sesión"
+msgstr "Đăng xuất"
+
+#: templates/base.html:233 templates/login.html:3 templates/login.html:6
+msgid "Iniciar sesión"
+msgstr "Đăng nhập"
+
+#: templates/base.html:234 templates/register.html:16
+msgid "Registrarse"
+msgstr "Đăng ký"
+
+#: templates/base.html:248 templates/base.html:321
+msgid "Cerrar"
+msgstr "Đóng"
+
+#: templates/base.html:260
+msgid "Año actual"
+msgstr "Năm hiện tại"
+
+#: templates/base.html:260
+msgid "Conectando Pioneros."
+msgstr "Kết nối những người tiên phong."
+
+#: templates/base.html:320
+#, fuzzy
+msgid "Citar Publicación"
+msgstr "Xóa bài đăng"
+
+#: templates/base.html:326
+#, fuzzy
+msgid "Añade un comentario (opcional):"
+msgstr "Thêm hình ảnh (tùy chọn)"
+
+#: templates/base.html:327
+#, fuzzy
+msgid "¿Qué estás pensando sobre esto?"
+msgstr "Bạn đang nghĩ gì vậy, %(username)s?"
+
+#: templates/base.html:331
+#, fuzzy
+msgid "Cancelar"
+msgstr "Chấp nhận"
+
+#: templates/base.html:332
+#, fuzzy
+msgid "Compartir ahora"
+msgstr "Chia sẻ"
+
+#: templates/contactos.html:3
+msgid "Mis Contactos y Bloqueados"
+msgstr "Danh bạ và Người bị chặn của tôi"
+
+#: templates/contactos.html:10
+msgid "Gestionar Contactos"
+msgstr "Quản lý Danh bạ"
+
+#: templates/contactos.html:15
+msgid "Buscar en mis contactos..."
+msgstr "Tìm kiếm trong danh bạ của tôi..."
+
+#: templates/contactos.html:32
+msgid "Usuarios Bloqueados"
+msgstr "Người dùng bị chặn"
+
+#: templates/contactos.html:62
+#, python-format
+msgid ""
+"No se encontraron contactos que coincidan con "
+"\"<strong>%(term)s</strong>\"."
+msgstr "Không tìm thấy liên hệ nào khớp với \"<strong>%(term)s</strong>\"."
+
+#: templates/contactos.html:63
+msgid "Mostrar todos los contactos"
+msgstr "Hiển thị tất cả liên hệ"
+
+#: templates/contactos.html:68
+msgid "Aún no tienes contactos."
+msgstr "Bạn chưa có liên hệ nào."
+
+#: templates/contactos.html:69
+msgid ""
+"Puedes enviar solicitudes de contacto desde los perfiles de otros "
+"usuarios."
+msgstr "Bạn có thể gửi yêu cầu kết bạn từ hồ sơ của người dùng khác."
+
+#: templates/contactos.html:81
+msgid ""
+"Aquí puedes ver a los usuarios que has bloqueado. Si desbloqueas a "
+"alguien, podrás ver su contenido de nuevo, pero tendrás que volver a "
+"enviar una solicitud de contacto si deseas reconectar."
+msgstr ""
+"Tại đây bạn có thể xem những người dùng bạn đã chặn. Nếu bạn bỏ chặn ai "
+"đó, bạn sẽ có thể xem lại nội dung của họ, nhưng bạn sẽ phải gửi lại yêu "
+"cầu kết bạn nếu muốn kết nối lại."
+
+#: templates/contactos.html:100
+msgid "Desbloquear"
+msgstr "Bỏ chặn"
+
+#: templates/contactos.html:108
+msgid "No has bloqueado a ningún usuario."
+msgstr "Bạn chưa chặn người dùng nào."
+
+#: templates/conversacion.html:3
+#, python-format
+msgid "Conversación con @%(username)s"
+msgstr "Cuộc trò chuyện với @%(username)s"
+
+#: templates/conversacion.html:56
+msgid "Volver a Mensajes"
+msgstr "Quay lại Tin nhắn"
+
+#: templates/conversacion.html:81
+msgid "Aún no hay mensajes. ¡Envía el primero!"
+msgstr "Chưa có tin nhắn nào. Hãy gửi tin nhắn đầu tiên!"
+
+#: templates/conversacion.html:89
+msgid "Escribe un mensaje..."
+msgstr "Viết tin nhắn..."
+
+#: templates/conversacion.html:90
+msgid "Enviar"
+msgstr "Gửi"
+
+#: templates/conversacion.html:107 templates/conversacion.html:174
+msgid "Hubo un error al enviar tu mensaje. Inténtalo de nuevo."
+msgstr "Đã xảy ra lỗi khi gửi tin nhắn của bạn. Vui lòng thử lại."
+
+#: templates/conversacion.html:179
+msgid "Hubo un error de red. Por favor, revisa tu conexión."
+msgstr "Đã xảy ra lỗi mạng. Vui lòng kiểm tra kết nối của bạn."
+
+#: templates/feed.html:4
+msgid "Feed"
+msgstr "Bảng tin"
+
+#: templates/feed.html:40
+msgid "Últimas publicaciones"
+msgstr "Bài đăng mới nhất"
+
+#: templates/feed.html:45
+msgid "Nueva Publicación"
+msgstr "Bài đăng mới"
+
+#: templates/feed.html:48 templates/view_section.html:56
+#, python-format
+msgid "¿Qué estás pensando, %(username)s?"
+msgstr "Bạn đang nghĩ gì vậy, %(username)s?"
+
+#: templates/feed.html:52 templates/view_section.html:60
+msgid "Añadir imagen (opcional)"
+msgstr "Thêm hình ảnh (tùy chọn)"
+
+#: templates/feed.html:59
+msgid "Seleccionar Sección (opcional)"
+msgstr ""
+
+#: templates/feed.html:61
+msgid "Ninguna"
+msgstr ""
+
+#: templates/feed.html:70 templates/view_section.html:78
+msgid "Publicar"
+msgstr "Đăng"
+
+#: templates/feed.html:93 templates/ver_perfil.html:122
+#: templates/ver_post.html:60 templates/view_section.html:103
+msgid "¿Estás seguro de que quieres eliminar esta publicación?"
+msgstr "Bạn có chắc chắn muốn xóa bài đăng này không?"
+
+#: templates/feed.html:94 templates/ver_post.html:61
+#: templates/view_section.html:104
+msgid "Eliminar publicación"
+msgstr "Xóa bài đăng"
+
+#: templates/feed.html:99 templates/feed.html:184 templates/ver_perfil.html:128
+#: templates/ver_perfil.html:203 templates/ver_post.html:67
+#: templates/view_section.html:109
+msgid "Imagen de la publicación"
+msgstr "Hình ảnh của bài đăng"
+
+#: templates/feed.html:128 templates/feed.html:213
+#: templates/ver_perfil.html:152 templates/ver_perfil.html:227
+#: templates/ver_post.html:114 templates/view_section.html:138
+msgid "Comentarios"
+msgstr "Bình luận"
+
+#: templates/feed.html:134 templates/feed.html:219
+#: templates/ver_perfil.html:158 templates/ver_perfil.html:233
+#: templates/ver_post.html:102 templates/view_section.html:144
+#, fuzzy
+msgid "Citar o compartir"
+msgstr "Chia sẻ"
+
+#: templates/feed.html:139 templates/ver_post.html:119
+#: templates/view_section.html:149
+msgid "No hay comentarios aún. ¡Sé el primero!"
+msgstr "Chưa có bình luận nào. Hãy là người đầu tiên!"
+
+#: templates/feed.html:143 templates/ver_post.html:126
+#: templates/view_section.html:153
+msgid "Escribe un comentario..."
+msgstr "Viết bình luận..."
+
+#: templates/feed.html:145 templates/feed.html:230 templates/ver_post.html:129
+#: templates/view_section.html:155
+msgid "Comentar"
+msgstr "Bình luận"
+
+#: templates/feed.html:159 templates/ver_perfil.html:171
+msgid "compartió esto"
+msgstr "đã chia sẻ điều này"
+
+#: templates/feed.html:159 templates/ver_perfil.html:171
+#, fuzzy
+msgid "con el siguiente comentario:"
+msgstr "Xóa bình luận"
+
+#: templates/feed.html:224
+msgid "No hay comentarios aún."
+msgstr "Chưa có bình luận nào."
+
+#: templates/feed.html:228
+msgid "Escribe un comentario sobre la publicación original..."
+msgstr "Viết bình luận về bài đăng gốc..."
+
+#: templates/feed.html:240
+msgid "Aún no hay publicaciones en el feed."
+msgstr "Chưa có bài đăng nào trên bảng tin."
+
+#: templates/feed.html:241
+msgid "¡Sigue a otros pioneros o crea tu primera publicación!"
+msgstr "Theo dõi những người tiên phong khác hoặc tạo bài đăng đầu tiên của bạn!"
+
+#: templates/feed.html:270 templates/ver_post.html:153
+#: templates/view_section.html:199
+msgid "Respondiendo a"
+msgstr "Đang trả lời"
+
+#: templates/index.html:3
+msgid "Bienvenido a PiVerse"
+msgstr "Chào mừng đến với PiVerse"
+
+#: templates/index.html:9
+msgid ""
+"Tu universo social dentro del ecosistema Pi Network. Conéctate, comparte "
+"y crece con otros pioneros."
+msgstr ""
+"Vũ trụ xã hội của bạn trong hệ sinh thái Pi Network. Kết nối, chia sẻ và "
+"phát triển cùng những người tiên phong khác."
+
+#: templates/index.html:13
+msgid "Explorar el Feed"
+msgstr "Khám phá Bảng tin"
+
+#: templates/index.html:17
+#, fuzzy, python-format
+msgid ""
+"\n"
+"                    Por favor, %(profile_link_start)scompleta tu perfil "
+"público%(profile_link_end)s para acceder al feed y todas las funciones.\n"
+"                    "
+msgstr ""
+"\n"
+"                      Vui lòng %(profile_link_start)shoàn tất hồ sơ công "
+"khai%(profile_link_end)s của bạn để truy cập bảng tin và tất cả các tính "
+"năng.\n"
+"                    "
+
+#: templates/index.html:23
+msgid "Únete a PiVerse"
+msgstr "Tham gia PiVerse"
+
+#: templates/index.html:24
+msgid "Iniciar Sesión"
+msgstr "Đăng nhập"
+
+#: templates/index.html:32
+#, python-format
+msgid "Hola de nuevo, <strong>%(username)s</strong>. ¿Listo para interactuar?"
+msgstr "Chào mừng trở lại, <strong>%(username)s</strong>. Sẵn sàng tương tác chưa?"
+
+#: templates/index.html:41
+msgid "Conecta"
+msgstr "Kết nối"
+
+#: templates/index.html:42
+msgid ""
+"Encuentra y establece lazos con otros pioneros de la red Pi de todo el "
+"mundo."
+msgstr ""
+"Tìm kiếm và thiết lập mối quan hệ với những người tiên phong khác của "
+"mạng Pi trên toàn thế giới."
+
+#: templates/index.html:50
+msgid "Comparte"
+msgstr "Chia sẻ"
+
+#: templates/index.html:51
+msgid ""
+"Publica tus ideas innovadoras, proyectos y las últimas noticias sobre Pi "
+"Network."
+msgstr "Đăng tải những ý tưởng đổi mới, dự án và tin tức mới nhất về Pi Network."
+
+#: templates/index.html:59
+msgid "Crece"
+msgstr "Phát triển"
+
+#: templates/index.html:60
+msgid "Participa en discusiones, aprende y haz crecer el valor del ecosistema Pi."
+msgstr "Tham gia thảo luận, học hỏi và làm tăng giá trị của hệ sinh thái Pi."
+
+#: templates/login.html:9 templates/register.html:9
+msgid "Nombre de usuario:"
+msgstr "Tên người dùng:"
+
+#: templates/login.html:13 templates/register.html:13
+msgid "Contraseña:"
+msgstr "Mật khẩu:"
+
+#: templates/login.html:16
+msgid "Entrar"
+msgstr "Đăng nhập"
+
+#: templates/login.html:18
+#, python-format
+msgid "¿No tienes cuenta? <a href=\"%(register_url)s\">Regístrate aquí</a>"
+msgstr "Chưa có tài khoản? <a href=\"%(register_url)s\">Đăng ký tại đây</a>"
+
+#: templates/mensajes.html:3
+msgid "Mis Mensajes"
+msgstr "Tin nhắn của tôi"
+
+#: templates/mensajes.html:35
+msgid "No tienes conversaciones."
+msgstr "Bạn không có cuộc trò chuyện nào."
+
+#: templates/mensajes.html:36
+msgid "Puedes iniciar una conversación desde el perfil de uno de tus contactos."
+msgstr ""
+"Bạn có thể bắt đầu cuộc trò chuyện từ hồ sơ của một trong các liên hệ của"
+" mình."
+
+#: templates/mensajes.html:46
+msgid "Selecciona una conversación"
+msgstr "Chọn một cuộc trò chuyện"
+
+#: templates/mensajes.html:47
+msgid "O inicia una nueva desde el perfil de un contacto."
+msgstr "Hoặc bắt đầu một cuộc trò chuyện mới từ hồ sơ của một liên hệ."
+
+#: templates/notificaciones.html:3
+msgid "Mis Notificaciones"
+msgstr "Thông báo của tôi"
+
+#: templates/notificaciones.html:20 templates/ver_perfil.html:55
+msgid "Aceptar"
+msgstr "Chấp nhận"
+
+#: templates/notificaciones.html:23 templates/ver_perfil.html:56
+msgid "Rechazar"
+msgstr "Từ chối"
+
+#: templates/notificaciones.html:33
+msgid "No tienes notificaciones."
+msgstr "Bạn không có thông báo nào."
+
+#: templates/profile.html:3
+msgid "Mi perfil"
+msgstr "Hồ sơ của tôi"
+
+#: templates/profile.html:6
+msgid "Editar perfil"
+msgstr "Chỉnh sửa hồ sơ"
+
+#: templates/profile.html:10
+msgid "Nombre de usuario público"
+msgstr "Tên người dùng công khai"
+
+#: templates/profile.html:16
+msgid "Biografía"
+msgstr "Tiểu sử"
+
+#: templates/profile.html:21 templates/profile.html:28
+msgid "Imagen de perfil"
+msgstr "Ảnh hồ sơ"
+
+#: templates/profile.html:27
+msgid "Vista previa actual:"
+msgstr "Xem trước hiện tại:"
+
+#: templates/profile.html:32
+msgid "Guardar cambios"
+msgstr "Lưu thay đổi"
+
+#: templates/register.html:3 templates/register.html:6
+msgid "Registro"
+msgstr "Đăng ký"
+
+#: templates/register.html:18
+#, python-format
+msgid "¿Ya tienes cuenta? <a href=\"%(login_url)s\">Inicia sesión aquí</a>"
+msgstr "Đã có tài khoản? <a href=\"%(login_url)s\">Đăng nhập tại đây</a>"
+
+#: templates/sections_list.html:3 templates/sections_list.html:8
+msgid "Secciones de Discusión"
+msgstr ""
+
+#: templates/sections_list.html:23
+#, fuzzy
+msgid "Ver publicaciones"
+msgstr "Bài đăng mới nhất"
+
+#: templates/sections_list.html:30
+#, fuzzy
+msgid "Aún no hay secciones definidas."
+msgstr "Chưa có bài đăng nào trên bảng tin."
+
+#: templates/ver_perfil.html:3
+#, python-format
+msgid "Perfil de @%(username)s"
+msgstr "Hồ sơ của @%(username)s"
+
+#: templates/ver_perfil.html:44
+msgid "Editar mi perfil"
+msgstr "Chỉnh sửa hồ sơ của tôi"
+
+#: templates/ver_perfil.html:48
+msgid "Sin biografía."
+msgstr "Không có tiểu sử."
+
+#: templates/ver_perfil.html:53
+msgid "te ha enviado una solicitud de contacto."
+msgstr "đã gửi cho bạn một yêu cầu kết bạn."
+
+#: templates/ver_perfil.html:60
+msgid "Enviar Mensaje"
+msgstr "Gửi tin nhắn"
+
+#: templates/ver_perfil.html:61
+msgid "¿Estás seguro de que quieres eliminar este contacto?"
+msgstr "Bạn có chắc chắn muốn xóa liên hệ này không?"
+
+#: templates/ver_perfil.html:61
+msgid "Eliminar contacto"
+msgstr "Xóa liên hệ"
+
+#: templates/ver_perfil.html:64
+msgid "Solicitud de contacto enviada y pendiente de respuesta."
+msgstr "Yêu cầu kết bạn đã được gửi và đang chờ phản hồi."
+
+#: templates/ver_perfil.html:65
+msgid "¿Estás seguro de que quieres cancelar esta solicitud de contacto?"
+msgstr "Bạn có chắc chắn muốn hủy yêu cầu kết bạn này không?"
+
+#: templates/ver_perfil.html:65
+msgid "Cancelar Solicitud"
+msgstr "Hủy Yêu cầu"
+
+#: templates/ver_perfil.html:67
+msgid "Enviar solicitud de contacto"
+msgstr "Gửi yêu cầu kết bạn"
+
+#: templates/ver_perfil.html:71
+msgid "Más acciones"
+msgstr "Hành động khác"
+
+#: templates/ver_perfil.html:79
+msgid "Desbloquear Usuario"
+msgstr "Bỏ chặn Người dùng"
+
+#: templates/ver_perfil.html:85
+msgid ""
+"¿Estás seguro de que quieres bloquear a este usuario? No podrás ver su "
+"contenido ni interactuar, y se eliminará de tus contactos si lo es."
+msgstr ""
+"Bạn có chắc chắn muốn chặn người dùng này không? Bạn sẽ không thể xem nội"
+" dung của họ hoặc tương tác, và họ sẽ bị xóa khỏi danh bạ của bạn nếu có."
+
+#: templates/ver_perfil.html:87
+msgid "Bloquear Usuario"
+msgstr "Chặn Người dùng"
+
+#: templates/ver_perfil.html:99
+#, python-format
+msgid "Actividad de @%(username)s:"
+msgstr "Hoạt động của @%(username)s:"
+
+#: templates/ver_perfil.html:123
+msgid "Eliminar"
+msgstr "Xóa"
+
+#: templates/ver_perfil.html:243
+msgid ""
+"Este usuario aún no tiene actividad (publicaciones o contenido "
+"compartido)."
+msgstr ""
+"Người dùng này chưa có hoạt động nào (bài đăng hoặc nội dung được chia "
+"sẻ)."
+
+#: templates/ver_post.html:4
+#, python-format
+msgid "Publicación de @%(username)s"
+msgstr "Bài đăng của @%(username)s"
+
+#: templates/ver_post.html:33
+msgid "Volver"
+msgstr "Quay lại"
+
+#: templates/ver_post.html:53
+msgid "en"
+msgstr ""
+
+#: templates/ver_post.html:123
+msgid "Escribe un nuevo comentario"
+msgstr "Viết bình luận mới"
+
+#: templates/view_section.html:4 templates/view_section.html:41
+msgid "Sección:"
+msgstr ""
+
+#: templates/view_section.html:43
+msgid "Ver todas las secciones"
+msgstr ""
+
+#: templates/view_section.html:52
+#, fuzzy
+msgid "Nueva Publicación en esta Sección"
+msgstr "Bài đăng mới"
+
+#: templates/view_section.html:67
+msgid "Sección"
+msgstr ""
+
+#: templates/view_section.html:82
+#, fuzzy
+msgid "Publicaciones en esta sección"
+msgstr "Chưa có bài đăng nào trên bảng tin."
+
+#: templates/view_section.html:165
+#, fuzzy
+msgid "Aún no hay publicaciones en esta sección."
+msgstr "Chưa có bài đăng nào trên bảng tin."
+
+#: templates/view_section.html:166
+msgid "¡Sé el primero en publicar algo aquí!"
+msgstr ""
+
+#: venv/Lib/site-packages/click/_termui_impl.py:556
+#, python-brace-format
+msgid "{editor}: Editing failed"
+msgstr "{editor}: Chỉnh sửa thất bại"
+
+#: venv/Lib/site-packages/click/_termui_impl.py:560
+#, python-brace-format
+msgid "{editor}: Editing failed: {e}"
+msgstr "{editor}: Chỉnh sửa thất bại: {e}"
+
+#: venv/Lib/site-packages/click/core.py:1124
+msgid "Aborted!"
+msgstr "Đã hủy!"
+
+#: venv/Lib/site-packages/click/core.py:1349
+#: venv/Lib/site-packages/click/core.py:1379
+#, python-brace-format
+msgid "(Deprecated) {text}"
+msgstr "(Không dùng nữa) {text}"
+
+#: venv/Lib/site-packages/click/core.py:1396
+msgid "Options"
+msgstr "Tùy chọn"
+
+#: venv/Lib/site-packages/click/core.py:1422
+#, python-brace-format
+msgid "Got unexpected extra argument ({args})"
+msgid_plural "Got unexpected extra arguments ({args})"
+msgstr[0] "Đã nhận được đối số thừa không mong muốn ({args})"
+
+#: venv/Lib/site-packages/click/core.py:1438
+#, python-brace-format
+msgid "DeprecationWarning: The command {name!r} is deprecated."
+msgstr "Cảnh báo Ngừng sử dụng: Lệnh {name!r} đã không còn được dùng nữa."
+
+#: venv/Lib/site-packages/click/core.py:1645
+msgid "Commands"
+msgstr "Lệnh"
+
+#: venv/Lib/site-packages/click/core.py:1677
+msgid "Missing command."
+msgstr "Thiếu lệnh."
+
+#: venv/Lib/site-packages/click/core.py:1755
+#, python-brace-format
+msgid "No such command {name!r}."
+msgstr "Không có lệnh nào như {name!r}."
+
+#: venv/Lib/site-packages/click/core.py:2313
+msgid "Value must be an iterable."
+msgstr "Giá trị phải là một đối tượng có thể lặp lại."
+
+#: venv/Lib/site-packages/click/core.py:2334
+#, python-brace-format
+msgid "Takes {nargs} values but 1 was given."
+msgid_plural "Takes {nargs} values but {len} were given."
+msgstr[0] "Nhận {nargs} giá trị nhưng chỉ có 1 giá trị được cung cấp."
+
+#: venv/Lib/site-packages/click/core.py:2783
+#, python-brace-format
+msgid "env var: {var}"
+msgstr "biến môi trường: {var}"
+
+#: venv/Lib/site-packages/click/core.py:2813
+msgid "(dynamic)"
+msgstr "(động)"
+
+#: venv/Lib/site-packages/click/core.py:2828
+#, python-brace-format
+msgid "default: {default}"
+msgstr "mặc định: {default}"
+
+#: venv/Lib/site-packages/click/core.py:2841
+msgid "required"
+msgstr "bắt buộc"
+
+#: venv/Lib/site-packages/click/decorators.py:457
+#, python-format
+msgid "%(prog)s, version %(version)s"
+msgstr "%(prog)s, phiên bản %(version)s"
+
+#: venv/Lib/site-packages/click/decorators.py:520
+msgid "Show the version and exit."
+msgstr "Hiển thị phiên bản và thoát."
+
+#: venv/Lib/site-packages/click/decorators.py:541
+msgid "Show this message and exit."
+msgstr "Hiển thị thông báo này và thoát."
+
+#: venv/Lib/site-packages/click/exceptions.py:49
+#: venv/Lib/site-packages/click/exceptions.py:88
+#, python-brace-format
+msgid "Error: {message}"
+msgstr "Lỗi: {message}"
+
+#: venv/Lib/site-packages/click/exceptions.py:80
+#, python-brace-format
+msgid "Try '{command} {option}' for help."
+msgstr "Thử '{command} {option}' để được trợ giúp."
+
+#: venv/Lib/site-packages/click/exceptions.py:129
+#, python-brace-format
+msgid "Invalid value: {message}"
+msgstr "Giá trị không hợp lệ: {message}"
+
+#: venv/Lib/site-packages/click/exceptions.py:131
+#, python-brace-format
+msgid "Invalid value for {param_hint}: {message}"
+msgstr "Giá trị không hợp lệ cho {param_hint}: {message}"
+
+#: venv/Lib/site-packages/click/exceptions.py:187
+msgid "Missing argument"
+msgstr "Thiếu đối số"
+
+#: venv/Lib/site-packages/click/exceptions.py:189
+msgid "Missing option"
+msgstr "Thiếu tùy chọn"
+
+#: venv/Lib/site-packages/click/exceptions.py:191
+msgid "Missing parameter"
+msgstr "Thiếu tham số"
+
+#: venv/Lib/site-packages/click/exceptions.py:193
+#, python-brace-format
+msgid "Missing {param_type}"
+msgstr "Thiếu {param_type}"
+
+#: venv/Lib/site-packages/click/exceptions.py:200
+#, python-brace-format
+msgid "Missing parameter: {param_name}"
+msgstr "Thiếu tham số: {param_name}"
+
+#: venv/Lib/site-packages/click/exceptions.py:220
+#, python-brace-format
+msgid "No such option: {name}"
+msgstr "Không có tùy chọn nào như: {name}"
+
+#: venv/Lib/site-packages/click/exceptions.py:232
+#, python-brace-format
+msgid "Did you mean {possibility}?"
+msgid_plural "(Possible options: {possibilities})"
+msgstr[0] "Ý bạn là {possibility}?"
+
+#: venv/Lib/site-packages/click/exceptions.py:270
+msgid "unknown error"
+msgstr "lỗi không xác định"
+
+#: venv/Lib/site-packages/click/exceptions.py:277
+#, python-brace-format
+msgid "Could not open file {filename!r}: {message}"
+msgstr "Không thể mở tệp {filename!r}: {message}"
+
+#: venv/Lib/site-packages/click/parser.py:233
+#, python-brace-format
+msgid "Argument {name!r} takes {nargs} values."
+msgstr "Đối số {name!r} nhận {nargs} giá trị."
+
+#: venv/Lib/site-packages/click/parser.py:415
+#, python-brace-format
+msgid "Option {name!r} does not take a value."
+msgstr "Tùy chọn {name!r} không nhận giá trị."
+
+#: venv/Lib/site-packages/click/parser.py:476
+#, python-brace-format
+msgid "Option {name!r} requires an argument."
+msgid_plural "Option {name!r} requires {nargs} arguments."
+msgstr[0] "Tùy chọn {name!r} yêu cầu một đối số."
+
+#: venv/Lib/site-packages/click/shell_completion.py:326
+msgid "Shell completion is not supported for Bash versions older than 4.4."
+msgstr "Hoàn thành shell không được hỗ trợ cho các phiên bản Bash cũ hơn 4.4."
+
+#: venv/Lib/site-packages/click/shell_completion.py:333
+msgid "Couldn't detect Bash version, shell completion is not supported."
+msgstr "Không thể phát hiện phiên bản Bash, hoàn thành shell không được hỗ trợ."
+
+#: venv/Lib/site-packages/click/termui.py:158
+msgid "Repeat for confirmation"
+msgstr "Lặp lại để xác nhận"
+
+#: venv/Lib/site-packages/click/termui.py:174
+msgid "Error: The value you entered was invalid."
+msgstr "Lỗi: Giá trị bạn đã nhập không hợp lệ."
+
+#: venv/Lib/site-packages/click/termui.py:176
+#, python-brace-format
+msgid "Error: {e.message}"
+msgstr "Lỗi: {e.message}"
+
+#: venv/Lib/site-packages/click/termui.py:187
+msgid "Error: The two entered values do not match."
+msgstr "Lỗi: Hai giá trị đã nhập không khớp."
+
+#: venv/Lib/site-packages/click/termui.py:243
+msgid "Error: invalid input"
+msgstr "Lỗi: đầu vào không hợp lệ"
+
+#: venv/Lib/site-packages/click/termui.py:773
+msgid "Press any key to continue..."
+msgstr "Nhấn phím bất kỳ để tiếp tục..."
+
+#: venv/Lib/site-packages/click/types.py:267
+#, python-brace-format
+msgid ""
+"Choose from:\n"
+"\t{choices}"
+msgstr ""
+"Chọn từ:\n"
+"\t{choices}"
+
+#: venv/Lib/site-packages/click/types.py:299
+#, python-brace-format
+msgid "{value!r} is not {choice}."
+msgid_plural "{value!r} is not one of {choices}."
+msgstr[0] "{value!r} không phải là {choice}."
+
+#: venv/Lib/site-packages/click/types.py:393
+#, python-brace-format
+msgid "{value!r} does not match the format {format}."
+msgid_plural "{value!r} does not match the formats {formats}."
+msgstr[0] "{value!r} không khớp với định dạng {format}."
+
+#: venv/Lib/site-packages/click/types.py:415
+#, python-brace-format
+msgid "{value!r} is not a valid {number_type}."
+msgstr "{value!r} không phải là một {number_type} hợp lệ."
+
+#: venv/Lib/site-packages/click/types.py:471
+#, python-brace-format
+msgid "{value} is not in the range {range}."
+msgstr "{value} không nằm trong phạm vi {range}."
+
+#: venv/Lib/site-packages/click/types.py:612
+#, python-brace-format
+msgid "{value!r} is not a valid boolean."
+msgstr "{value!r} không phải là một giá trị boolean hợp lệ."
+
+#: venv/Lib/site-packages/click/types.py:636
+#, python-brace-format
+msgid "{value!r} is not a valid UUID."
+msgstr "{value!r} không phải là một UUID hợp lệ."
+
+#: venv/Lib/site-packages/click/types.py:826
+msgid "file"
+msgstr "tệp"
+
+#: venv/Lib/site-packages/click/types.py:828
+msgid "directory"
+msgstr "thư mục"
+
+#: venv/Lib/site-packages/click/types.py:830
+msgid "path"
+msgstr "đường dẫn"
+
+#: venv/Lib/site-packages/click/types.py:881
+#, python-brace-format
+msgid "{name} {filename!r} does not exist."
+msgstr "{name} {filename!r} không tồn tại."
+
+#: venv/Lib/site-packages/click/types.py:890
+#, python-brace-format
+msgid "{name} {filename!r} is a file."
+msgstr "{name} {filename!r} là một tệp."
+
+#: venv/Lib/site-packages/click/types.py:898
+#, python-brace-format
+msgid "{name} {filename!r} is a directory."
+msgstr "{name} {filename!r} là một thư mục."
+
+#: venv/Lib/site-packages/click/types.py:907
+#, python-brace-format
+msgid "{name} {filename!r} is not readable."
+msgstr "{name} {filename!r} không thể đọc được."
+
+#: venv/Lib/site-packages/click/types.py:916
+#, python-brace-format
+msgid "{name} {filename!r} is not writable."
+msgstr "{name} {filename!r} không thể ghi được."
+
+#: venv/Lib/site-packages/click/types.py:925
+#, python-brace-format
+msgid "{name} {filename!r} is not executable."
+msgstr "{name} {filename!r} không thể thực thi được."
+
+#: venv/Lib/site-packages/click/types.py:992
+#, python-brace-format
+msgid "{len_type} values are required, but {len_value} was given."
+msgid_plural "{len_type} values are required, but {len_value} were given."
+msgstr[0] "Yêu cầu {len_type} giá trị, nhưng chỉ có {len_value} được cung cấp."
+
+#~ msgid "Has compartido tu propia publicación (o ya lo habías hecho)."
+#~ msgstr "Bạn đã chia sẻ bài đăng của chính mình (hoặc đã làm điều đó trước đây)."
+
+#~ msgid "Ya has compartido esta publicación anteriormente."
+#~ msgstr "Bạn đã chia sẻ bài đăng này trước đây."
+

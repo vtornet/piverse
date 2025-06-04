@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ _('Inicio') }}</title>
+</head>
+<body>
+    <h1>{{ _('Bienvenido a PiVerse') }}</h1>
+    {% if 'username' in session %}
+        <p>{% trans username=session['username'] %}Hola, {{ username }}!{% endtrans %}</p>
+        <p><a href="{{ url_for('profile') }}">{{ _('Editar mi perfil') }}</a></p>
+        <p><a href="{{ url_for('logout') }}">{{ _('Cerrar sesión') }}</a></p>
+    {% else %}
+        <p>{% trans %}<a href="{{ url_for('login') }}">Iniciar sesión</a> o <a href="{{ url_for('register') }}">Registrarse</a>{% endtrans %}</p>
+    {% endif %}
+</body>
+</html>
+
