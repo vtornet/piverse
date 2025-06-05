@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, url_for, flash, jsonify
+from flask import Flask, render_template, request, redirect, session, url_for, flash, jsonify, Response
 from flask_babel import Babel, gettext as _, lazy_gettext as _l, get_locale as get_babel_locale, \
                         format_datetime, format_date, format_time, format_timedelta, format_number
 import sqlite3
@@ -6,6 +6,7 @@ import os
 import re
 import requests # Para hacer peticiones HTTP
 import urllib.parse # Para construir URLs absolutas para las imágenes
+import time
 from bs4 import BeautifulSoup # Para analizar HTML
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -2685,6 +2686,63 @@ def highlight_term(text_content, query):
     except Exception as e:
         print(f"Error durante el resaltado: {e}")
         return text_content
+    
+@app.route('/stream-notifications')
+def stream_notifications():
+    if 'user_id' not in session:
+        # No debería llegarse aquí si el frontend solo lo llama para usuarios logueados,
+        # pero es una buena salvaguarda.
+        return Response(status=401)
+
+    user_id = session['user_id']
+
+    def event_stream():
+        last_notif_count = -1
+        last_msg_count = -1
+
+        while True:
+            # Obtener el recuento actual de notificaciones y mensajes no leídos
+            # Esta lógica es similar a la que tienes en inject_global_vars
+            num_notificaciones_no_leidas = 0
+            num_mensajes_no_leidos = 0
+
+            with sqlite3.connect('users.db') as conn:
+                c = conn.cursor()
+                c.execute('SELECT COUNT(*) FROM notificaciones WHERE user_id = ? AND leida = 0', (user_id,))
+                res_notif_count = c.fetchone()
+                num_notificaciones_no_leidas = res_notif_count[0] if res_notif_count else 0
+
+                # Lógica para mensajes no leídos (copiada de inject_global_vars)
+                excluded_ids = get_blocked_and_blocking_ids(user_id, c) # Asume que esta función está disponible
+                params = [user_id, user_id]
+                not_in_clause = ""
+                if excluded_ids:
+                    not_in_clause = f" AND m.sender_id NOT IN ({','.join('?' for _ in excluded_ids)}) "
+                    params.extend(list(excluded_ids))
+
+                c.execute(f'''SELECT COUNT(m.id) FROM messages m 
+                              JOIN conversation_participants cp ON m.conversation_id = cp.conversation_id 
+                              WHERE cp.user_id = ? AND m.sender_id != ? AND m.is_read = 0 {not_in_clause}''', tuple(params))
+                res_msg_count = c.fetchone()
+                num_mensajes_no_leidos = res_msg_count[0] if res_msg_count else 0
+
+            if num_notificaciones_no_leidas != last_notif_count or num_mensajes_no_leidos != last_msg_count:
+                # Crear el payload de datos. Usaremos JSON para poder enviar múltiples valores.
+                # Importante: el formato SSE requiere "data: " seguido de tus datos y dos saltos de línea "\n\n"
+                import json # Asegúrate que json está importado
+                data_payload = json.dumps({
+                    'unread_notifications': num_notificaciones_no_leidas,
+                    'unread_messages': num_mensajes_no_leidos
+                })
+                yield f"data: {data_payload}\n\n"
+
+                last_notif_count = num_notificaciones_no_leidas
+                last_msg_count = num_mensajes_no_leidos
+
+            time.sleep(5) # Esperar 5 segundos antes de comprobar de nuevo
+
+    # Devolver una respuesta de tipo 'text/event-stream'
+    return Response(event_stream(), mimetype='text/event-stream')
 
 if __name__ == '__main__':
     print("Iniciando la base de datos y la aplicación web...")

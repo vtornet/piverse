@@ -191,44 +191,40 @@
 <body>
 
 <div class="content-wrapper">
-    <nav class="navbar navbar-expand-lg fixed-top px-3">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top px-3">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
                 <img src="{{ url_for('static', filename='images/piverse.png') }}" alt="{{ _('Logo de PiVerse') }}" style="max-height: 35px; margin-right: 10px; border-radius: 4px;">
                 <span style="color: #FFFFFF; font-weight: bold;">PiVerse</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="{{ _('Alternar navegación') }}">
-                <span class="navbar-toggler-icon" style="background-image: url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.75)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e\");"></span>
+                <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
                     {% if 'user_id' in session %}
                         <li class="nav-item">
                             <form class="d-flex pt-1" method="GET" action="{{ url_for('search') }}" role="search">
-                                <input class="form-control form-control-sm me-1" type="search" name="q" placeholder="{{ _('Buscar...') }}" aria-label="{{ _('Buscar') }}" style="width: 150px; height: 31px;"> {# Ajustar altura para alinear mejor #}
+                                <input class="form-control form-control-sm me-1" type="search" name="q" placeholder="{{ _('Buscar...') }}" aria-label="{{ _('Buscar') }}" style="width: 150px; height: 31px;">
                                 <button class="btn btn-sm btn-outline-light" type="submit" style="height: 31px; line-height: 1.2;"><i class="bi bi-search"></i></button>
                             </form>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link position-relative" href="{{ url_for('notificaciones') }}">
                                 <i class="bi bi-bell-fill"></i> {{ _('Notificaciones') }}
-                                {% if notificaciones_no_leidas_count > 0 %}
-                                    <span class="badge rounded-pill bg-danger notification-badge">
-                                        {{ notificaciones_no_leidas_count }}
-                                        <span class="visually-hidden">{{ _('notificaciones no leídas') }}</span>
-                                    </span>
-                                {% endif %}
+                                <span class="badge rounded-pill bg-danger notification-badge {% if notificaciones_no_leidas_count == 0 %}d-none{% endif %}" id="notifications-count-badge">
+                                    {{ notificaciones_no_leidas_count if notificaciones_no_leidas_count > 0 else '' }}
+                                    <span class="visually-hidden">{{ _('notificaciones no leídas') }}</span>
+                                </span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link position-relative" href="{{ url_for('mensajes') }}">
                                 <i class="bi bi-chat-dots-fill"></i> {{ _('Mensajes') }}
-                                {% if unread_messages_count > 0 %}
-                                    <span class="badge rounded-pill bg-danger notification-badge">
-                                        {{ unread_messages_count }}
-                                        <span class="visually-hidden">{{ _('mensajes no leídos') }}</span>
-                                    </span>
-                                {% endif %}
+                                <span class="badge rounded-pill bg-danger notification-badge {% if unread_messages_count == 0 %}d-none{% endif %}" id="messages-count-badge">
+                                    {{ unread_messages_count if unread_messages_count > 0 else '' }}
+                                    <span class="visually-hidden">{{ _('mensajes no leídos') }}</span>
+                                </span>
                             </a>
                         </li>
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('feed') }}"><i class="bi bi-house-door-fill"></i> {{ _('Inicio') }}</a></li>
@@ -347,6 +343,7 @@
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Script para el modal de compartir
     const shareModalElement = document.getElementById('shareModal');
     if (shareModalElement) {
         const shareModalForm = document.getElementById('share-modal-form');
@@ -369,6 +366,48 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // --- INICIO: LÓGICA PARA SERVER-SENT EVENTS (SSE) ---
+    const notificationsBadge = document.getElementById('notifications-count-badge');
+    const messagesBadge = document.getElementById('messages-count-badge');
+
+    // Solo intentamos conectar si el usuario está logueado
+    if (notificationsBadge && messagesBadge) {
+        const eventSource = new EventSource("{{ url_for('stream_notifications') }}");
+
+        eventSource.onmessage = function(event) {
+            try {
+                const data = JSON.parse(event.data);
+
+                // Actualizar contador de notificaciones
+                if (data.unread_notifications !== undefined) {
+                    notificationsBadge.textContent = data.unread_notifications > 0 ? data.unread_notifications : '';
+                    if (data.unread_notifications > 0) {
+                        notificationsBadge.classList.remove('d-none');
+                    } else {
+                        notificationsBadge.classList.add('d-none');
+                    }
+                }
+
+                // Actualizar contador de mensajes
+                if (data.unread_messages !== undefined) {
+                    messagesBadge.textContent = data.unread_messages > 0 ? data.unread_messages : '';
+                    if (data.unread_messages > 0) {
+                        messagesBadge.classList.remove('d-none');
+                    } else {
+                        messagesBadge.classList.add('d-none');
+                    }
+                }
+            } catch (e) {
+                console.error("Error al parsear datos SSE:", e);
+            }
+        };
+
+        eventSource.onerror = function(err) {
+            console.error("Error en EventSource:", err);
+        };
+    }
+    // --- FIN: LÓGICA PARA SERVER-SENT EVENTS (SSE) ---
 });
 </script>
 {% endblock %}
