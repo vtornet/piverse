@@ -8,12 +8,6 @@
 <style>
 /* Estilos existentes y el nuevo para quote-content-box y post-section-link */
 .mention-suggestions-list { position: absolute; background-color: white; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.15); z-index: 1000; width: auto; min-width: 200px; max-height: 200px; overflow-y: auto; margin-top: 2px; }
-.mention-suggestions-list ul { list-style: none; padding: 0; margin: 0; }
-.mention-suggestions-list li { padding: 8px 12px; cursor: pointer; display: flex; align-items: center; font-size: 0.9rem; }
-.mention-suggestions-list li:hover { background-color: #f5f5f5; }
-.mention-suggestions-list img { width: 24px; height: 24px; border-radius: 50%; margin-right: 8px; object-fit: cover; }
-.mention-suggestions-list .no-photo { width: 24px; height: 24px; border-radius: 50%; margin-right: 8px; background-color: #eee; display: inline-flex; align-items: center; justify-content: center; }
-.mention-suggestions-list .no-photo i { font-size: 12px; color: #777; }
 .comment-replies { margin-left: 40px; padding-left: 15px; border-left: 2px solid #eee; margin-top: 10px; }
 .comment-container { margin-bottom: 15px; }
 .reactions-container .reactions-palette { display: none; position: absolute; bottom: 100%; left: 0; margin-bottom: 5px; z-index: 10; white-space: nowrap; border-spacing: 2px; gap: 5px; }
@@ -70,11 +64,13 @@
             </div>
         </div>
 
-        <div id="feed-posts-container">
+        <button id="new-posts-button" class="btn btn-primary shadow-lg" style="display: none; position: fixed; top: 70px; left: 50%; transform: translateX(-50%); z-index: 1030;">
+            <i class="bi bi-arrow-up-circle-fill"></i> <span>{{ _('Ver nuevas publicaciones') }}</span>
+        </button>
+
+        <div id="feed-posts-container" data-latest-post-timestamp="{{ posts[0].activity_timestamp.isoformat() if posts and posts[0].activity_timestamp else '' }}">
             {% if posts %}
-                {% for item in posts %}
-                    {% include '_post_card.html' %}
-                {% endfor %}
+                {% include '_post_card_list.html' %}
             {% else %}
                 <div class="text-center p-5 card shadow-sm">
                     <p class="lead">{{ _('Aún no hay publicaciones en el feed.') }}</p>
@@ -91,114 +87,79 @@
 
 {% block scripts %}
 {{ super() }}
+
+{# ESTE SCRIPT ES SOLO PARA LA LÓGICA DE ESTA PÁGINA. EL RESTO ESTÁ EN BASE.HTML #}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // --- LÓGICA DE INTERACCIONES DE PUBLICACIONES (CON DELEGACIÓN DE EVENTOS) ---
-    // Usamos 'document' para delegar eventos y asegurarnos de que funcione en todo el contenido,
-    // tanto el cargado inicialmente como el dinámico.
-    document.addEventListener('click', function(e) {
-        // Lógica para la paleta de reacciones
-        const reactionTriggerBtn = e.target.closest('.reaction-trigger-btn');
-        if (reactionTriggerBtn) {
-            const palette = reactionTriggerBtn.nextElementSibling;
-            const isVisible = window.getComputedStyle(palette).display !== 'none';
-            // Primero, cerramos todas las demás paletas
-            document.querySelectorAll('.reactions-palette').forEach(p => {
-                if (p !== palette) p.style.display = 'none';
-            });
-            // Luego, abrimos o cerramos la paleta actual
-            palette.style.display = isVisible ? 'none' : 'flex';
-            return; // Salimos para no cerrar la paleta inmediatamente
-        }
-
-        // Si se hace clic fuera de una paleta o de su botón, se cierran todas
-        if (!e.target.closest('.reactions-container')) {
-            document.querySelectorAll('.reactions-palette').forEach(p => {
-                p.style.display = 'none';
-            });
-        }
-        
-        // Lógica para "Responder a comentario"
-        if (e.target.matches('.reply-to-comment-btn')) {
-            e.preventDefault();
-            const button = e.target;
-            const commentId = button.dataset.commentId;
-            const usernameToReply = button.dataset.usernameToReply || 'Usuario';
-            const slugToReply = button.dataset.slugToReply || '';
-            const replyFormContainer = document.getElementById(`reply-form-container-${commentId}`);
-            if (replyFormContainer) {
-                const textarea = replyFormContainer.querySelector('textarea[name="content"]');
-                const isHidden = replyFormContainer.style.display === 'none';
-                document.querySelectorAll('.reply-form-container').forEach(c => {
-                    if (c.id !== replyFormContainer.id) {
-                        c.style.display = 'none';
-                        c.querySelector('textarea[name="content"]').value = '';
-                    }
-                });
-                if (isHidden) {
-                    textarea.placeholder = `{{ _('Respondiendo a') }} @${usernameToReply}...`;
-                    textarea.value = `@${slugToReply} `;
-                    replyFormContainer.style.display = 'block';
-                    textarea.focus();
-                } else {
-                    replyFormContainer.style.display = 'none';
-                }
-            }
-        }
-    });
-
-    // --- LÓGICA FINAL Y ROBUSTA PARA SCROLL INFINITO ---
     const loadingIndicator = document.getElementById('loading-indicator');
     const postsContainer = document.getElementById('feed-posts-container');
-    
-    if (postsContainer && loadingIndicator) {
+    const newPostsButton = document.getElementById('new-posts-button');
+
+    if (postsContainer) {
         let page = 1;
         let isLoading = false;
-        let allPostsLoaded = (postsContainer.children.length < {{ POSTS_PER_PAGE }});
+        let postsPerPage = {{ POSTS_PER_PAGE if POSTS_PER_PAGE else 10 }};
+        let allPostsLoaded = postsContainer.querySelectorAll('.card').length < postsPerPage;
 
-        if (allPostsLoaded && postsContainer.children.length > 0) {
-            loadingIndicator.innerHTML = '<p class="text-muted">{{ _("Has llegado al final.") }}</p>';
-        } else if (!allPostsLoaded) {
-            loadingIndicator.innerHTML = '';
-        }
-
-        const loadMorePosts = () => {
+        const loadMorePosts = async () => {
             if (isLoading || allPostsLoaded) return;
             isLoading = true;
-            loadingIndicator.innerHTML = `<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>`;
-            page++;
-
-            fetch(`/api/feed?page=${page}`)
-                .then(response => response.text())
-                .then(html => {
-                    if (html.trim().length > 0) {
-                        postsContainer.insertAdjacentHTML('beforeend', html);
-                        isLoading = false; 
-                        loadingIndicator.innerHTML = ''; 
-                    } else {
-                        allPostsLoaded = true;
-                        if(observer) { observer.unobserve(loadingIndicator); }
-                        loadingIndicator.innerHTML = '<p class="text-muted">{{ _("Has llegado al final.") }}</p>';
-                    }
-                })
-                .catch(err => {
-                    console.error('Error al cargar más publicaciones:', err);
-                    allPostsLoaded = true;
-                    if(observer) { observer.unobserve(loadingIndicator); }
-                    loadingIndicator.innerHTML = '<p class="text-danger">{{ _("Error al cargar más contenido.") }}</p>';
+            if(loadingIndicator) loadingIndicator.innerHTML = `<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>`;
+            try {
+                const response = await fetch(`/api/feed?page=${page + 1}`);
+                const html = await response.text();
+                if (html.trim().length > 0) {
+                    postsContainer.insertAdjacentHTML('beforeend', html);
+                    page++;
                     isLoading = false;
-                });
+                    setTimeout(checkAndLoadIfIndicatorVisible, 100);
+                } else {
+                    allPostsLoaded = true;
+                    if(observer) observer.disconnect();
+                    if(loadingIndicator) loadingIndicator.innerHTML = '<p class="text-muted">{{ _("Has llegado al final.") }}</p>';
+                }
+            } catch (err) {
+                console.error('Error al cargar más publicaciones:', err);
+                isLoading = false;
+            }
         };
 
-        const observer = new IntersectionObserver((entries) => {
-            const firstEntry = entries[0];
-            if (firstEntry.isIntersecting && !isLoading) {
+        const checkAndLoadIfIndicatorVisible = () => {
+            if (isLoading || allPostsLoaded || !loadingIndicator) return;
+            const rect = loadingIndicator.getBoundingClientRect();
+            if (rect.top <= window.innerHeight) {
                 loadMorePosts();
             }
-        }, { threshold: 0.01 });
+        };
 
-        if (!allPostsLoaded) {
-            observer.observe(loadingIndicator);
+        let observer;
+        if (loadingIndicator) {
+            observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) loadMorePosts();
+            }, { threshold: 0.1 });
+            if (!allPostsLoaded) {
+                observer.observe(loadingIndicator);
+                checkAndLoadIfIndicatorVisible();
+            } else if (postsContainer.querySelectorAll('.card').length > 0) {
+                loadingIndicator.innerHTML = '<p class="text-muted">{{ _("Has llegado al final.") }}</p>';
+            }
+        }
+
+        if (newPostsButton) {
+            let latestTimestamp = postsContainer.dataset.latestPostTimestamp;
+            const checkForNewPosts = () => {
+                if (!latestTimestamp) return;
+                fetch(`/api/feed/check_new?timestamp=${latestTimestamp}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data && data.new_items_count > 0) {
+                            newPostsButton.querySelector('span').textContent = ` {{ _('Ver') }} ${data.new_items_count} {{ _('publicaciones nuevas') }}`;
+                            newPostsButton.style.display = 'block';
+                        }
+                    });
+            };
+            setInterval(checkForNewPosts, 30000);
+            newPostsButton.addEventListener('click', () => window.location.href = "{{ url_for('feed') }}");
         }
     }
 });

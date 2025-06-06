@@ -132,7 +132,6 @@
             color: #212529; 
         }
 
-        /* === INICIO: ESTILOS PARA PREVISUALIZACIÓN DE ENLACE (CORREGIDO) === */
         .link-preview-card {
             display: flex;
             border: 1px solid #dee2e6;
@@ -183,8 +182,6 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        /* === FIN: ESTILOS PARA PREVISUALIZACIÓN DE ENLACE === */
-
     </style>
     {% block head_extra %}{% endblock %}
 </head>
@@ -230,7 +227,6 @@
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('feed') }}"><i class="bi bi-house-door-fill"></i> {{ _('Inicio') }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('profile') }}"><i class="bi bi-person-circle"></i> {{ _('Mi Perfil') }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('contactos') }}"><i class="bi bi-people-fill"></i> {{ _('Mis Contactos') }}</a></li>
-                        {# --- INICIO: ENLACE CONDICIONAL AL PANEL DE ADMIN --- #}
                         {% if current_user_role in ['moderator', 'coordinator', 'admin'] %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('admin_users_list') }}" style="color: #ffc107;">
@@ -238,14 +234,11 @@
                             </a>
                         </li>
                         {% endif %}
-                        {# --- FIN: ENLACE CONDICIONAL AL PANEL DE ADMIN --- #}
-                        
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('sections_list') }}">
                                 <i class="bi bi-columns-gap"></i> {{ _('Secciones') }}
                             </a>
                         </li>
-                        
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-translate"></i> 
@@ -306,7 +299,6 @@
             </div>
         </div>
     </nav>
-
     <div class="container">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -330,97 +322,6 @@
     </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    window.setTimeout(function() {
-        var alerts = document.querySelectorAll('.alert-dismissible.show');
-        alerts.forEach(function(alert) {
-            if (typeof bootstrap !== 'undefined' && bootstrap.Alert) {
-                var bsAlert = bootstrap.Alert.getInstance(alert);
-                if (bsAlert) {
-                    bsAlert.close();
-                } else {
-                    new bootstrap.Alert(alert).close();
-                }
-            } else {
-                alert.style.display = 'none';
-            }
-        });
-    }, 7000); 
-</script>
-
-{% block scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Script para el modal de compartir
-    const shareModalElement = document.getElementById('shareModal');
-    if (shareModalElement) {
-        const shareModalForm = document.getElementById('share-modal-form');
-        const quoteContentTextarea = document.getElementById('quote_content_modal_textarea'); 
-
-        shareModalElement.addEventListener('show.bs.modal', function(event) {
-            const button = event.relatedTarget;
-            const postId = button.getAttribute('data-post-id');
-            let actionUrl = "{{ url_for('share_post', post_id=0) }}"; 
-            actionUrl = actionUrl.replace('0', postId); 
-            
-            if(shareModalForm) {
-                shareModalForm.setAttribute('action', actionUrl);
-            }
-        });
-
-        shareModalElement.addEventListener('hidden.bs.modal', function() {
-            if(quoteContentTextarea) {
-                quoteContentTextarea.value = '';
-            }
-        });
-    }
-
-    // --- INICIO: LÓGICA PARA SERVER-SENT EVENTS (SSE) ---
-    const notificationsBadge = document.getElementById('notifications-count-badge');
-    const messagesBadge = document.getElementById('messages-count-badge');
-
-    // Solo intentamos conectar si el usuario está logueado
-    if (notificationsBadge && messagesBadge) {
-        const eventSource = new EventSource("{{ url_for('stream_notifications') }}");
-
-        eventSource.onmessage = function(event) {
-            try {
-                const data = JSON.parse(event.data);
-
-                // Actualizar contador de notificaciones
-                if (data.unread_notifications !== undefined) {
-                    notificationsBadge.textContent = data.unread_notifications > 0 ? data.unread_notifications : '';
-                    if (data.unread_notifications > 0) {
-                        notificationsBadge.classList.remove('d-none');
-                    } else {
-                        notificationsBadge.classList.add('d-none');
-                    }
-                }
-
-                // Actualizar contador de mensajes
-                if (data.unread_messages !== undefined) {
-                    messagesBadge.textContent = data.unread_messages > 0 ? data.unread_messages : '';
-                    if (data.unread_messages > 0) {
-                        messagesBadge.classList.remove('d-none');
-                    } else {
-                        messagesBadge.classList.add('d-none');
-                    }
-                }
-            } catch (e) {
-                console.error("Error al parsear datos SSE:", e);
-            }
-        };
-
-        eventSource.onerror = function(err) {
-            console.error("Error en EventSource:", err);
-        };
-    }
-    // --- FIN: LÓGICA PARA SERVER-SENT EVENTS (SSE) ---
-});
-</script>
-{% endblock %}
-
 <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -443,6 +344,214 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 </div>
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Script de auto-cierre de alertas
+    window.setTimeout(function() {
+        var alerts = document.querySelectorAll('.alert-dismissible.show');
+        alerts.forEach(function(alert) {
+            new bootstrap.Alert(alert).close();
+        });
+    }, 7000);
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Lógica del modal de compartir
+        const shareModalElement = document.getElementById('shareModal');
+        if (shareModalElement) {
+            const shareModalForm = document.getElementById('share-modal-form');
+            shareModalElement.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+                const postId = button.getAttribute('data-post-id');
+                let actionUrl = "{{ url_for('share_post', post_id=0) }}".replace('0', postId);
+                if(shareModalForm) {
+                    shareModalForm.setAttribute('action', actionUrl);
+                }
+            });
+        }
+        
+        // Lógica de Server-Sent Events para notificaciones
+        const notificationsBadge = document.getElementById('notifications-count-badge');
+        const messagesBadge = document.getElementById('messages-count-badge');
+        if (notificationsBadge && messagesBadge) {
+            const eventSource = new EventSource("{{ url_for('stream_notifications') }}");
+            eventSource.onmessage = function(event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.unread_notifications !== undefined) {
+                        notificationsBadge.textContent = data.unread_notifications > 0 ? data.unread_notifications : '';
+                        notificationsBadge.classList.toggle('d-none', data.unread_notifications <= 0);
+                    }
+                    if (data.unread_messages !== undefined) {
+                        messagesBadge.textContent = data.unread_messages > 0 ? data.unread_messages : '';
+                        messagesBadge.classList.toggle('d-none', data.unread_messages <= 0);
+                    }
+                } catch (e) { console.error("Error al parsear datos SSE:", e); }
+            };
+            eventSource.onerror = function(err) { console.error("Error en EventSource:", err); };
+        }
+    });
+</script>
+
+{# === INICIO: SCRIPT GLOBAL PARA TODAS LAS INTERACCIONES COMUNES === #}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const body = document.body;
+
+    // 1. LÓGICA PARA MOSTRAR/OCULTAR LA PALETA DE REACCIONES
+    body.addEventListener('click', function(e) {
+        const triggerBtn = e.target.closest('.reaction-trigger-btn');
+        if (triggerBtn) {
+            const palette = triggerBtn.nextElementSibling;
+            if (!palette || !palette.classList.contains('reactions-palette')) return;
+            
+            const isVisible = palette.style.display === 'flex';
+            document.querySelectorAll('.reactions-palette').forEach(p => {
+                if (p !== palette) p.style.display = 'none';
+            });
+            palette.style.display = isVisible ? 'none' : 'flex';
+            return;
+        }
+        if (!e.target.closest('.reactions-container')) {
+            document.querySelectorAll('.reactions-palette').forEach(p => {
+                p.style.display = 'none';
+            });
+        }
+    });
+
+    // 2. LÓGICA PARA ENVIAR REACCIONES CON AJAX (EVITA RECARGA DE PÁGINA)
+    body.addEventListener('submit', function (e) {
+        if (!e.target.matches('.reaction-form')) {
+            return;
+        }
+        e.preventDefault();
+
+        const form = e.target;
+        const url = form.action;
+        const formData = new FormData(form);
+        const triggerBtn = form.closest('.reactions-container').querySelector('.reaction-trigger-btn');
+        
+        fetch(url, {
+            method: 'POST',
+            body: formData,
+            headers: {'X-Requested-With': 'XMLHttpRequest'}
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && triggerBtn) {
+                const reactionIcons = {'like': '👍', 'love': '❤️', 'haha': '😂', 'wow': '😮', 'sad': '😢', 'angry': '😠'};
+                let content = '';
+                if (data.action === 'removed') {
+                    triggerBtn.classList.remove('btn-primary');
+                    triggerBtn.classList.add('btn-outline-primary');
+                    content = `<i class="bi bi-hand-thumbs-up"></i> {{ _('Reaccionar') }} (${data.new_total})`;
+                } else {
+                    triggerBtn.classList.remove('btn-outline-primary');
+                    triggerBtn.classList.add('btn-primary');
+                    const icon = reactionIcons[data.reaction_type] || '👍';
+                    const reactionName = data.reaction_type.charAt(0).toUpperCase() + data.reaction_type.slice(1);
+                    content = `${icon} ${reactionName} (${data.new_total})`;
+                }
+                triggerBtn.innerHTML = content;
+                const palette = form.closest('.reactions-palette');
+                if (palette) palette.style.display = 'none';
+            }
+        }).catch(error => console.error('Fetch error:', error));
+    });
+
+    // 3. LÓGICA PARA RESPONDER A COMENTARIO
+    body.addEventListener('click', function(e) {
+        const replyBtn = e.target.closest('.reply-to-comment-btn');
+        if (!replyBtn) return;
+        
+        e.preventDefault();
+        const commentId = replyBtn.dataset.commentId;
+        const usernameToReply = replyBtn.dataset.usernameToReply || 'Usuario';
+        const slugToReply = replyBtn.dataset.slugToReply || '';
+        const replyFormContainer = document.getElementById(`reply-form-container-${commentId}`);
+        if (replyFormContainer) {
+            const textarea = replyFormContainer.querySelector('textarea[name="content"]');
+            const isHidden = replyFormContainer.style.display === 'none';
+            document.querySelectorAll('.reply-form-container').forEach(c => {
+                if (c.id !== replyFormContainer.id) c.style.display = 'none';
+            });
+            if (isHidden) {
+                textarea.placeholder = `{{ _('Respondiendo a') }} @${usernameToReply}...`;
+                textarea.value = `@${slugToReply} `;
+                replyFormContainer.style.display = 'block';
+                textarea.focus();
+            } else {
+                replyFormContainer.style.display = 'none';
+            }
+        }
+    });
+
+    // 4. LÓGICA PARA AUTOCOMPLETADO DE MENCIONES
+    let currentActiveInput = null, currentSuggestionsBox = null, debounceTimer;
+    function hideAllSuggestionBoxes() {
+        document.querySelectorAll('.mention-suggestions-list').forEach(box => {
+            if (box) {
+                box.innerHTML = '';
+                box.style.display = 'none';
+            }
+        });
+    }
+    body.addEventListener('input', function(e) {
+        if (!e.target.matches('.mentionable-input')) return;
+        currentActiveInput = e.target;
+        const parentWrapper = currentActiveInput.closest('.input-group, .position-relative');
+        currentSuggestionsBox = parentWrapper ? parentWrapper.querySelector('.mention-suggestions-list') : null;
+        if (!currentSuggestionsBox) return;
+        const text = currentActiveInput.value;
+        const cursorPos = currentActiveInput.selectionStart;
+        let atPos = text.lastIndexOf('@', cursorPos - 1);
+        
+        if (atPos !== -1 && (atPos === 0 || /\s/.test(text[atPos - 1]))) {
+            const query = text.substring(atPos + 1, cursorPos);
+            if (!/\s/.test(query)) {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    fetch(`/api/users/mention_search?term=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!currentSuggestionsBox) return;
+                        currentSuggestionsBox.innerHTML = '';
+                        if (data.length > 0) {
+                            const ul = document.createElement('ul');
+                            data.forEach(user => {
+                                const li = document.createElement('li');
+                                let photoHtml = user.photo ? `<img src="${user.photo}" alt="${user.username}">` : `<span class="no-photo"><i class="bi bi-person-fill"></i></span>`;
+                                li.innerHTML = `${photoHtml}<span>${user.username} <small class="text-muted">(@${user.slug})</small></span>`;
+                                li.addEventListener('mousedown', (evt) => {
+                                    evt.preventDefault();
+                                    const mentionText = `@${user.slug} `;
+                                    const newText = text.substring(0, atPos) + mentionText + text.substring(cursorPos);
+                                    currentActiveInput.value = newText;
+                                    hideAllSuggestionBoxes();
+                                    currentActiveInput.focus();
+                                });
+                                ul.appendChild(li);
+                            });
+                            currentSuggestionsBox.appendChild(ul);
+                            currentSuggestionsBox.style.display = 'block';
+                        } else {
+                            hideAllSuggestionBoxes();
+                        }
+                    });
+                }, 300);
+            } else { hideAllSuggestionBoxes(); }
+        } else { hideAllSuggestionBoxes(); }
+    });
+    body.addEventListener('click', (e) => {
+        if (!e.target.matches('.mentionable-input')) {
+            hideAllSuggestionBoxes();
+        }
+    });
+});
+</script>
+{# === FIN: SCRIPT GLOBAL === #}
+{% endblock %}
 
 </body>
 </html>
