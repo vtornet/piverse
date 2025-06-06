@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Editar Publicación') }} #{{ post.id }} - PiVerse{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-3">
+        <div class="col">
+            <h2><i class="bi bi-pencil-square"></i> {{ _('Editar Publicación') }} #{{ post.id }}</h2>
+            <a href="{{ url_for('admin_list_posts') }}" class="btn btn-sm btn-outline-secondary">{{ _('Volver a la lista de publicaciones') }}</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('admin_edit_post', post_id=post.id) }}">
+                <div class="mb-3">
+                    <label for="content" class="form-label">{{ _('Contenido de la Publicación') }}</label>
+                    <textarea class="form-control" id="content" name="content" rows="10" required>{{ post.content }}</textarea>
+                </div>
+                
+                {# En el futuro, podríamos añadir aquí campos para editar la sección, etc. #}
+
+                <button type="submit" class="btn btn-primary">{{ _('Guardar Cambios') }}</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

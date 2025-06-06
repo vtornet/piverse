@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Administración de Comentarios') }} - PiVerse{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-3">
+        <div class="col">
+            <h2><i class="bi bi-chat-dots-fill"></i> {{ _('Administración de Comentarios') }}</h2>
+        </div>
+    </div>
+
+    {# Menú de navegación para el panel de admin #}
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'admin_users_list' %}active{% endif %}" href="{{ url_for('admin_users_list') }}">{{ _('Usuarios') }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'admin_list_posts' %}active{% endif %}" href="{{ url_for('admin_list_posts') }}">{{ _('Publicaciones') }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'admin_list_comments' %}active{% endif %}" href="{{ url_for('admin_list_comments') }}">{{ _('Comentarios') }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'admin_view_log' %}active{% endif %}" href="{{ url_for('admin_view_log') }}">{{ _('Registro de Acciones') }}</a>
+        </li>
+    </ul>
+
+    {% if comments_list %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">{{ _('Autor') }}</th>
+                    <th scope="col">{{ _('Comentario') }}</th>
+                    <th scope="col">{{ _('En Respuesta a Post') }}</th>
+                    <th scope="col">{{ _('Fecha') }}</th>
+                    <th scope="col">{{ _('Acciones') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for comment in comments_list %}
+                <tr>
+                    <td>{{ comment.id }}</td>
+                    <td>
+                        <a href="{{ url_for('ver_perfil', slug_perfil=comment.author_slug) }}">@{{ comment.author_username }}</a>
+                    </td>
+                    <td style="max-width: 400px;">
+                        <span title="{{ comment.content }}">{{ comment.content_display[:150] | safe }}{% if comment.content_display|length > 150 %}...{% endif %}</span>
+                    </td>
+                    <td>
+                        {# --- INICIO DE LA CORRECCIÓN --- #}
+                        {# Comprobar si el post_id existe antes de crear el enlace #}
+                        {% if comment.post_id %}
+                            <a href="{{ url_for('ver_publicacion_individual', post_id_vista=comment.post_id) }}" title="{{ comment.post_snippet }}">
+                               #{{ comment.post_id }}
+                            </a>
+                        {% else %}
+                            <span class="text-muted fst-italic">{{ _('Publicación eliminada') }}</span>
+                        {% endif %}
+                        {# --- FIN DE LA CORRECCIÓN --- #}
+                    </td>
+                    <td>
+                        <small class="text-muted" title="{{ comment.timestamp }}">
+                            {{ format_datetime(comment.timestamp_obj, 'short') if comment.timestamp_obj else comment.timestamp.split('.')[0] }}
+                        </small>
+                    </td>
+                    <td>
+                        <form method="POST" action="{{ url_for('delete_comment', comment_id=comment.id) }}" style="display: inline;"
+                              onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar este comentario (ID: %(comment_id)s)?', comment_id=comment.id) }}');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Eliminar Comentario') }}"><i class="bi bi-trash-fill"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info" role="alert">
+        {{ _('No se encontraron comentarios.') }}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

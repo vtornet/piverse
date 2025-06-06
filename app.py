@@ -15,7 +15,7 @@ from datetime import datetime, timezone
 
 app = Flask(__name__)
 app.secret_key = 'tu_clave_secreta_aqui_MUY_SECRETA'
-
+POSTS_PER_PAGE = 10
 # --- Configuración de Uploads ---
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -766,6 +766,10 @@ def profile():
     return render_template('profile.html', profile=datos_perfil)
 
 
+# Asegúrate de tener POSTS_PER_PAGE = 10 (o el número que prefieras) definido al principio del archivo.
+
+# Reemplaza tu función feed() completa con esta:
+
 @app.route('/feed')
 def feed():
     if 'user_id' not in session:
@@ -777,151 +781,74 @@ def feed():
 
     feed_items = []
     default_username_display = _("Usuario")
-    all_sections = []
 
     with sqlite3.connect('users.db') as conn:
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
 
-        c.execute("SELECT id, name, slug FROM sections ORDER BY name ASC")
-        sections_raw = c.fetchall()
-        for section_row in sections_raw:
-            all_sections.append(dict(section_row))
-
         excluded_ids = get_blocked_and_blocking_ids(user_id_actual, c)
-        params = []
-        excluded_placeholders = ""
+        
+        # --- 1. OBTENER PUBLICACIONES ORIGINALES ---
+        params_original = []
+        where_clauses_original = []
         if excluded_ids:
-            excluded_placeholders = ", ".join("?" for _ in excluded_ids)
-            params.extend(list(excluded_ids))
+            excluded_placeholders_str = ','.join('?' for _ in excluded_ids)
+            where_clauses_original.append(f"p.user_id NOT IN ({excluded_placeholders_str})")
+            params_original.extend(list(excluded_ids))
 
-        # 1. OBTENER PUBLICACIONES ORIGINALES (MODIFICADO para incluir previsualización)
         query_original_posts = f'''
-            SELECT p.id, p.user_id AS autor_id_post, pr.username, pr.photo, p.content,
-                   p.image_filename, p.timestamp AS post_timestamp_str, pr.slug,
-                   s.name AS section_name, s.slug AS section_slug,
-                   p.preview_url, p.preview_title, p.preview_description, p.preview_image_url
-            FROM posts p
-            JOIN users u ON p.user_id = u.id
-            LEFT JOIN profiles pr ON u.id = pr.user_id
-            LEFT JOIN sections s ON p.section_id = s.id
-            { "WHERE p.user_id NOT IN (" + excluded_placeholders + ")" if excluded_ids else "" }
-            ORDER BY p.timestamp DESC
-            LIMIT 50
+            SELECT p.id, p.user_id AS autor_id_post, pr.username, pr.photo, p.content, p.image_filename, p.timestamp AS post_timestamp_str, pr.slug, s.name AS section_name, s.slug AS section_slug, p.preview_url, p.preview_title, p.preview_description, p.preview_image_url
+            FROM posts p JOIN users u ON p.user_id = u.id LEFT JOIN profiles pr ON u.id = pr.user_id LEFT JOIN sections s ON p.section_id = s.id
+            { "WHERE " + " AND ".join(where_clauses_original) if where_clauses_original else "" }
+            ORDER BY p.timestamp DESC LIMIT 200
         '''
-        c.execute(query_original_posts, tuple(params))
+        c.execute(query_original_posts, tuple(params_original))
         original_posts_raw = c.fetchall()
-
         for post_data in original_posts_raw:
             post_id = post_data['id']
             post_timestamp_obj = parse_timestamp(post_data['post_timestamp_str'])
-            # ... (lógica de reacciones, conteo de compartidos, comentarios - sin cambios)
             c.execute("SELECT reaction_type FROM post_reactions WHERE post_id = ? AND user_id = ?", (post_id, user_id_actual))
             reaccion_usuario_actual_row = c.fetchone()
             usuario_reacciono_info = {'reaction_type': reaccion_usuario_actual_row['reaction_type']} if reaccion_usuario_actual_row else None
             c.execute("SELECT COUNT(id) AS total_reactions FROM post_reactions WHERE post_id = ?", (post_id,))
-            num_reacciones_totales_row = c.fetchone()
-            num_reacciones_totales = num_reacciones_totales_row['total_reactions'] if num_reacciones_totales_row else 0
+            num_reacciones_totales_row = c.fetchone(); num_reacciones_totales = num_reacciones_totales_row['total_reactions'] if num_reacciones_totales_row else 0
             c.execute("SELECT COUNT(id) FROM shared_posts WHERE original_post_id = ?", (post_id,))
-            share_count_row = c.fetchone()
-            share_count = share_count_row[0] if share_count_row else 0
-            c.execute('''
-                SELECT cm.id, pr_com.username AS comment_username, pr_com.photo AS comment_photo,
-                       cm.content AS comment_content, cm.timestamp AS comment_timestamp_str,
-                       pr_com.slug AS comment_slug, cm.parent_comment_id, cm.user_id AS comment_user_id
-                FROM comments cm
-                JOIN users u_com ON cm.user_id = u_com.id LEFT JOIN profiles pr_com ON u_com.id = pr_com.user_id
-                WHERE cm.post_id = ? ORDER BY cm.timestamp ASC
-            ''', (post_id,))
+            share_count_row = c.fetchone(); share_count = share_count_row[0] if share_count_row else 0
+            c.execute("SELECT cm.id, pr_com.username AS comment_username, pr_com.photo AS comment_photo, cm.content AS comment_content, cm.timestamp AS comment_timestamp_str, pr_com.slug AS comment_slug, cm.parent_comment_id, cm.user_id AS comment_user_id FROM comments cm JOIN users u_com ON cm.user_id = u_com.id LEFT JOIN profiles pr_com ON u_com.id = pr_com.user_id WHERE cm.post_id = ? ORDER BY cm.timestamp ASC", (post_id,))
             comentarios_raw = c.fetchall()
-            comments_map = {}
-            structured_comments = []
+            comments_map = {}; structured_comments = []
             for row_com in comentarios_raw:
-                comment_id = row_com['id']
-                comment_timestamp_obj = parse_timestamp(row_com['comment_timestamp_str'])
-                c.execute("SELECT COUNT(id) FROM comment_reactions WHERE comment_id = ?", (comment_id,))
-                total_comment_reactions_row = c.fetchone()
-                total_comment_reactions = total_comment_reactions_row[0] if total_comment_reactions_row else 0
-                c.execute("SELECT reaction_type FROM comment_reactions WHERE comment_id = ? AND user_id = ?", (comment_id, user_id_actual))
-                user_cr_row = c.fetchone()
-                user_comment_reaction = {'reaction_type': user_cr_row['reaction_type']} if user_cr_row else None
-                comments_map[comment_id] = {
-                    'id': comment_id, 'username': (row_com['comment_username'] if row_com['comment_username'] and row_com['comment_username'].strip() else default_username_display),
-                    'photo': row_com['comment_photo'], 'content': procesar_menciones_para_mostrar(row_com['comment_content']),
-                    'timestamp': comment_timestamp_obj, 'slug': (row_com['comment_slug'] if row_com['comment_slug'] and row_com['comment_slug'].strip() else "#"),
-                    'parent_comment_id': row_com['parent_comment_id'], 'user_id': row_com['comment_user_id'],
-                    'replies': [], 'total_reactions': total_comment_reactions, 'user_reaction': user_comment_reaction
-                }
+                comment_id = row_com['id']; comment_timestamp_obj = parse_timestamp(row_com['comment_timestamp_str'])
+                c.execute("SELECT COUNT(id) FROM comment_reactions WHERE comment_id = ?", (comment_id,)); total_comment_reactions_row = c.fetchone(); total_comment_reactions = total_comment_reactions_row[0] if total_comment_reactions_row else 0
+                c.execute("SELECT reaction_type FROM comment_reactions WHERE comment_id = ? AND user_id = ?", (comment_id, user_id_actual)); user_cr_row = c.fetchone(); user_comment_reaction = {'reaction_type': user_cr_row['reaction_type']} if user_cr_row else None
+                comments_map[comment_id] = {'id': comment_id, 'username': (row_com['comment_username'] or default_username_display), 'photo': row_com['comment_photo'], 'content': procesar_menciones_para_mostrar(row_com['comment_content']), 'timestamp': comment_timestamp_obj, 'slug': (row_com['comment_slug'] or "#"), 'parent_comment_id': row_com['parent_comment_id'], 'user_id': row_com['comment_user_id'], 'replies': [], 'total_reactions': total_comment_reactions, 'user_reaction': user_comment_reaction}
             for cid, cdata in comments_map.items():
-                if cdata['parent_comment_id'] and cdata['parent_comment_id'] in comments_map:
-                    comments_map[cdata['parent_comment_id']]['replies'].append(cdata)
+                if cdata['parent_comment_id'] and cdata['parent_comment_id'] in comments_map: comments_map[cdata['parent_comment_id']]['replies'].append(cdata)
                 else: structured_comments.append(cdata)
+            feed_items.append({'item_type': 'original_post', 'activity_timestamp': post_timestamp_obj, 'id': post_id, 'autor_id_post': post_data['autor_id_post'], 'username': (post_data['username'] or default_username_display), 'photo': post_data['photo'], 'slug': (post_data['slug'] or "#"), 'content': procesar_menciones_para_mostrar(post_data['content']), 'image_filename': post_data['image_filename'], 'timestamp': post_timestamp_obj, 'comments': structured_comments, 'total_reactions': num_reacciones_totales, 'user_reaction': usuario_reacciono_info, 'share_count': share_count, 'section_name': post_data['section_name'], 'section_slug': post_data['section_slug'], 'preview_url': post_data['preview_url'], 'preview_title': post_data['preview_title'], 'preview_description': post_data['preview_description'], 'preview_image_url': post_data['preview_image_url']})
 
-            feed_items.append({
-                'item_type': 'original_post',
-                'activity_timestamp': post_timestamp_obj,
-                'id': post_id,
-                'autor_id_post': post_data['autor_id_post'],
-                'username': (post_data['username'] if post_data['username'] and post_data['username'].strip() else default_username_display),
-                'photo': post_data['photo'],
-                'slug': (post_data['slug'] if post_data['slug'] and post_data['slug'].strip() else "#"),
-                'content': procesar_menciones_para_mostrar(post_data['content']),
-                'image_filename': post_data['image_filename'],
-                'timestamp': post_timestamp_obj,
-                'comments': structured_comments,
-                'total_reactions': num_reacciones_totales,
-                'user_reaction': usuario_reacciono_info,
-                'share_count': share_count,
-                'section_name': post_data['section_name'],
-                'section_slug': post_data['section_slug'],
-                'preview_url': post_data['preview_url'],
-                'preview_title': post_data['preview_title'],
-                'preview_description': post_data['preview_description'],
-                'preview_image_url': post_data['preview_image_url']
-            })
-
-        # 2. OBTENER PUBLICACIONES COMPARTIDAS (REPOSTS) (MODIFICADO para previsualización)
+        # --- 2. OBTENER PUBLICACIONES COMPARTIDAS ---
         params_shared = []
         where_clauses_shared = []
         if excluded_ids:
-            where_clauses_shared.append(f"sp.user_id NOT IN ({excluded_placeholders})")
+            excluded_placeholders_str = ','.join('?' for _ in excluded_ids)
+            where_clauses_shared.append(f"sp.user_id NOT IN ({excluded_placeholders_str})")
             params_shared.extend(list(excluded_ids))
-            where_clauses_shared.append(f"op.user_id NOT IN ({excluded_placeholders})")
+            where_clauses_shared.append(f"op.user_id NOT IN ({excluded_placeholders_str})")
             params_shared.extend(list(excluded_ids))
-
         query_shared_posts = f'''
-            SELECT
-                sp.id AS share_id, sp.timestamp AS share_timestamp_str, sp.user_id AS sharer_user_id,
-                sharer_profile.username AS sharer_username, sharer_profile.photo AS sharer_photo,
-                sharer_profile.slug AS sharer_slug,
-                sp.quote_content,
-                op.id AS original_post_id, op.user_id AS original_author_user_id,
-                op.content AS original_content, op.image_filename AS original_image_filename,
-                op.timestamp AS original_timestamp_str,
-                original_author_profile.username AS original_author_username,
-                original_author_profile.photo AS original_author_photo,
-                original_author_profile.slug AS original_author_slug,
-                s_orig.name AS original_section_name, s_orig.slug AS original_section_slug,
-                op.preview_url, op.preview_title, op.preview_description, op.preview_image_url
-            FROM shared_posts sp
-            JOIN users sharer_user ON sp.user_id = sharer_user.id
-            LEFT JOIN profiles sharer_profile ON sp.user_id = sharer_profile.user_id
-            JOIN posts op ON sp.original_post_id = op.id
-            LEFT JOIN sections s_orig ON op.section_id = s_orig.id
-            JOIN users original_author_user ON op.user_id = original_author_user.id
-            LEFT JOIN profiles original_author_profile ON op.user_id = original_author_profile.user_id
+            SELECT sp.id AS share_id, sp.timestamp AS share_timestamp_str, sp.user_id AS sharer_user_id, sharer_profile.username AS sharer_username, sharer_profile.photo AS sharer_photo, sharer_profile.slug AS sharer_slug, sp.quote_content, op.id AS original_post_id, op.user_id AS original_author_user_id, op.content AS original_content, op.image_filename AS original_image_filename, op.timestamp AS original_timestamp_str, original_author_profile.username AS original_author_username, original_author_profile.photo AS original_author_photo, original_author_profile.slug AS original_author_slug, s_orig.name AS original_section_name, s_orig.slug AS original_section_slug, op.preview_url, op.preview_title, op.preview_description, op.preview_image_url
+            FROM shared_posts sp JOIN users sharer_user ON sp.user_id = sharer_user.id LEFT JOIN profiles sharer_profile ON sp.user_id = sharer_profile.user_id JOIN posts op ON sp.original_post_id = op.id LEFT JOIN sections s_orig ON op.section_id = s_orig.id JOIN users original_author_user ON op.user_id = original_author_user.id LEFT JOIN profiles original_author_profile ON op.user_id = original_author_profile.user_id
             { "WHERE " + " AND ".join(where_clauses_shared) if where_clauses_shared else "" }
             ORDER BY sp.timestamp DESC
-            LIMIT 50
+            LIMIT 200
         '''
         c.execute(query_shared_posts, tuple(params_shared))
         shared_posts_raw = c.fetchall()
-
         for shared_data in shared_posts_raw:
             original_post_id = shared_data['original_post_id']
             share_timestamp_obj = parse_timestamp(shared_data['share_timestamp_str'])
             original_timestamp_obj = parse_timestamp(shared_data['original_timestamp_str'])
-            # ... (lógica de reacciones, conteo de compartidos, comentarios para el post original - sin cambios) ...
             c.execute("SELECT reaction_type FROM post_reactions WHERE post_id = ? AND user_id = ?", (original_post_id, user_id_actual))
             reaccion_usuario_original_row = c.fetchone()
             usuario_reacciono_original_info = {'reaction_type': reaccion_usuario_original_row['reaction_type']} if reaccion_usuario_original_row else None
@@ -932,11 +859,8 @@ def feed():
             share_count_original_row = c.fetchone()
             share_count_original = share_count_original_row[0] if share_count_original_row else 0
             c.execute('''
-                SELECT cm.id, pr_com.username AS comment_username, pr_com.photo AS comment_photo,
-                       cm.content AS comment_content, cm.timestamp AS comment_timestamp_str,
-                       pr_com.slug AS comment_slug, cm.parent_comment_id, cm.user_id AS comment_user_id
-                FROM comments cm
-                JOIN users u_com ON cm.user_id = u_com.id LEFT JOIN profiles pr_com ON u_com.id = pr_com.user_id
+                SELECT cm.id, pr_com.username AS comment_username, pr_com.photo AS comment_photo, cm.content AS comment_content, cm.timestamp AS comment_timestamp_str, pr_com.slug AS comment_slug, cm.parent_comment_id, cm.user_id AS comment_user_id
+                FROM comments cm JOIN users u_com ON cm.user_id = u_com.id LEFT JOIN profiles pr_com ON u_com.id = pr_com.user_id
                 WHERE cm.post_id = ? ORDER BY cm.timestamp ASC
             ''', (original_post_id,))
             comentarios_original_raw = c.fetchall()
@@ -951,51 +875,30 @@ def feed():
                 c.execute("SELECT reaction_type FROM comment_reactions WHERE comment_id = ? AND user_id = ?", (comment_id_orig, user_id_actual))
                 user_cr_o_row = c.fetchone()
                 user_comment_reaction_o = {'reaction_type': user_cr_o_row['reaction_type']} if user_cr_o_row else None
-                comments_original_map[comment_id_orig] = {
-                    'id': comment_id_orig, 'username': (row_com_orig['comment_username'] if row_com_orig['comment_username'] and row_com_orig['comment_username'].strip() else default_username_display),
-                    'photo': row_com_orig['comment_photo'], 'content': procesar_menciones_para_mostrar(row_com_orig['comment_content']),
-                    'timestamp': comment_original_timestamp_obj, 'slug': (row_com_orig['comment_slug'] if row_com_orig['comment_slug'] and row_com_orig['comment_slug'].strip() else "#"),
-                    'parent_comment_id': row_com_orig['parent_comment_id'], 'user_id': row_com_orig['comment_user_id'],
-                    'replies': [], 'total_reactions': total_comment_reactions_o, 'user_reaction': user_comment_reaction_o
-                }
+                comments_original_map[comment_id_orig] = { 'id': comment_id_orig, 'username': (row_com_orig['comment_username'] or default_username_display), 'photo': row_com_orig['comment_photo'], 'content': procesar_menciones_para_mostrar(row_com_orig['comment_content']), 'timestamp': comment_original_timestamp_obj, 'slug': (row_com_orig['comment_slug'] or "#"), 'parent_comment_id': row_com_orig['parent_comment_id'], 'user_id': row_com_orig['comment_user_id'], 'replies': [], 'total_reactions': total_comment_reactions_o, 'user_reaction': user_comment_reaction_o }
             for cid_orig, cdata_orig in comments_original_map.items():
-                if cdata_orig['parent_comment_id'] and cdata_orig['parent_comment_id'] in comments_original_map:
-                    comments_original_map[cdata_orig['parent_comment_id']]['replies'].append(cdata_orig)
+                if cdata_orig['parent_comment_id'] and cdata_orig['parent_comment_id'] in comments_original_map: comments_original_map[cdata_orig['parent_comment_id']]['replies'].append(cdata_orig)
                 else: structured_original_comments.append(cdata_orig)
+            feed_items.append({ 'item_type': 'shared_post', 'activity_timestamp': share_timestamp_obj, 'share_id': shared_data['share_id'], 'sharer_user_id': shared_data['sharer_user_id'], 'sharer_username': (shared_data['sharer_username'] or default_username_display), 'sharer_photo': shared_data['sharer_photo'], 'sharer_slug': (shared_data['sharer_slug'] or "#"), 'share_timestamp': share_timestamp_obj, 'quote_content': procesar_menciones_para_mostrar(shared_data['quote_content']), 'original_post': { 'id': original_post_id, 'autor_id_post': shared_data['original_author_user_id'], 'username': (shared_data['original_author_username'] or default_username_display), 'photo': shared_data['original_author_photo'], 'slug': (shared_data['original_author_slug'] or "#"), 'content': procesar_menciones_para_mostrar(shared_data['original_content']), 'image_filename': shared_data['original_image_filename'], 'timestamp': original_timestamp_obj, 'comments': structured_original_comments, 'total_reactions': num_reacciones_original_totales, 'user_reaction': usuario_reacciono_original_info, 'share_count': share_count_original, 'section_name': shared_data['original_section_name'], 'section_slug': shared_data['original_section_slug'], 'preview_url': shared_data['preview_url'], 'preview_title': shared_data['preview_title'], 'preview_description': shared_data['preview_description'], 'preview_image_url': shared_data['preview_image_url'] } })
 
-            feed_items.append({
-                'item_type': 'shared_post',
-                'activity_timestamp': share_timestamp_obj,
-                'share_id': shared_data['share_id'],
-                'sharer_user_id': shared_data['sharer_user_id'],
-                'sharer_username': (shared_data['sharer_username'] if shared_data['sharer_username'] and shared_data['sharer_username'].strip() else default_username_display),
-                'sharer_photo': shared_data['sharer_photo'],
-                'sharer_slug': (shared_data['sharer_slug'] if shared_data['sharer_slug'] and shared_data['sharer_slug'].strip() else "#"),
-                'share_timestamp': share_timestamp_obj,
-                'quote_content': shared_data['quote_content'],
-                'original_post': {
-                    'id': original_post_id,
-                    'autor_id_post': shared_data['original_author_user_id'],
-                    'username': (shared_data['original_author_username'] if shared_data['original_author_username'] and shared_data['original_author_username'].strip() else default_username_display),
-                    'photo': shared_data['original_author_photo'],
-                    'slug': (shared_data['original_author_slug'] if shared_data['original_author_slug'] and shared_data['original_author_slug'].strip() else "#"),
-                    'content': procesar_menciones_para_mostrar(shared_data['original_content']),
-                    'image_filename': shared_data['original_image_filename'],
-                    'timestamp': original_timestamp_obj,
-                    'comments': structured_original_comments,
-                    'total_reactions': num_reacciones_original_totales,
-                    'user_reaction': usuario_reacciono_original_info,
-                    'share_count': share_count_original,
-                    'section_name': shared_data['original_section_name'],
-                    'section_slug': shared_data['original_section_slug'],
-                    'preview_url': shared_data['preview_url'],
-                    'preview_title': shared_data['preview_title'],
-                    'preview_description': shared_data['preview_description'],
-                    'preview_image_url': shared_data['preview_image_url']
-                }
-            })
-        feed_items.sort(key=lambda item: item['activity_timestamp'] if item['activity_timestamp'] else datetime.min.replace(tzinfo=timezone.utc), reverse=True)
-    return render_template('feed.html', posts=feed_items, sections=all_sections)
+    # --- PROCESAMIENTO FINAL ---
+    feed_items.sort(key=lambda item: item.get('activity_timestamp') or datetime.min.replace(tzinfo=timezone.utc), reverse=True)
+
+    # --- LÍNEAS CLAVE: PAGINACIÓN PARA LA CARGA INICIAL ---
+    posts_for_page_1 = feed_items[0 : POSTS_PER_PAGE]
+
+    # También necesitamos la lista de secciones para el formulario de nuevo post
+    all_sections = []
+    c.execute("SELECT id, name, slug FROM sections ORDER BY name ASC")
+    sections_raw = c.fetchall()
+    for section_row in sections_raw:
+        all_sections.append(dict(section_row))
+
+    # En la función feed()
+    return render_template('feed.html', 
+                           posts=posts_for_page_1, 
+                           sections=all_sections,
+                           POSTS_PER_PAGE=POSTS_PER_PAGE)
 
 
 @app.route('/post', methods=['POST'])
@@ -3403,6 +3306,118 @@ def contacts_feed():
 
     return render_template('feed_contacts.html', posts=feed_items, has_contacts=bool(contact_ids))
 
+
+# Asegúrate de tener POSTS_PER_PAGE = 10 (o el número que quieras) definido globalmente
+# Y también: from flask import jsonify, render_template
+
+# Reemplaza tu función api_feed() completa con esta:
+
+@app.route('/api/feed')
+def api_feed():
+    if 'user_id' not in session:
+        return jsonify(error="Not authenticated"), 401
+
+    user_id_actual = session['user_id']
+    page = request.args.get('page', 1, type=int)
+
+    # --- INICIO DE LA LÓGICA COMPLETA PARA OBTENER EL FEED ---
+    feed_items = []
+    default_username_display = _("Usuario")
+    with sqlite3.connect('users.db') as conn:
+        conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+
+        excluded_ids = get_blocked_and_blocking_ids(user_id_actual, c)
+        
+        # 1. Obtener publicaciones originales
+        params_original = []
+        where_clauses_original = []
+        if excluded_ids:
+            excluded_placeholders_str = ','.join('?' for _ in excluded_ids)
+            where_clauses_original.append(f"p.user_id NOT IN ({excluded_placeholders_str})")
+            params_original.extend(list(excluded_ids))
+
+        query_original_posts = f'''
+            SELECT p.id, p.user_id AS autor_id_post, pr.username, pr.photo, p.content, p.image_filename, p.timestamp AS post_timestamp_str, pr.slug, s.name AS section_name, s.slug AS section_slug, p.preview_url, p.preview_title, p.preview_description, p.preview_image_url
+            FROM posts p JOIN users u ON p.user_id = u.id LEFT JOIN profiles pr ON u.id = pr.user_id LEFT JOIN sections s ON p.section_id = s.id
+            { "WHERE " + " AND ".join(where_clauses_original) if where_clauses_original else "" }
+            ORDER BY p.timestamp DESC LIMIT 200
+        '''
+        c.execute(query_original_posts, tuple(params_original))
+        original_posts_raw = c.fetchall()
+        for post_data in original_posts_raw:
+            post_id = post_data['id']
+            post_timestamp_obj = parse_timestamp(post_data['post_timestamp_str'])
+            c.execute("SELECT reaction_type FROM post_reactions WHERE post_id = ? AND user_id = ?", (post_id, user_id_actual))
+            reaccion_usuario_actual_row = c.fetchone()
+            usuario_reacciono_info = {'reaction_type': reaccion_usuario_actual_row['reaction_type']} if reaccion_usuario_actual_row else None
+            c.execute("SELECT COUNT(id) AS total_reactions FROM post_reactions WHERE post_id = ?", (post_id,))
+            num_reacciones_totales_row = c.fetchone(); num_reacciones_totales = num_reacciones_totales_row['total_reactions'] if num_reacciones_totales_row else 0
+            c.execute("SELECT COUNT(id) FROM shared_posts WHERE original_post_id = ?", (post_id,))
+            share_count_row = c.fetchone(); share_count = share_count_row[0] if share_count_row else 0
+            c.execute("SELECT cm.id, pr_com.username AS comment_username, pr_com.photo AS comment_photo, cm.content AS comment_content, cm.timestamp AS comment_timestamp_str, pr_com.slug AS comment_slug, cm.parent_comment_id, cm.user_id AS comment_user_id FROM comments cm JOIN users u_com ON cm.user_id = u_com.id LEFT JOIN profiles pr_com ON u_com.id = pr_com.user_id WHERE cm.post_id = ? ORDER BY cm.timestamp ASC", (post_id,))
+            comentarios_raw = c.fetchall()
+            comments_map = {}; structured_comments = []
+            for row_com in comentarios_raw:
+                comment_id = row_com['id']; comment_timestamp_obj = parse_timestamp(row_com['comment_timestamp_str'])
+                c.execute("SELECT COUNT(id) FROM comment_reactions WHERE comment_id = ?", (comment_id,)); total_comment_reactions_row = c.fetchone(); total_comment_reactions = total_comment_reactions_row[0] if total_comment_reactions_row else 0
+                c.execute("SELECT reaction_type FROM comment_reactions WHERE comment_id = ? AND user_id = ?", (comment_id, user_id_actual)); user_cr_row = c.fetchone(); user_comment_reaction = {'reaction_type': user_cr_row['reaction_type']} if user_cr_row else None
+                comments_map[comment_id] = {'id': comment_id, 'username': (row_com['comment_username'] or default_username_display), 'photo': row_com['comment_photo'], 'content': procesar_menciones_para_mostrar(row_com['comment_content']), 'timestamp': comment_timestamp_obj, 'slug': (row_com['comment_slug'] or "#"), 'parent_comment_id': row_com['parent_comment_id'], 'user_id': row_com['comment_user_id'], 'replies': [], 'total_reactions': total_comment_reactions, 'user_reaction': user_comment_reaction}
+            for cid, cdata in comments_map.items():
+                if cdata['parent_comment_id'] and cdata['parent_comment_id'] in comments_map: comments_map[cdata['parent_comment_id']]['replies'].append(cdata)
+                else: structured_comments.append(cdata)
+            feed_items.append({'item_type': 'original_post', 'activity_timestamp': post_timestamp_obj, 'id': post_id, 'autor_id_post': post_data['autor_id_post'], 'username': (post_data['username'] or default_username_display), 'photo': post_data['photo'], 'slug': (post_data['slug'] or "#"), 'content': procesar_menciones_para_mostrar(post_data['content']), 'image_filename': post_data['image_filename'], 'timestamp': post_timestamp_obj, 'comments': structured_comments, 'total_reactions': num_reacciones_totales, 'user_reaction': usuario_reacciono_info, 'share_count': share_count, 'section_name': post_data['section_name'], 'section_slug': post_data['section_slug'], 'preview_url': post_data['preview_url'], 'preview_title': post_data['preview_title'], 'preview_description': post_data['preview_description'], 'preview_image_url': post_data['preview_image_url']})
+        
+        # 2. Obtener publicaciones compartidas
+        params_shared = []
+        where_clauses_shared = []
+        if excluded_ids:
+            excluded_placeholders_str = ','.join('?' for _ in excluded_ids)
+            where_clauses_shared.append(f"sp.user_id NOT IN ({excluded_placeholders_str})")
+            params_shared.extend(list(excluded_ids))
+            where_clauses_shared.append(f"op.user_id NOT IN ({excluded_placeholders_str})")
+            params_shared.extend(list(excluded_ids))
+        query_shared_posts = f'''
+            SELECT sp.id AS share_id, sp.timestamp AS share_timestamp_str, sp.user_id AS sharer_user_id, sharer_profile.username AS sharer_username, sharer_profile.photo AS sharer_photo, sharer_profile.slug AS sharer_slug, sp.quote_content, op.id AS original_post_id, op.user_id AS original_author_user_id, op.content AS original_content, op.image_filename AS original_image_filename, op.timestamp AS original_timestamp_str, original_author_profile.username AS original_author_username, original_author_profile.photo AS original_author_photo, original_author_profile.slug AS original_author_slug, s_orig.name AS original_section_name, s_orig.slug AS original_section_slug, op.preview_url, op.preview_title, op.preview_description, op.preview_image_url
+            FROM shared_posts sp JOIN users sharer_user ON sp.user_id = sharer_user.id LEFT JOIN profiles sharer_profile ON sp.user_id = sharer_profile.user_id JOIN posts op ON sp.original_post_id = op.id LEFT JOIN sections s_orig ON op.section_id = s_orig.id JOIN users original_author_user ON op.user_id = original_author_user.id LEFT JOIN profiles original_author_profile ON op.user_id = original_author_profile.user_id
+            { "WHERE " + " AND ".join(where_clauses_shared) if where_clauses_shared else "" }
+            ORDER BY sp.timestamp DESC
+            LIMIT 200
+        '''
+        c.execute(query_shared_posts, tuple(params_shared))
+        shared_posts_raw = c.fetchall()
+        for shared_data in shared_posts_raw:
+            original_post_id = shared_data['original_post_id']
+            share_timestamp_obj = parse_timestamp(shared_data['share_timestamp_str'])
+            original_timestamp_obj = parse_timestamp(shared_data['original_timestamp_str'])
+            c.execute("SELECT reaction_type FROM post_reactions WHERE post_id = ? AND user_id = ?", (original_post_id, user_id_actual))
+            reaccion_usuario_original_row = c.fetchone(); usuario_reacciono_original_info = {'reaction_type': reaccion_usuario_original_row['reaction_type']} if reaccion_usuario_original_row else None
+            c.execute("SELECT COUNT(id) AS total_reactions FROM post_reactions WHERE post_id = ?", (original_post_id,)); num_reacciones_original_totales_row = c.fetchone(); num_reacciones_original_totales = num_reacciones_original_totales_row['total_reactions'] if num_reacciones_original_totales_row else 0
+            c.execute("SELECT COUNT(id) FROM shared_posts WHERE original_post_id = ?", (original_post_id,)); share_count_original_row = c.fetchone(); share_count_original = share_count_original_row[0] if share_count_original_row else 0
+            c.execute("SELECT cm.id, pr_com.username AS comment_username, pr_com.photo AS comment_photo, cm.content AS comment_content, cm.timestamp AS comment_timestamp_str, pr_com.slug AS comment_slug, cm.parent_comment_id, cm.user_id AS comment_user_id FROM comments cm JOIN users u_com ON cm.user_id = u_com.id LEFT JOIN profiles pr_com ON u_com.id = pr_com.user_id WHERE cm.post_id = ? ORDER BY cm.timestamp ASC", (original_post_id,))
+            comentarios_original_raw = c.fetchall()
+            comments_original_map = {}; structured_original_comments = []
+            for row_com_orig in comentarios_original_raw:
+                comment_id_orig = row_com_orig['id']; comment_original_timestamp_obj = parse_timestamp(row_com_orig['comment_timestamp_str'])
+                c.execute("SELECT COUNT(id) FROM comment_reactions WHERE comment_id = ?", (comment_id_orig,)); total_comment_reactions_o_row = c.fetchone(); total_comment_reactions_o = total_comment_reactions_o_row[0] if total_comment_reactions_o_row else 0
+                c.execute("SELECT reaction_type FROM comment_reactions WHERE comment_id = ? AND user_id = ?", (comment_id_orig, user_id_actual)); user_cr_o_row = c.fetchone(); user_comment_reaction_o = {'reaction_type': user_cr_o_row['reaction_type']} if user_cr_o_row else None
+                comments_original_map[comment_id_orig] = { 'id': comment_id_orig, 'username': (row_com_orig['comment_username'] or default_username_display), 'photo': row_com_orig['comment_photo'], 'content': procesar_menciones_para_mostrar(row_com_orig['comment_content']), 'timestamp': comment_original_timestamp_obj, 'slug': (row_com_orig['comment_slug'] or "#"), 'parent_comment_id': row_com_orig['parent_comment_id'], 'user_id': row_com_orig['comment_user_id'], 'replies': [], 'total_reactions': total_comment_reactions_o, 'user_reaction': user_comment_reaction_o }
+            for cid_orig, cdata_orig in comments_original_map.items():
+                if cdata_orig['parent_comment_id'] and cdata_orig['parent_comment_id'] in comments_original_map: comments_original_map[cdata_orig['parent_comment_id']]['replies'].append(cdata_orig)
+                else: structured_original_comments.append(cdata_orig)
+            feed_items.append({ 'item_type': 'shared_post', 'activity_timestamp': share_timestamp_obj, 'share_id': shared_data['share_id'], 'sharer_user_id': shared_data['sharer_user_id'], 'sharer_username': (shared_data['sharer_username'] or default_username_display), 'sharer_photo': shared_data['sharer_photo'], 'sharer_slug': (shared_data['sharer_slug'] or "#"), 'share_timestamp': share_timestamp_obj, 'quote_content': procesar_menciones_para_mostrar(shared_data['quote_content']), 'original_post': { 'id': original_post_id, 'autor_id_post': shared_data['original_author_user_id'], 'username': (shared_data['original_author_username'] or default_username_display), 'photo': shared_data['original_author_photo'], 'slug': (shared_data['original_author_slug'] or "#"), 'content': procesar_menciones_para_mostrar(shared_data['original_content']), 'image_filename': shared_data['original_image_filename'], 'timestamp': original_timestamp_obj, 'comments': structured_original_comments, 'total_reactions': num_reacciones_original_totales, 'user_reaction': usuario_reacciono_original_info, 'share_count': share_count_original, 'section_name': shared_data['original_section_name'], 'section_slug': shared_data['original_section_slug'], 'preview_url': shared_data['preview_url'], 'preview_title': shared_data['preview_title'], 'preview_description': shared_data['preview_description'], 'preview_image_url': shared_data['preview_image_url'] } })
+        
+    # --- FIN DE LA LÓGICA COMPLETA ---
+
+    feed_items.sort(key=lambda item: item.get('activity_timestamp') or datetime.min.replace(tzinfo=timezone.utc), reverse=True)
+
+    offset = (page - 1) * POSTS_PER_PAGE
+    posts_for_page = feed_items[offset : offset + POSTS_PER_PAGE]
+
+    if not posts_for_page:
+        return ""
+
+    return render_template('_post_card_list.html', posts=posts_for_page)
 
 if __name__ == '__main__':
     print("Iniciando la base de datos y la aplicación web...")

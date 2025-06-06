@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Administración de Publicaciones') }} - PiVerse{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-3">
+        <div class="col">
+            <h2><i class="bi bi-file-earmark-text-fill"></i> {{ _('Administración de Publicaciones') }}</h2>
+        </div>
+    </div>
+
+    {# Menú de navegación para el panel de admin #}
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'admin_users_list' %}active{% endif %}" href="{{ url_for('admin_users_list') }}">{{ _('Usuarios') }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'admin_list_posts' %}active{% endif %}" href="{{ url_for('admin_list_posts') }}">{{ _('Publicaciones') }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'admin_list_comments' %}active{% endif %}" href="{{ url_for('admin_list_comments') }}">{{ _('Comentarios') }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'admin_view_log' %}active{% endif %}" href="{{ url_for('admin_view_log') }}">{{ _('Registro de Acciones') }}</a>
+        </li>
+    </ul>
+
+    {% if posts_list %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">{{ _('Autor') }}</th>
+                    <th scope="col">{{ _('Contenido (Extracto)') }}</th>
+                    <th scope="col">{{ _('Imagen') }}</th>
+                    <th scope="col">{{ _('Enlace (Título)') }}</th>
+                    <th scope="col">{{ _('Sección') }}</th>
+                    <th scope="col">{{ _('Fecha') }}</th>
+                    <th scope="col">{{ _('Acciones') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in posts_list %}
+                <tr>
+                    <td>{{ post.id }}</td>
+                    <td>
+                        {% if post.author_slug %}
+                            <a href="{{ url_for('ver_perfil', slug_perfil=post.author_slug) }}">@{{ post.author_username }}</a>
+                        {% else %}
+                            @{{ post.author_username }}
+                        {% endif %}
+                        <br><small class="text-muted">(ID: {{ post.author_user_id }})</small>
+                    </td>
+                    <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ post.content }}">
+                        {{ post.content_display[:150] | safe }}{% if post.content_display|length > 150 %}...{% endif %}
+                    </td>
+                    <td>
+                        {% if post.image_filename %}
+                            <img src="{{ url_for('static', filename='uploads/post_images/' + post.image_filename) }}" alt="{{ _('Imagen del post') }}" style="max-height: 50px; max-width: 70px; object-fit: cover; cursor: pointer;"
+                                 data-bs-toggle="modal" data-bs-target="#imageModal-{{ post.id }}">
+                            
+                            <div class="modal fade" id="imageModal-{{ post.id }}" tabindex="-1" aria-labelledby="imageModalLabel-{{ post.id }}" aria-hidden="true">
+                              <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="imageModalLabel-{{ post.id }}">{{ _('Imagen del Post') }} #{{ post.id }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body text-center">
+                                    <img src="{{ url_for('static', filename='uploads/post_images/' + post.image_filename) }}" class="img-fluid" alt="{{ _('Imagen del post') }}">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        {% if post.preview_url %}
+                            <a href="{{ post.preview_url }}" target="_blank" title="{{ post.preview_url }}">{{ post.preview_title or post.preview_url }}</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if post.section_name %}
+                            <a href="{{ url_for('view_section', slug_seccion=post.section_slug) }}">{{ post.section_name }}</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        <small class="text-muted" title="{{ post.timestamp }}">
+                            {{ format_datetime(post.timestamp_obj, 'short') if post.timestamp_obj else post.timestamp.split('.')[0] }}
+                        </small>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <a href="{{ url_for('ver_publicacion_individual', post_id_vista=post.id) }}" class="btn btn-sm btn-outline-primary" title="{{ _('Ver Post') }}"><i class="bi bi-eye-fill"></i></a>
+                            
+                            <a href="{{ url_for('admin_edit_post', post_id=post.id) }}" class="btn btn-sm btn-outline-warning ms-1" title="{{ _('Editar Post') }}"><i class="bi bi-pencil-fill"></i></a>
+
+                            <form method="POST" action="{{ url_for('delete_post', post_id=post.id) }}" class="ms-1"
+                                  onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar esta publicación (ID: %(post_id)s)? Esta acción no se puede deshacer.', post_id=post.id) }}');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Eliminar Post') }}"><i class="bi bi-trash-fill"></i></button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info" role="alert">
+        {{ _('No se encontraron publicaciones.') }}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

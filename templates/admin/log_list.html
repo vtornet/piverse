@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Registro de Auditoría') }} - PiVerse{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-3">
+        <div class="col">
+            <h2><i class="bi bi-clipboard-data-fill"></i> {{ _('Registro de Auditoría') }}</h2>
+            <p class="text-muted">{{ _('Historial de acciones de moderadores, coordinadores y administradores.') }}</p>
+        </div>
+    </div>
+
+    {# Menú de navegación para el panel de admin #}
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('admin_users_list') }}">{{ _('Usuarios') }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('admin_list_posts') }}">{{ _('Publicaciones') }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('admin_list_comments') }}">{{ _('Comentarios') }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{ url_for('admin_view_log') }}">{{ _('Registro de Acciones') }}</a>
+        </li>
+    </ul>
+
+    {% if logs %}
+    <div class="table-responsive">
+        <table class="table table-sm table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">{{ _('Fecha') }}</th>
+                    <th scope="col">{{ _('Actor') }}</th>
+                    <th scope="col">{{ _('Acción') }}</th>
+                    <th scope="col">{{ _('Detalles') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td class="text-nowrap"><small>{{ format_datetime(log.timestamp_obj, 'short') if log.timestamp_obj else log.timestamp }}</small></td>
+                    <td><a href="{{ url_for('ver_perfil', slug_perfil=log.actor_username) }}">@{{ log.actor_username }}</a></td>
+                    <td><span class="badge bg-info text-dark">{{ log.action_type }}</span></td>
+                    <td class="text-muted"><small>{{ log.details }}</small></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info" role="alert">
+        {{ _('No hay acciones registradas en el log de auditoría.') }}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

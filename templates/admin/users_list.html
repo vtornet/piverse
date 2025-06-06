@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Administración de Usuarios') }} - PiVerse{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-3">
+        <div class="col">
+            <h2><i class="bi bi-people-fill"></i> {{ _('Administración de Usuarios') }}</h2>
+        </div>
+    </div>
+
+    {# Menú de navegación para el panel de admin #}
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'admin_users_list' %}active{% endif %}" href="{{ url_for('admin_users_list') }}">{{ _('Usuarios') }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'admin_list_posts' %}active{% endif %}" href="{{ url_for('admin_list_posts') }}">{{ _('Publicaciones') }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'admin_list_comments' %}active{% endif %}" href="{{ url_for('admin_list_comments') }}">{{ _('Comentarios') }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'admin_view_log' %}active{% endif %}" href="{{ url_for('admin_view_log') }}">{{ _('Registro de Acciones') }}</a>
+        </li>
+    </ul>
+
+    {% if users_list %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">{{ _('Username (Login)') }}</th>
+                    <th scope="col">{{ _('Nombre de Perfil Público') }}</th>
+                    <th scope="col">{{ _('Slug de Perfil') }}</th>
+                    <th scope="col">{{ _('Rol') }}</th>
+                    <th scope="col" style="width: 280px;">{{ _('Acciones') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users_list %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.login_username }}</td>
+                    <td>
+                        {% if user.profile_display_name %}
+                            <a href="{{ url_for('ver_perfil', slug_perfil=user.slug if user.slug else '#') }}">@{{ user.profile_display_name }}</a>
+                        {% else %}
+                            <span class="text-muted fst-italic">{{ _('No establecido') }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ user.slug if user.slug else '-' }}</td>
+                    <td>
+                        {# Lógica para mostrar el rol con diferentes colores #}
+                        {% if user.role == 'admin' %}
+                            <span class="badge bg-danger">{{ _('Administrador') }}</span>
+                        {% elif user.role == 'coordinator' %}
+                            <span class="badge bg-warning text-dark">{{ _('Coordinador') }}</span>
+                        {% elif user.role == 'moderator' %}
+                            <span class="badge bg-primary">{{ _('Moderador') }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ _('Usuario') }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <a href="{{ url_for('ver_perfil', slug_perfil=user.slug if user.slug else '#') }}" class="btn btn-sm btn-outline-primary" title="{{ _('Ver Perfil') }}"><i class="bi bi-eye-fill"></i></a>
+                            
+                            {% if user.id != session.user_id %}
+                            <form method="POST" action="{{ url_for('admin_set_user_role', user_id=user.id) }}" class="d-inline-flex align-items-center ms-2">
+                                <select class="form-select form-select-sm me-1" name="role" style="width: auto;"
+                                        {# Un coordinador no puede modificar a otros admins o coordinadores, por lo tanto se deshabilita el select #}
+                                        {% if current_user_role == 'coordinator' and user.role in ['admin', 'coordinator'] %}disabled{% endif %}>
+                                    
+                                    <option value="user" {% if user.role == 'user' %}selected{% endif %}>{{ _('Usuario') }}</option>
+                                    <option value="moderator" {% if user.role == 'moderator' %}selected{% endif %}>{{ _('Moderador') }}</option>
+                                    
+                                    {# Solo los admins pueden ver y asignar los roles de Coordinador y Administrador #}
+                                    {% if current_user_role == 'admin' %}
+                                    <option value="coordinator" {% if user.role == 'coordinator' %}selected{% endif %}>{{ _('Coordinador') }}</option>
+                                    <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>{{ _('Administrador') }}</option>
+                                    {% endif %}
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-success" title="{{ _('Guardar Rol') }}"
+                                        {# Deshabilitar también el botón para mayor seguridad y claridad visual #}
+                                        {% if current_user_role == 'coordinator' and user.role in ['admin', 'coordinator'] %}disabled{% endif %}>
+                                    <i class="bi bi-check-lg"></i>
+                                </button>
+                            </form>
+                            {% else %}
+                            <span class="badge bg-info ms-2">{{ _('Eres tú') }}</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info" role="alert">
+        {{ _('No se encontraron usuarios.') }}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -230,6 +230,15 @@
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('feed') }}"><i class="bi bi-house-door-fill"></i> {{ _('Inicio') }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('profile') }}"><i class="bi bi-person-circle"></i> {{ _('Mi Perfil') }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('contactos') }}"><i class="bi bi-people-fill"></i> {{ _('Mis Contactos') }}</a></li>
+                        {# --- INICIO: ENLACE CONDICIONAL AL PANEL DE ADMIN --- #}
+                        {% if current_user_role in ['moderator', 'coordinator', 'admin'] %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_users_list') }}" style="color: #ffc107;">
+                                <i class="bi bi-shield-lock-fill"></i> {{ _('Panel Admin') }}
+                            </a>
+                        </li>
+                        {% endif %}
+                        {# --- FIN: ENLACE CONDICIONAL AL PANEL DE ADMIN --- #}
                         
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('sections_list') }}">
