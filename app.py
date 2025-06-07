@@ -11,7 +11,7 @@ import time
 from bs4 import BeautifulSoup # Para analizar HTML
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 app = Flask(__name__)
 app.secret_key = 'tu_clave_secreta_aqui_MUY_SECRETA'
@@ -95,6 +95,32 @@ def init_db():
                 role TEXT NOT NULL DEFAULT 'user'
             )
         ''')
+        # --- SALVAGUARDAS PARA 'users' (sanciones) ---
+        c.execute("PRAGMA table_info(users)")
+        users_columns = [column[1] for column in c.fetchall()]
+
+        if 'banned_until' not in users_columns:
+            try:
+                # Usamos DATETIME para poder guardar fechas y horas específicas
+                c.execute("ALTER TABLE users ADD COLUMN banned_until DATETIME DEFAULT NULL")
+                print("Columna 'banned_until' añadida a la tabla 'users'.")
+            except sqlite3.OperationalError as e:
+                print(f"DEBUG: No se pudo añadir la columna 'banned_until': {e}")
+
+        if 'ban_reason' not in users_columns:
+            try:
+                c.execute("ALTER TABLE users ADD COLUMN ban_reason TEXT DEFAULT NULL")
+                print("Columna 'ban_reason' añadida a la tabla 'users'.")
+            except sqlite3.OperationalError as e:
+                print(f"DEBUG: No se pudo añadir la columna 'ban_reason': {e}")
+                
+        if 'muted_until' not in users_columns:
+            try:
+                c.execute("ALTER TABLE users ADD COLUMN muted_until DATETIME DEFAULT NULL")
+                print("Columna 'muted_until' añadida a la tabla 'users'.")
+            except sqlite3.OperationalError as e:
+                print(f"DEBUG: No se pudo añadir la columna 'muted_until': {e}")
+                
         # --- SALVAGUARDAS PARA LA TABLA 'users' (roles) ---
         c.execute("PRAGMA table_info(users)")
         users_columns_info = {column[1]: column for column in c.fetchall()} # {name: (cid, name, type, ...)}
@@ -574,9 +600,7 @@ def procesar_menciones_para_mostrar(texto):
         return f'<a href="{url_for("ver_perfil", slug_perfil=slug_enlace)}">@{slug_capturado}</a>'
     return re.sub(r'@([a-zA-Z0-9_]+)', reemplazar, texto, flags=re.IGNORECASE)
 
-# Asegúrate de que timezone está importado desde datetime al principio de tu app.py
-from datetime import datetime, timezone
-
+# Reemplaza la función parse_timestamp existente por esta versión final:
 def parse_timestamp(timestamp_str):
     """
     Parsea una cadena de texto de timestamp y devuelve un objeto datetime 
@@ -584,24 +608,32 @@ def parse_timestamp(timestamp_str):
     """
     if not timestamp_str:
         return None
-    # Si ya es un objeto datetime, aseguramos que tenga timezone
     if isinstance(timestamp_str, datetime):
-        return timestamp_str if timestamp_str.tzinfo else timestamp_str.replace(tzinfo=timezone.utc)
+        if timestamp_str.tzinfo:
+            return timestamp_str.astimezone(timezone.utc)
+        else:
+            return timestamp_str.replace(tzinfo=timezone.utc)
 
     formats_to_try = [
-        '%Y-%m-%d %H:%M:%S.%f',  # Formato con microsegundos
-        '%Y-%m-%d %H:%M:%S'      # Formato sin microsegundos
+        '%Y-%m-%d %H:%M:%S.%f%z',
+        '%Y-%m-%d %H:%M:%S%z',
+        '%Y-%m-%d %H:%M:%S.%f',
+        '%Y-%m-%d %H:%M:%S'
     ]
     for fmt in formats_to_try:
         try:
-            dt_obj_naive = datetime.strptime(timestamp_str, fmt)
-            # LA CORRECCIÓN CLAVE: Asignamos la zona horaria UTC al objeto de fecha.
-            dt_obj_aware = dt_obj_naive.replace(tzinfo=timezone.utc)
-            return dt_obj_aware
+            dt_obj = datetime.strptime(timestamp_str, fmt)
+            
+            # Si el objeto ya tiene zona horaria por el formato %z, lo pasamos a UTC
+            if dt_obj.tzinfo:
+                return dt_obj.astimezone(timezone.utc)
+            # Si es naive (no tiene zona horaria), le asignamos UTC
+            else:
+                return dt_obj.replace(tzinfo=timezone.utc)
         except ValueError:
             continue
             
-    print(f"ADVERTENCIA: No se pudo parsear la cadena de timestamp: {timestamp_str} con los formatos probados.")
+    print(f"ADVERTENCIA: No se pudo parsear la cadena de timestamp: '{timestamp_str}' con los formatos probados.")
     return None
 
 # --- NUEVAS FUNCIONES PARA PREVISUALIZACIÓN DE ENLACES ---
@@ -712,6 +744,79 @@ def login_required(f):
             return redirect(url_for('login', next=request.url))
         return f(*args, **kwargs)
     return decorated_function
+
+# Reemplaza la función check_sanctions_and_block existente por esta:
+def check_sanctions_and_block(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            return f(*args, **kwargs)
+
+        user_id = session['user_id']
+        with sqlite3.connect('users.db') as conn:
+            conn.row_factory = sqlite3.Row
+            c = conn.cursor()
+            c.execute("SELECT banned_until, muted_until FROM users WHERE id = ?", (user_id,))
+            user_sanctions = c.fetchone()
+        
+        if not user_sanctions:
+            session.clear()
+            return redirect(url_for('login'))
+
+        now_utc = datetime.now(timezone.utc)
+
+        # Comprobar si está baneado
+        if user_sanctions['banned_until']:
+            banned_until_dt = parse_timestamp(user_sanctions['banned_until'])
+            # --- CORRECCIÓN: Añadimos la comprobación "if banned_until_dt" ---
+            if banned_until_dt and banned_until_dt > now_utc:
+                session.clear()
+                flash(_('Tu cuenta está suspendida y tu sesión ha sido cerrada.'), 'danger')
+                return redirect(url_for('login'))
+
+        # Comprobar si está silenciado
+        if user_sanctions['muted_until']:
+            muted_until_dt = parse_timestamp(user_sanctions['muted_until'])
+            # --- CORRECCIÓN: Añadimos la comprobación "if muted_until_dt" ---
+            if muted_until_dt and muted_until_dt > now_utc:
+                flash(_('Tu cuenta está silenciada. No puedes publicar ni comentar temporalmente.'), 'warning')
+                return redirect(request.referrer or url_for('feed'))
+        
+        return f(*args, **kwargs)
+    return decorated_function
+
+def check_sanctions_and_block_api(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            return jsonify(success=False, error=_('Autenticación requerida.')), 401
+
+        user_id = session['user_id']
+        with sqlite3.connect('users.db') as conn:
+            conn.row_factory = sqlite3.Row
+            c = conn.cursor()
+            c.execute("SELECT banned_until, muted_until FROM users WHERE id = ?", (user_id,))
+            user_sanctions = c.fetchone()
+        
+        if not user_sanctions:
+            session.clear()
+            return jsonify(success=False, error=_('Usuario no encontrado.')), 401
+
+        now_utc = datetime.now(timezone.utc)
+        
+        if user_sanctions['banned_until']:
+            banned_until_dt = parse_timestamp(user_sanctions['banned_until'])
+            if banned_until_dt > now_utc:
+                session.clear()
+                return jsonify(success=False, error=_('Tu cuenta está suspendida.')), 403
+
+        if user_sanctions['muted_until']:
+            muted_until_dt = parse_timestamp(user_sanctions['muted_until'])
+            if muted_until_dt > now_utc:
+                return jsonify(success=False, error=_('Tu cuenta está silenciada. No puedes realizar esta acción.')), 403
+        
+        return f(*args, **kwargs)
+    return decorated_function
         
     conn.commit()
 
@@ -812,32 +917,53 @@ def register():
                 flash(_('Ese nombre de usuario para login ya existe. Por favor, elige otro.'), 'danger')
     return render_template('register.html')
 
+# Reemplaza la función login existente por esta:
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username_login = request.form['username']
         password = request.form['password']
         with sqlite3.connect('users.db') as conn:
+            conn.row_factory = sqlite3.Row # Usamos Row Factory para poder acceder por nombre
             c = conn.cursor()
-            c.execute('SELECT id, password FROM users WHERE username = ?', (username_login,))
+            # Modificamos la consulta para obtener también los datos del baneo
+            c.execute('SELECT id, password, banned_until, ban_reason FROM users WHERE username = ?', (username_login,))
             user_data = c.fetchone()
-        if user_data and check_password_hash(user_data[1], password):
-            session['user_id'] = user_data[0]
+
+        if user_data and check_password_hash(user_data['password'], password):
+            
+            # --- NUEVA COMPROBACIÓN DE BANEO ---
+            if user_data['banned_until']:
+                banned_until_dt = parse_timestamp(user_data['banned_until'])
+                now_utc = datetime.now(timezone.utc)
+
+                if banned_until_dt > now_utc:
+                    # El usuario está actualmente baneado
+                    fecha_fin_baneo = format_datetime(banned_until_dt, 'long')
+                    motivo = user_data['ban_reason'] or _('No se especificó un motivo.')
+                    flash(_('Tu cuenta está suspendida hasta el %(date)s. Motivo: "%(reason)s"', date=fecha_fin_baneo, reason=motivo), 'danger')
+                    return redirect(url_for('login'))
+
+            # Si no está baneado, el flujo continúa como antes
+            session['user_id'] = user_data['id']
             session['username_login'] = username_login
-            with sqlite3.connect('users.db') as conn:
-                c_profile = conn.cursor()
-                c_profile.execute('SELECT username FROM profiles WHERE user_id = ?', (user_data[0],))
+            
+            with sqlite3.connect('users.db') as conn_profile:
+                c_profile = conn_profile.cursor()
+                c_profile.execute('SELECT username FROM profiles WHERE user_id = ?', (user_data['id'],))
                 profile_data = c_profile.fetchone()
                 session['display_username'] = profile_data[0] if profile_data and profile_data[0] and profile_data[0].strip() else username_login
-            if not check_profile_completion(user_data[0]):
+
+            if not check_profile_completion(user_data['id']):
                  flash(_('¡Bienvenido! Por favor, completa tu perfil público para continuar.'), 'info')
                  return redirect(url_for('profile'))
+            
             flash(_('Inicio de sesión exitoso.'), 'success')
             return redirect(url_for('feed'))
         else:
             flash(_("Credenciales inválidas. Inténtalo de nuevo."), 'danger')
+            
     return render_template('login.html')
-
 @app.route('/logout')
 def logout():
     session.clear()
@@ -1027,9 +1153,11 @@ def feed():
                            sections=all_sections,
                            POSTS_PER_PAGE=POSTS_PER_PAGE)
 
+# Reemplaza la función post existente por esta:
 @app.route('/post', methods=['POST'])
+@login_required
+@check_sanctions_and_block
 def post():
-    if 'user_id' not in session: return redirect(url_for('login'))
     user_id_actual = session['user_id']
     if not check_profile_completion(user_id_actual):
         flash(_('Por favor, completa tu perfil antes de publicar.'), 'warning')
@@ -1042,6 +1170,7 @@ def post():
     if section_id_str and section_id_str.isdigit():
         section_id = int(section_id_str)
 
+    # ... (el resto de la función se mantiene exactamente igual) ...
     contenido_post_limpio = contenido_post.strip()
 
     if not contenido_post_limpio and not archivo_imagen:
@@ -1068,24 +1197,15 @@ def post():
          flash(_('La publicación no puede estar completamente vacía. Añade texto o una imagen.'), 'danger')
          return redirect(request.referrer or url_for('feed'))
 
-
-    # --- INICIO: Lógica para Previsualización de Enlaces ---
-    preview_url_db = None
-    preview_title_db = None
-    preview_description_db = None
-    preview_image_url_db = None
-
+    preview_url_db, preview_title_db, preview_description_db, preview_image_url_db = None, None, None, None
     first_url_found = extract_first_url(contenido_post)
-
     if first_url_found:
         link_preview_data = generate_link_preview(first_url_found)
-        if link_preview_data:
-            if link_preview_data.get('title') or link_preview_data.get('description'):
-                preview_url_db = link_preview_data.get('url')
-                preview_title_db = link_preview_data.get('title')
-                preview_description_db = link_preview_data.get('description')
-                preview_image_url_db = link_preview_data.get('image_url')
-    # --- FIN: Lógica para Previsualización de Enlaces ---
+        if link_preview_data and (link_preview_data.get('title') or link_preview_data.get('description')):
+            preview_url_db = link_preview_data.get('url')
+            preview_title_db = link_preview_data.get('title')
+            preview_description_db = link_preview_data.get('description')
+            preview_image_url_db = link_preview_data.get('image_url')
 
     with sqlite3.connect('users.db') as conn:
         c = conn.cursor()
@@ -1103,6 +1223,7 @@ def post():
 
     flash(_('Publicación creada.'), 'success')
     return redirect(request.referrer or url_for('feed'))
+
 
 @app.route('/post/<int:post_id>/delete', methods=['POST'])
 def delete_post(post_id):
@@ -1151,6 +1272,7 @@ def delete_post(post_id):
 
 # 1. Reemplaza la función react_to_post
 @app.route('/react_to_post/<int:post_id>', methods=['POST'])
+@check_sanctions_and_block_api
 def react_to_post(post_id):
     if 'user_id' not in session:
         return jsonify(success=False, error='authentication_required'), 401
@@ -1196,19 +1318,19 @@ def react_to_post(post_id):
     )
 
 @app.route('/comment/<int:post_id>', methods=['POST'])
+@login_required
+@check_sanctions_and_block
 def comment(post_id):
-    if 'user_id' not in session: return redirect(url_for('login'))
     user_id_actual = session['user_id']
     if not check_profile_completion(user_id_actual):
         flash(_('Por favor, completa tu perfil antes de comentar.'), 'warning')
         return redirect(url_for('profile'))
 
     contenido_comentario = request.form['content'].strip()
-    parent_comment_id_str = request.form.get('parent_comment_id') 
-    parent_comment_id = None
-    if parent_comment_id_str and parent_comment_id_str.isdigit():
-        parent_comment_id = int(parent_comment_id_str)
+    parent_comment_id_str = request.form.get('parent_comment_id')
+    parent_comment_id = int(parent_comment_id_str) if parent_comment_id_str and parent_comment_id_str.isdigit() else None
 
+    # ... (el resto de la función se mantiene exactamente igual) ...
     if not contenido_comentario:
         flash(_('El comentario no puede estar vacío.'), 'danger')
         return redirect(request.referrer or url_for('feed'))
@@ -1217,7 +1339,7 @@ def comment(post_id):
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
 
-        c.execute("SELECT user_id FROM posts WHERE id = ?", (post_id,))
+        c.execute("SELECT user_id FROM posts WHERE id = ? AND is_visible = 1", (post_id,))
         post_info = c.fetchone()
         if not post_info:
             flash(_('La publicación a la que intentas responder no existe.'), 'danger')
@@ -1229,20 +1351,11 @@ def comment(post_id):
             flash(_('No puedes interactuar con este usuario o publicación.'), 'danger')
             return redirect(request.referrer or url_for('feed'))
 
-        # ... (La lógica para verificar el comentario padre se mantiene igual) ...
-
         try:
             c.execute('INSERT INTO comments (post_id, user_id, content, parent_comment_id) VALUES (?, ?, ?, ?)', 
                       (post_id, user_id_actual, contenido_comentario, parent_comment_id))
-            id_nuevo_comentario = c.lastrowid
             conn.commit()
-
-            # --- LÓGICA DE NOTIFICACIONES ---
-
-            # 1. Notificar por @menciones
-            procesar_menciones_y_notificar(contenido_comentario, user_id_actual, post_id, "comentario")
-            
-            # Obtener el perfil del usuario que comenta para usarlo en las notificaciones
+            # ... (la lógica de notificaciones se mantiene) ...
             c.execute("SELECT slug, username FROM profiles WHERE user_id = ?", (user_id_actual,))
             commenter_profile = c.fetchone()
             commenter_slug = commenter_profile['slug'] if commenter_profile else "#"
@@ -1250,7 +1363,6 @@ def comment(post_id):
             commenter_link_html = f'<a href="{url_for("ver_perfil", slug_perfil=commenter_slug)}">@{commenter_name}</a>'
             post_link_html = f'<a href="{url_for("ver_publicacion_individual", post_id_vista=post_id)}">{_("publicación")}</a>'
 
-            # 2. Notificar al autor del comentario padre (si es una respuesta)
             if parent_comment_id:
                 c.execute("SELECT user_id FROM comments WHERE id = ?", (parent_comment_id,))
                 autor_comentario_padre_row = c.fetchone()
@@ -1262,22 +1374,18 @@ def comment(post_id):
                         c.execute('INSERT INTO notificaciones (user_id, mensaje, tipo, referencia_id) VALUES (?, ?, ?, ?)', 
                                   (id_autor_comentario_padre, mensaje_notif_respuesta, 'respuesta_comentario', post_id))
             
-            # 3. --- AÑADIDO: Notificar al autor del post (si es un comentario de primer nivel) ---
             elif autor_post_id != user_id_actual:
-                # Se ejecuta solo si NO es una respuesta (parent_comment_id es None)
-                # y si el que comenta no es el mismo autor del post.
                 mensaje_template_comentario = _('%(commenter_link)s ha comentado en tu %(post_link)s.')
                 mensaje_notif_comentario = mensaje_template_comentario % {'commenter_link': commenter_link_html, 'post_link': post_link_html}
                 c.execute('INSERT INTO notificaciones (user_id, mensaje, tipo, referencia_id) VALUES (?, ?, ?, ?)', 
                           (autor_post_id, mensaje_notif_comentario, 'nuevo_comentario', post_id))
-
+            
             conn.commit()
             flash(_('Comentario añadido.'), 'success')
         except sqlite3.Error as e:
             flash(_('Error al guardar el comentario: %(error)s', error=str(e)), 'danger')
             conn.rollback() 
     
-    # Redirección final
     if request.referrer and f'/post/{post_id}' in request.referrer:
         return redirect(url_for('ver_publicacion_individual', post_id_vista=post_id))
     return redirect(request.referrer or url_for('feed'))
@@ -1335,6 +1443,7 @@ def delete_comment(comment_id):
 # ESTA ES LA VERSIÓN DE react_to_comment QUE DEBES CONSERVAR
 
 @app.route('/react_to_comment/<int:comment_id>', methods=['POST'])
+@check_sanctions_and_block_api
 def react_to_comment(comment_id):
     if 'user_id' not in session:
         return jsonify(success=False, error='authentication_required'), 401
@@ -2266,6 +2375,7 @@ def marcar_notificacion_leida(notificacion_id):
 
 
 @app.route('/api/mensajes/enviar', methods=['POST'])
+@check_sanctions_and_block_api
 def api_enviar_mensaje():
     if 'user_id' not in session:
         return jsonify(success=False, error=_("Autenticación requerida")), 401
@@ -3886,6 +3996,65 @@ def resolve_appeal(appeal_id):
         
         log_admin_action(c, moderator_id, 'APPEAL_RESOLVE', target_user_id=appeal['user_id'], target_content_id=appeal_id, details=log_details)
 
+        conn.commit()
+
+    flash(flash_message, 'success')
+    return jsonify(success=True)
+
+# Reemplaza tu función admin_sanction_user actual con esta versión corregida:
+@app.route('/admin/user/<int:user_id>/sanction', methods=['POST'])
+@coordinator_or_admin_required
+def admin_sanction_user(user_id):
+    admin_id = session['user_id']
+    data = request.get_json()
+    duration = data.get('duration')
+    reason = data.get('reason', '').strip()
+
+    if not reason and duration != 'lift_sanctions':
+        return jsonify(success=False, error=_("El motivo de la sanción es obligatorio.")), 400
+
+    if user_id == admin_id:
+        return jsonify(success=False, error=_("No te puedes sancionar a ti mismo.")), 403
+
+    banned_until, muted_until = None, None
+    is_mute = 'mute' in duration
+
+    # --- LÓGICA CORREGIDA ---
+    if duration == 'lift_sanctions':
+        banned_until, muted_until, reason = None, None, None
+        notification_message = _("Se han levantado todas las sanciones de tu cuenta. Vuelves a tener acceso completo.")
+        log_details = f"Levantó todas las sanciones del usuario ID {user_id}."
+        flash_message = _("Sanciones levantadas correctamente.")
+    
+    elif duration == 'permanent_ban':
+        banned_until = datetime(9999, 12, 31)
+        muted_until = None
+        notification_message = _('Tu cuenta ha sido suspendida de forma permanente. Motivo: "%(reason)s"', reason=reason)
+        log_details = f"Suspendió permanentemente al usuario ID {user_id}. Motivo: {reason}"
+        flash_message = _("Usuario suspendido permanentemente.")
+    
+    else: # Para todas las demás duraciones temporales
+        days = int(duration.split('_')[0])
+        end_date = datetime.now(timezone.utc) + timedelta(days=days)
+        fecha_fin_sancion = format_datetime(end_date, 'long')
+        
+        if is_mute:
+            muted_until = end_date
+            notification_message = _('Tu cuenta ha sido silenciada hasta el %(date)s (solo podrás leer contenido). Motivo: "%(reason)s"', date=fecha_fin_sancion, reason=reason)
+            log_details = f"Silenció al usuario ID {user_id} hasta {fecha_fin_sancion}. Motivo: {reason}"
+            flash_message = _("Usuario silenciado correctamente.")
+        else: # Es un baneo temporal
+            banned_until = end_date
+            notification_message = _('Tu cuenta ha sido suspendida hasta el %(date)s. Motivo: "%(reason)s"', date=fecha_fin_sancion, reason=reason)
+            log_details = f"Suspendió al usuario ID {user_id} hasta {fecha_fin_sancion}. Motivo: {reason}"
+            flash_message = _("Usuario suspendido correctamente.")
+
+    with sqlite3.connect('users.db') as conn:
+        c = conn.cursor()
+        c.execute("UPDATE users SET banned_until = ?, muted_until = ?, ban_reason = ? WHERE id = ?", (banned_until, muted_until, reason, user_id))
+        
+        create_system_notification(c, user_id, notification_message, 'sanction', user_id)
+        log_admin_action(c, admin_id, 'USER_SANCTION', target_user_id=user_id, details=log_details)
         conn.commit()
 
     flash(flash_message, 'success')

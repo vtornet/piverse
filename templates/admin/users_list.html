@@ -1,108 +1,163 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block title %}{{ _('Administración de Usuarios') }} - PiVerse{% endblock %}
+{% block title %}{{ _('Gestionar Usuarios') }}{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row mb-3">
-        <div class="col">
-            <h2><i class="bi bi-people-fill"></i> {{ _('Administración de Usuarios') }}</h2>
+<div class="container-fluid mt-4">
+    <h2 class="mb-4">{{ _('Gestión de Usuarios') }}</h2>
+
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <i class="bi bi-people-fill me-2"></i>{{ _('Lista de Usuarios') }}
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>{{ _('Usuario de Login') }}</th>
+                            <th>{{ _('Usuario de Perfil') }}</th>
+                            <th>{{ _('Rol') }}</th>
+                            <th class="text-center">{{ _('Acciones') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users_list %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.login_username }}</td>
+                            <td>
+                                {% if user.profile_display_name %}
+                                    <a href="{{ url_for('ver_perfil', slug_perfil=user.slug) }}">@{{ user.profile_display_name }}</a>
+                                {% else %}
+                                    <span class="text-muted fst-italic">{{ _('Sin perfil') }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form action="{{ url_for('admin_set_user_role', user_id=user.id) }}" method="POST" class="d-flex">
+                                    <select name="role" class="form-select form-select-sm" {% if user.id == session.user_id or (current_user_role == 'coordinator' and user.role in ['admin', 'coordinator']) %}disabled{% endif %}>
+                                        <option value="user" {% if user.role == 'user' %}selected{% endif %}>User</option>
+                                        <option value="moderator" {% if user.role == 'moderator' %}selected{% endif %}>Moderator</option>
+                                        {% if current_user_role == 'admin' %}
+                                        <option value="coordinator" {% if user.role == 'coordinator' %}selected{% endif %}>Coordinator</option>
+                                        <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+                                        {% endif %}
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-primary ms-2" {% if user.id == session.user_id or (current_user_role == 'coordinator' and user.role in ['admin', 'coordinator']) %}disabled{% endif %}>{{ _('Guardar') }}</button>
+                                </form>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-danger sanction-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#sanctionModal"
+                                        data-user-id="{{ user.id }}"
+                                        data-username="{{ user.profile_display_name or user.login_username }}"
+                                        {% if user.id == session.user_id or user.role == 'admin' %}disabled{% endif %}>
+                                    <i class="bi bi-gavel"></i> {{ _('Sancionar') }}
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-
-    {# Menú de navegación para el panel de admin #}
-    <ul class="nav nav-tabs mb-3">
-        <li class="nav-item">
-            <a class="nav-link {% if request.endpoint == 'admin_users_list' %}active{% endif %}" href="{{ url_for('admin_users_list') }}">{{ _('Usuarios') }}</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link {% if request.endpoint == 'admin_list_posts' %}active{% endif %}" href="{{ url_for('admin_list_posts') }}">{{ _('Publicaciones') }}</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link {% if request.endpoint == 'admin_list_comments' %}active{% endif %}" href="{{ url_for('admin_list_comments') }}">{{ _('Comentarios') }}</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link {% if request.endpoint == 'admin_view_log' %}active{% endif %}" href="{{ url_for('admin_view_log') }}">{{ _('Registro de Acciones') }}</a>
-        </li>
-    </ul>
-
-    {% if users_list %}
-    <div class="table-responsive">
-        <table class="table table-striped table-hover align-middle">
-            <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">{{ _('Username (Login)') }}</th>
-                    <th scope="col">{{ _('Nombre de Perfil Público') }}</th>
-                    <th scope="col">{{ _('Slug de Perfil') }}</th>
-                    <th scope="col">{{ _('Rol') }}</th>
-                    <th scope="col" style="width: 280px;">{{ _('Acciones') }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users_list %}
-                <tr>
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.login_username }}</td>
-                    <td>
-                        {% if user.profile_display_name %}
-                            <a href="{{ url_for('ver_perfil', slug_perfil=user.slug if user.slug else '#') }}">@{{ user.profile_display_name }}</a>
-                        {% else %}
-                            <span class="text-muted fst-italic">{{ _('No establecido') }}</span>
-                        {% endif %}
-                    </td>
-                    <td>{{ user.slug if user.slug else '-' }}</td>
-                    <td>
-                        {# Lógica para mostrar el rol con diferentes colores #}
-                        {% if user.role == 'admin' %}
-                            <span class="badge bg-danger">{{ _('Administrador') }}</span>
-                        {% elif user.role == 'coordinator' %}
-                            <span class="badge bg-warning text-dark">{{ _('Coordinador') }}</span>
-                        {% elif user.role == 'moderator' %}
-                            <span class="badge bg-primary">{{ _('Moderador') }}</span>
-                        {% else %}
-                            <span class="badge bg-secondary">{{ _('Usuario') }}</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <div class="d-flex align-items-center">
-                            <a href="{{ url_for('ver_perfil', slug_perfil=user.slug if user.slug else '#') }}" class="btn btn-sm btn-outline-primary" title="{{ _('Ver Perfil') }}"><i class="bi bi-eye-fill"></i></a>
-                            
-                            {% if user.id != session.user_id %}
-                            <form method="POST" action="{{ url_for('admin_set_user_role', user_id=user.id) }}" class="d-inline-flex align-items-center ms-2">
-                                <select class="form-select form-select-sm me-1" name="role" style="width: auto;"
-                                        {# Un coordinador no puede modificar a otros admins o coordinadores, por lo tanto se deshabilita el select #}
-                                        {% if current_user_role == 'coordinator' and user.role in ['admin', 'coordinator'] %}disabled{% endif %}>
-                                    
-                                    <option value="user" {% if user.role == 'user' %}selected{% endif %}>{{ _('Usuario') }}</option>
-                                    <option value="moderator" {% if user.role == 'moderator' %}selected{% endif %}>{{ _('Moderador') }}</option>
-                                    
-                                    {# Solo los admins pueden ver y asignar los roles de Coordinador y Administrador #}
-                                    {% if current_user_role == 'admin' %}
-                                    <option value="coordinator" {% if user.role == 'coordinator' %}selected{% endif %}>{{ _('Coordinador') }}</option>
-                                    <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>{{ _('Administrador') }}</option>
-                                    {% endif %}
-                                </select>
-                                <button type="submit" class="btn btn-sm btn-success" title="{{ _('Guardar Rol') }}"
-                                        {# Deshabilitar también el botón para mayor seguridad y claridad visual #}
-                                        {% if current_user_role == 'coordinator' and user.role in ['admin', 'coordinator'] %}disabled{% endif %}>
-                                    <i class="bi bi-check-lg"></i>
-                                </button>
-                            </form>
-                            {% else %}
-                            <span class="badge bg-info ms-2">{{ _('Eres tú') }}</span>
-                            {% endif %}
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% else %}
-    <div class="alert alert-info" role="alert">
-        {{ _('No se encontraron usuarios.') }}
-    </div>
-    {% endif %}
 </div>
+
+<div class="modal fade" id="sanctionModal" tabindex="-1" aria-labelledby="sanctionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="sanction-form">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sanctionModalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="sanction-user-id">
+                    <div class="mb-3">
+                        <label for="sanction-duration" class="form-label">{{ _('Tipo y Duración de la Sanción') }}</label>
+                        <select id="sanction-duration" class="form-select">
+                            <option value="7_days_mute">{{ _('Silenciar por 7 Días') }}</option>
+                            <option value="30_days_mute">{{ _('Silenciar por 30 Días') }}</option>
+                            <option value="1_day_ban">{{ _('Suspender por 1 Día') }}</option>
+                            <option value="7_days_ban">{{ _('Suspender por 7 Días') }}</option>
+                            <option value="30_days_ban">{{ _('Suspender por 30 Días') }}</option>
+                            <option value="permanent_ban">{{ _('Suspensión Permanente') }}</option>
+                            <option value="lift_sanctions">{{ _('Levantar Todas las Sanciones') }}</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sanction-reason" class="form-label">{{ _('Motivo de la Sanción (se notificará al usuario)') }}</label>
+                        <textarea id="sanction-reason" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <div id="sanction-feedback" class="mt-3"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Cancelar') }}</button>
+                    <button type="submit" class="btn btn-danger">{{ _('Aplicar Sanción') }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sanctionModalElement = document.getElementById('sanctionModal');
+    if (!sanctionModalElement) return;
+
+    const sanctionModal = new bootstrap.Modal(sanctionModalElement);
+    const form = document.getElementById('sanction-form');
+    
+    sanctionModalElement.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const userId = button.dataset.userId;
+        const username = button.dataset.username;
+
+        document.getElementById('sanctionModalLabel').textContent = `{{ _('Sancionar a') }} @${username}`;
+        document.getElementById('sanction-user-id').value = userId;
+        form.reset();
+        document.getElementById('sanction-feedback').innerHTML = '';
+    });
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const feedbackDiv = document.getElementById('sanction-feedback');
+        feedbackDiv.innerHTML = `<div class="spinner-border spinner-border-sm"></div> {{ _('Procesando...') }}`;
+        
+        const userId = document.getElementById('sanction-user-id').value;
+        const payload = {
+            duration: document.getElementById('sanction-duration').value,
+            reason: document.getElementById('sanction-reason').value
+        };
+
+        fetch(`/admin/user/${userId}/sanction`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                sanctionModal.hide();
+                location.reload();
+            } else {
+                feedbackDiv.innerHTML = `<div class="alert alert-danger">${data.error || 'Error'}</div>`;
+            }
+        })
+        .catch(err => {
+            feedbackDiv.innerHTML = `<div class="alert alert-danger">{{ _('Error de red.') }}</div>`;
+            console.error(err);
+        });
+    });
+});
+</script>
 {% endblock %}
