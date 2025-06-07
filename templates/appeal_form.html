@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ _('Apelar Decisión de Reporte') }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h4 class="mb-0">{{ _('Formulario de Apelación') }}</h4>
+            </div>
+            <div class="card-body">
+                <p>{{ _('Estás apelando la decisión sobre el reporte con ID #%(report_id)s.', report_id=report_id) }}</p>
+                <p class="text-muted">{{ _('Por favor, expón tus motivos de forma clara y respetuosa. Adjunta una captura de pantalla si lo consideras necesario para aportar pruebas.') }}</p>
+                
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="appeal_text" class="form-label">{{ _('Describe por qué crees que la decisión fue incorrecta:') }}</label>
+                        <textarea class="form-control" id="appeal_text" name="appeal_text" rows="6" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="appeal_image" class="form-label">{{ _('Adjuntar imagen (opcional):') }}</label>
+                        <input class="form-control" type="file" id="appeal_image" name="appeal_image" accept="image/png, image/jpeg, image/gif">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">{{ _('Enviar Apelación') }}</button>
+                    <a href="{{ url_for('index') }}" class="btn btn-secondary">{{ _('Cancelar') }}</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

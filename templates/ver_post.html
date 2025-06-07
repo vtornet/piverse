@@ -41,10 +41,26 @@
                             </small>
                         </div>
                     </div>
-                    {% if session.user_id == post.autor_id_post %}
-                    <form method="POST" action="{{ url_for('delete_post', post_id=post.id) }}" class="ms-auto" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar esta publicación?') }}');">
-                        <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Eliminar publicación') }}"><i class="bi bi-trash"></i></button>
-                    </form>
+                    {% if session.user_id == post.autor_id_post or current_user_role in ['moderator', 'coordinator', 'admin'] %}
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            {% if session.user_id == post.autor_id_post or current_user_role in ['moderator', 'coordinator', 'admin'] %}
+                            <li>
+                                <form method="POST" action="{{ url_for('delete_post', post_id=post.id) }}" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar esta publicación?') }}');">
+                                    <button type="submit" class="dropdown-item text-danger"><i class="bi bi-trash me-2"></i>{{ _('Eliminar') }}</button>
+                                </form>
+                            </li>
+                            {% endif %}
+                            <li>
+                                <button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#reportModal" data-content-type="post" data-content-id="{{ post.id }}">
+                                    <i class="bi bi-flag me-2"></i>{{ _('Reportar') }}
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                     {% endif %}
                 </div>
 
@@ -58,7 +74,6 @@
                 </div>
                 {% endif %}
 
-                {# === INICIO: BLOQUE DE PREVISUALIZACIÓN DE ENLACE === #}
                 {% if post.preview_url %}
                 <a href="{{ post.preview_url }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none">
                     <div class="link-preview-card my-2">
@@ -73,7 +88,6 @@
                     </div>
                 </a>
                 {% endif %}
-                {# === FIN: BLOQUE DE PREVISUALIZACIÓN DE ENLACE === #}
 
                 <div class="mt-2 d-flex align-items-center">
                     <div class="reactions-container d-inline-block position-relative me-2">
@@ -112,7 +126,6 @@
 
                 <hr>
 
-                {# Sección de Comentarios #}
                 <div class="comments-section mt-3">
                     <h5 class="mb-3">{{ _('Comentarios') }}</h5>
                     {% if post.comments %}
@@ -139,126 +152,5 @@
 
 {% block scripts %}
 {{ super() }}
-{# Todos los scripts para reacciones, respuestas, menciones, etc., son idénticos a los de feed.html #}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Script para "Responder" a comentarios 
-    document.querySelectorAll('.reply-to-comment-btn').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const commentId = this.dataset.commentId;
-            const usernameToReply = this.dataset.usernameToReply || 'Usuario';
-            const slugToReply = this.dataset.slugToReply || '';
-            const replyFormContainer = document.getElementById(`reply-form-container-${commentId}`);
-            if (replyFormContainer) {
-                const textarea = replyFormContainer.querySelector('textarea[name="content"]');
-                const isHidden = replyFormContainer.style.display === 'none';
-                document.querySelectorAll('.reply-form-container').forEach(c => {
-                    if (c.id !== replyFormContainer.id) {
-                        c.style.display = 'none';
-                        c.querySelector('textarea[name="content"]').value = '';
-                    }
-                });
-                if (isHidden) {
-                    textarea.placeholder = `{{ _('Respondiendo a') }} @${usernameToReply}...`;
-                    textarea.value = `@${slugToReply} `;
-                    replyFormContainer.style.display = 'block';
-                    textarea.focus();
-                    const end = textarea.value.length;
-                    textarea.setSelectionRange(end, end);
-                } else {
-                    replyFormContainer.style.display = 'none';
-                    textarea.value = '';
-                }
-            }
-        });
-    });
-
-    // Script para paleta de reacciones
-    document.addEventListener('click', function(event) {
-        const triggerBtn = event.target.closest('.reaction-trigger-btn');
-        if (!triggerBtn) {
-            document.querySelectorAll('.reactions-palette').forEach(p => p.style.display = 'none');
-            return;
-        }
-        const palette = triggerBtn.nextElementSibling;
-        document.querySelectorAll('.reactions-palette').forEach(p => { if (p !== palette) p.style.display = 'none'; });
-        if (palette) palette.style.display = window.getComputedStyle(palette).display === 'none' ? 'flex' : 'none';
-    });
-
-    // Script para autocompletado de menciones
-    // (Idéntico al de feed.html)
-    const mentionableInputs = document.querySelectorAll('.mentionable-input');
-    let currentActiveInput = null;
-    let currentSuggestionsBox = null;
-    let debounceTimer;
-
-    function hideAllSuggestionBoxes() {
-        document.querySelectorAll('.mention-suggestions-list').forEach(box => {
-            box.innerHTML = '';
-            box.style.display = 'none';
-        });
-        currentSuggestionsBox = null;
-    }
-
-    document.querySelector('.row.justify-content-center').addEventListener('input', function(e) {
-        if (!e.target.matches('.mentionable-input')) { return; }
-        currentActiveInput = e.target;
-        const parentWrapper = currentActiveInput.closest('.input-group, .position-relative');
-        currentSuggestionsBox = parentWrapper ? parentWrapper.querySelector('.mention-suggestions-list') : null;
-        if (!currentSuggestionsBox) return;
-        const text = currentActiveInput.value;
-        const cursorPos = currentActiveInput.selectionStart;
-        let atPos = -1;
-        for (let i = cursorPos - 1; i >= 0; i--) {
-            if (text[i] === '@') { if (i === 0 || /\s/.test(text[i - 1])) { atPos = i; break; } }
-            if (/\s/.test(text[i])) break;
-        }
-        if (atPos !== -1) {
-            const queryPart = text.substring(atPos + 1, cursorPos);
-            if (/^[a-zA-Z0-9_]*$/.test(queryPart) && queryPart.length >= 1) {
-                const query = queryPart;
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => {
-                    if (currentActiveInput !== e.target) return;
-                    fetch(`/api/users/mention_search?term=${encodeURIComponent(query)}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (currentActiveInput !== e.target || !currentSuggestionsBox) return;
-                            currentSuggestionsBox.innerHTML = '';
-                            if (data.length > 0) {
-                                const ul = document.createElement('ul');
-                                data.forEach(user => {
-                                    const li = document.createElement('li');
-                                    let photoHtml = user.photo ? `<img src="${user.photo}" alt="${user.username}">` : `<span class="no-photo"><i class="bi bi-person-fill"></i></span>`;
-                                    li.innerHTML = `${photoHtml}<span>${user.username} <small class="text-muted">(@${user.slug})</small></span>`;
-                                    li.addEventListener('mousedown', function(event) {
-                                        event.preventDefault();
-                                        const mentionText = `@${user.slug} `;
-                                        currentActiveInput.value = text.substring(0, atPos) + mentionText + text.substring(cursorPos);
-                                        hideAllSuggestionBoxes();
-                                        currentActiveInput.focus();
-                                        const newCursorPos = atPos + mentionText.length;
-                                        currentActiveInput.setSelectionRange(newCursorPos, newCursorPos);
-                                    });
-                                    ul.appendChild(li);
-                                });
-                                currentSuggestionsBox.appendChild(ul);
-                                currentSuggestionsBox.style.display = 'block';
-                            } else { currentSuggestionsBox.style.display = 'none'; }
-                        }).catch(error => { console.error('Error fetching mention suggestions:', error); if (currentSuggestionsBox) currentSuggestionsBox.style.display = 'none'; });
-                }, 300);
-            } else { if (currentSuggestionsBox) currentSuggestionsBox.style.display = 'none'; }
-        } else { if (currentSuggestionsBox) currentSuggestionsBox.style.display = 'none'; }
-    });
-    document.addEventListener('click', function(event) {
-        if (currentActiveInput && !currentActiveInput.contains(event.target) && currentSuggestionsBox && !currentSuggestionsBox.contains(event.target)) {
-            hideAllSuggestionBoxes();
-        }
-    });
-    mentionableInputs.forEach(inputField => {
-        inputField.addEventListener('blur', function() { setTimeout(hideAllSuggestionBoxes, 150); });
-    });
-});
-</script>
+{# No se necesita ningún script local. Todo es heredado de base.html a través de super() #}
 {% endblock %}

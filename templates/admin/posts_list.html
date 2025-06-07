@@ -10,19 +10,18 @@
         </div>
     </div>
 
-    {# Menú de navegación para el panel de admin #}
     <ul class="nav nav-tabs mb-3">
         <li class="nav-item">
-            <a class="nav-link {% if request.endpoint == 'admin_users_list' %}active{% endif %}" href="{{ url_for('admin_users_list') }}">{{ _('Usuarios') }}</a>
+            <a class="nav-link" href="{{ url_for('admin_users_list') }}">{{ _('Usuarios') }}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {% if request.endpoint == 'admin_list_posts' %}active{% endif %}" href="{{ url_for('admin_list_posts') }}">{{ _('Publicaciones') }}</a>
+            <a class="nav-link active" href="{{ url_for('admin_list_posts') }}">{{ _('Publicaciones') }}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {% if request.endpoint == 'admin_list_comments' %}active{% endif %}" href="{{ url_for('admin_list_comments') }}">{{ _('Comentarios') }}</a>
+            <a class="nav-link" href="{{ url_for('admin_list_comments') }}">{{ _('Comentarios') }}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {% if request.endpoint == 'admin_view_log' %}active{% endif %}" href="{{ url_for('admin_view_log') }}">{{ _('Registro de Acciones') }}</a>
+            <a class="nav-link" href="{{ url_for('admin_view_log') }}">{{ _('Registro de Acciones') }}</a>
         </li>
     </ul>
 
@@ -43,8 +42,11 @@
             </thead>
             <tbody>
                 {% for post in posts_list %}
-                <tr>
-                    <td>{{ post.id }}</td>
+                <tr class="{% if not post.is_visible %}table-secondary opacity-75{% endif %}">
+                    <td>
+                        {% if not post.is_visible %}<i class="bi bi-eye-slash-fill text-muted" title="{{ _('Oculto') }}"></i> {% endif %}
+                        {{ post.id }}
+                    </td>
                     <td>
                         {% if post.author_slug %}
                             <a href="{{ url_for('ver_perfil', slug_perfil=post.author_slug) }}">@{{ post.author_username }}</a>
@@ -62,17 +64,17 @@
                                  data-bs-toggle="modal" data-bs-target="#imageModal-{{ post.id }}">
                             
                             <div class="modal fade" id="imageModal-{{ post.id }}" tabindex="-1" aria-labelledby="imageModalLabel-{{ post.id }}" aria-hidden="true">
-                              <div class="modal-dialog modal-lg modal-dialog-centered">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <h5 class="modal-title" id="imageModalLabel-{{ post.id }}">{{ _('Imagen del Post') }} #{{ post.id }}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                  </div>
-                                  <div class="modal-body text-center">
-                                    <img src="{{ url_for('static', filename='uploads/post_images/' + post.image_filename) }}" class="img-fluid" alt="{{ _('Imagen del post') }}">
-                                  </div>
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="imageModalLabel-{{ post.id }}">{{ _('Imagen del Post') }} #{{ post.id }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body text-center">
+                                            <img src="{{ url_for('static', filename='uploads/post_images/' + post.image_filename) }}" class="img-fluid" alt="{{ _('Imagen del post') }}">
+                                        </div>
+                                    </div>
                                 </div>
-                              </div>
                             </div>
                         {% else %}
                             -
@@ -100,12 +102,10 @@
                     <td>
                         <div class="d-flex align-items-center">
                             <a href="{{ url_for('ver_publicacion_individual', post_id_vista=post.id) }}" class="btn btn-sm btn-outline-primary" title="{{ _('Ver Post') }}"><i class="bi bi-eye-fill"></i></a>
-                            
                             <a href="{{ url_for('admin_edit_post', post_id=post.id) }}" class="btn btn-sm btn-outline-warning ms-1" title="{{ _('Editar Post') }}"><i class="bi bi-pencil-fill"></i></a>
-
                             <form method="POST" action="{{ url_for('delete_post', post_id=post.id) }}" class="ms-1"
-                                  onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar esta publicación (ID: %(post_id)s)? Esta acción no se puede deshacer.', post_id=post.id) }}');">
-                                <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Eliminar Post') }}"><i class="bi bi-trash-fill"></i></button>
+                                  onsubmit="return confirm('{{ _('¿Estás seguro de que quieres ocultar esta publicación (ID: %(post_id)s)?', post_id=post.id) }}');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Ocultar Post') }}"><i class="bi bi-trash-fill"></i></button>
                             </form>
                         </div>
                     </td>

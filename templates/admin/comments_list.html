@@ -10,19 +10,18 @@
         </div>
     </div>
 
-    {# Menú de navegación para el panel de admin #}
     <ul class="nav nav-tabs mb-3">
         <li class="nav-item">
-            <a class="nav-link {% if request.endpoint == 'admin_users_list' %}active{% endif %}" href="{{ url_for('admin_users_list') }}">{{ _('Usuarios') }}</a>
+            <a class="nav-link" href="{{ url_for('admin_users_list') }}">{{ _('Usuarios') }}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {% if request.endpoint == 'admin_list_posts' %}active{% endif %}" href="{{ url_for('admin_list_posts') }}">{{ _('Publicaciones') }}</a>
+            <a class="nav-link" href="{{ url_for('admin_list_posts') }}">{{ _('Publicaciones') }}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {% if request.endpoint == 'admin_list_comments' %}active{% endif %}" href="{{ url_for('admin_list_comments') }}">{{ _('Comentarios') }}</a>
+            <a class="nav-link active" href="{{ url_for('admin_list_comments') }}">{{ _('Comentarios') }}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {% if request.endpoint == 'admin_view_log' %}active{% endif %}" href="{{ url_for('admin_view_log') }}">{{ _('Registro de Acciones') }}</a>
+            <a class="nav-link" href="{{ url_for('admin_view_log') }}">{{ _('Registro de Acciones') }}</a>
         </li>
     </ul>
 
@@ -41,8 +40,11 @@
             </thead>
             <tbody>
                 {% for comment in comments_list %}
-                <tr>
-                    <td>{{ comment.id }}</td>
+                <tr class="{% if not comment.is_visible %}table-secondary opacity-75{% endif %}">
+                    <td>
+                        {% if not comment.is_visible %}<i class="bi bi-eye-slash-fill text-muted" title="{{ _('Oculto') }}"></i> {% endif %}
+                        {{ comment.id }}
+                    </td>
                     <td>
                         <a href="{{ url_for('ver_perfil', slug_perfil=comment.author_slug) }}">@{{ comment.author_username }}</a>
                     </td>
@@ -50,8 +52,6 @@
                         <span title="{{ comment.content }}">{{ comment.content_display[:150] | safe }}{% if comment.content_display|length > 150 %}...{% endif %}</span>
                     </td>
                     <td>
-                        {# --- INICIO DE LA CORRECCIÓN --- #}
-                        {# Comprobar si el post_id existe antes de crear el enlace #}
                         {% if comment.post_id %}
                             <a href="{{ url_for('ver_publicacion_individual', post_id_vista=comment.post_id) }}" title="{{ comment.post_snippet }}">
                                #{{ comment.post_id }}
@@ -59,7 +59,6 @@
                         {% else %}
                             <span class="text-muted fst-italic">{{ _('Publicación eliminada') }}</span>
                         {% endif %}
-                        {# --- FIN DE LA CORRECCIÓN --- #}
                     </td>
                     <td>
                         <small class="text-muted" title="{{ comment.timestamp }}">
@@ -68,8 +67,8 @@
                     </td>
                     <td>
                         <form method="POST" action="{{ url_for('delete_comment', comment_id=comment.id) }}" style="display: inline;"
-                              onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar este comentario (ID: %(comment_id)s)?', comment_id=comment.id) }}');">
-                            <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Eliminar Comentario') }}"><i class="bi bi-trash-fill"></i></button>
+                              onsubmit="return confirm('{{ _('¿Estás seguro de que quieres ocultar este comentario (ID: %(comment_id)s)?', comment_id=comment.id) }}');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Ocultar Comentario') }}"><i class="bi bi-trash-fill"></i></button>
                         </form>
                     </td>
                 </tr>

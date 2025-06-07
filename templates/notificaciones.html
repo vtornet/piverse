@@ -7,26 +7,33 @@
     <h2 class="mb-4">{{ _('Notificaciones') }}</h2>
     
     {% if notificaciones %}
-        <ul class="list-group notification-list">
-        {% for notif_id, mensaje, timestamp, leida, tipo, referencia_id in notificaciones %}
-            <li id="notif-{{ notif_id }}" class="list-group-item {% if not leida %}list-group-item-warning fw-bold{% else %}list-group-item-light{% endif %} d-flex justify-content-between align-items-center">
-                <div>
-                    <span class="d-block notification-message">{{ mensaje|safe }}</span> {# Los mensajes de notificación se generan en app.py y deberían traducirse allí antes de guardarse #}
-                    <small class="text-muted">{{ timestamp }}</small> {# Las fechas/horas se pueden formatear con Babel #}
+        <div class="list-group notification-list">
+        {# --- BUCLE CORREGIDO --- #}
+        {# Ahora iteramos sobre 'notif' que es un diccionario, y accedemos a sus propiedades con . #}
+        {% for notif in notificaciones %}
+            <div class="list-group-item list-group-item-action notification-item {% if not notif.leida %}list-group-item-warning fw-bold{% else %}list-group-item-light{% endif %}" 
+                 data-notif-id="{{ notif.id }}"
+                 style="cursor: pointer;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="d-block notification-message">{{ notif.mensaje|safe }}</span>
+                        {# Ahora notif.timestamp es un objeto de fecha válido #}
+                        <small class="text-muted">{{ format_datetime(notif.timestamp, 'medium') if notif.timestamp else '' }}</small>
+                    </div>
+                    <div class="ms-3">
+                        {% if notif.tipo == 'solicitud_contacto' and not notif.leida %}
+                            <form method="post" action="{{ url_for('aceptar_solicitud', id_solicitante=notif.referencia_id) }}" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-success ms-2" title="{{ _('Aceptar') }}"><i class="bi bi-person-check-fill"></i></button>
+                            </form>
+                            <form method="post" action="{{ url_for('rechazar_solicitud', id_solicitante=notif.referencia_id) }}" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-danger ms-1" title="{{ _('Rechazar') }}"><i class="bi bi-person-x-fill"></i></button>
+                            </form>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="ms-3">
-                    {% if tipo == 'solicitud_contacto' and not leida %}
-                        <form method="post" action="{{ url_for('aceptar_solicitud', id_solicitante=referencia_id) }}" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-success ms-2" title="{{ _('Aceptar') }}"><i class="bi bi-person-check-fill"></i></button>
-                        </form>
-                        <form method="post" action="{{ url_for('rechazar_solicitud', id_solicitante=referencia_id) }}" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-danger ms-1" title="{{ _('Rechazar') }}"><i class="bi bi-person-x-fill"></i></button>
-                        </form>
-                    {% endif %}
-                </div>
-            </li>
+            </div>
         {% endfor %}
-        </ul>
+        </div>
     {% else %}
         <div class="text-center p-5">
             <i class="bi bi-bell-slash" style="font-size: 3rem;"></i>
@@ -44,27 +51,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (notificationList) {
         notificationList.addEventListener('click', function(e) {
-            const link = e.target.closest('a');
-            if (!link) {
+            const notifItem = e.target.closest('.notification-item');
+            if (!notifItem) return;
+
+            if (!notifItem.classList.contains('list-group-item-warning')) {
+                if (e.target.tagName === 'A') { return; }
+                e.preventDefault();
                 return;
             }
 
-            const notifListItem = e.target.closest('li[id^="notif-"]');
-            if (notifListItem && notifListItem.classList.contains('list-group-item-warning')) {
-                const notifId = notifListItem.id.split('-')[1];
-                // console.log(`Clic en enlace de notificación no leída (ID: ${notifId}). Marcando como leída.`); // Texto para desarrolladores, no necesita traducción
+            const notifId = notifItem.dataset.notifId;
+            
+            if (!e.target.closest('button')) {
+                notifItem.classList.remove('list-group-item-warning', 'fw-bold');
+                notifItem.classList.add('list-group-item-light');
 
-                notifListItem.classList.remove('list-group-item-warning', 'fw-bold');
-                notifListItem.classList.add('list-group-item-light');
-
-                const badge = document.querySelector('.notification-badge');
+                const badge = document.getElementById('notifications-count-badge');
                 if (badge) {
                     let currentCount = parseInt(badge.textContent, 10);
                     if (!isNaN(currentCount) && currentCount > 0) {
-                        currentCount -= 1;
-                        badge.textContent = currentCount;
-                        if (currentCount === 0) {
-                            badge.style.display = 'none';
+                        badge.textContent = currentCount - 1;
+                        if (badge.textContent == '0') {
+                            badge.classList.add('d-none');
                         }
                     }
                 }
@@ -72,24 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 fetch(`/api/notificacion/marcar_leida/${notifId}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    keepalive: true 
-                })
-                .then(response => {
-                    if (!response.ok) {
-                         // console.error(`La API devolvió un error: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        // console.log(`Notificación ${notifId} marcada como leída en el servidor.`);
-                    } else {
-                        // console.error('Fallo al marcar la notificación en el servidor:', data.error);
-                    }
-                })
-                .catch(error => {
-                    // console.error('Error de red al marcar notificación:', error);
-                });
+                }).catch(error => console.error('Error al marcar la notificación como leída:', error));
             }
         });
     }

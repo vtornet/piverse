@@ -1,4 +1,5 @@
-{% from '_macros.html' import render_comment_thread %}
+{# templates/_post_card.html #}
+{% from '_macros.html' import render_comment_thread, render_report_menu %}
 
 {# Este archivo espera que se le pase una variable llamada 'item' #}
 {% if item.item_type == 'original_post' %}
@@ -15,7 +16,32 @@
                     </small>
                 </div>
             </div>
-            {% if session.user_id == item.autor_id_post %}<form method="POST" action="{{ url_for('delete_post', post_id=item.id) }}" class="ms-auto" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar esta publicación?') }}');"><button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Eliminar publicación') }}"><i class="bi bi-trash"></i></button></form>{% endif %}
+            
+            {# --- INICIO: MENÚ DE ACCIONES (ELIMINAR Y REPORTAR) --- #}
+            <div class="dropdown ms-auto">
+                <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="{{ _('Más opciones') }}">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item report-trigger-btn" href="#" data-bs-toggle="modal" data-bs-target="#reportModal" data-content-type="post" data-content-id="{{ item.id }}">
+                            <i class="bi bi-flag-fill me-2"></i>{{ _('Reportar Publicación') }}
+                        </a>
+                    </li>
+                    {% if session.user_id == item.autor_id_post or current_user_role in ['moderator', 'coordinator', 'admin'] %}
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <form method="POST" action="{{ url_for('delete_post', post_id=item.id) }}" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar esta publicación?') }}');" class="d-inline">
+                             <button type="submit" class="dropdown-item text-danger">
+                                <i class="bi bi-trash-fill me-2"></i>{{ _('Eliminar Publicación') }}
+                            </button>
+                        </form>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            {# --- FIN: MENÚ DE ACCIONES --- #}
+
         </div>
         {% if item.content and item.content.strip() %}<p class="card-text mt-2" style="white-space: pre-wrap;">{{ item.content | safe }}</p>{% endif %}
         {% if item.image_filename %}<div class="mb-2 text-center"><img src="{{ url_for('static', filename='uploads/post_images/' + item.image_filename) }}" class="img-fluid rounded" alt="{{ _('Imagen de la publicación') }}" style="max-height: 450px; object-fit: contain; width: 100%;"></div>{% endif %}
@@ -57,6 +83,20 @@
                         </small>
                     </div>
                 </div>
+                 {# --- INICIO: MENÚ DE ACCIONES PARA POST ORIGINAL --- #}
+                <div class="dropdown ms-auto">
+                    <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="{{ _('Más opciones') }}">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item report-trigger-btn" href="#" data-bs-toggle="modal" data-bs-target="#reportModal" data-content-type="post" data-content-id="{{ item.original_post.id }}">
+                                <i class="bi bi-flag-fill me-2"></i>{{ _('Reportar Publicación Original') }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                {# --- FIN: MENÚ DE ACCIONES --- #}
             </div>
             {% if item.original_post.content and item.original_post.content.strip() %}<p class="card-text mt-2" style="white-space: pre-wrap;">{{ item.original_post.content | safe }}</p>{% endif %}
             {% if item.original_post.image_filename %}<div class="mb-2 text-center"><img src="{{ url_for('static', filename='uploads/post_images/' + item.original_post.image_filename) }}" class="img-fluid rounded" alt="{{ _('Imagen de la publicación') }}" style="max-height: 450px; object-fit: contain; width: 100%;"></div>{% endif %}

@@ -4,50 +4,14 @@
 
 {% block head_extra %}
 <style>
-    /* Estilos CSS no requieren traducción */
-    .chat-container {
-        display: flex;
-        flex-direction: column;
-        height: 75vh;
-    }
-    .chat-header {
-        padding: 0.75rem 1.25rem;
-        border-bottom: 1px solid #dee2e6;
-        background-color: #f8f9fa;
-    }
-    .chat-messages {
-        flex-grow: 1;
-        overflow-y: auto;
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-    }
-    .message-bubble-wrapper {
-        display: flex;
-        margin-bottom: 0.75rem;
-    }
-    .message-bubble {
-        max-width: 70%;
-        padding: 0.5rem 1rem;
-        border-radius: 1rem;
-        word-wrap: break-word;
-    }
-    .message-sent {
-        background-color: #0d6efd;
-        color: white;
-        margin-left: auto; /* Alinea a la derecha */
-        border-bottom-right-radius: 0.25rem;
-    }
-    .message-received {
-        background-color: #e9ecef;
-        color: black;
-        margin-right: auto; /* Alinea a la izquierda */
-        border-bottom-left-radius: 0.25rem;
-    }
-    .chat-input-form {
-        padding: 1rem;
-        border-top: 1px solid #dee2e6;
-    }
+    .chat-container { display: flex; flex-direction: column; height: 75vh; }
+    .chat-header { padding: 0.75rem 1.25rem; border-bottom: 1px solid #dee2e6; background-color: #f8f9fa; }
+    .chat-messages { flex-grow: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; }
+    .message-bubble-wrapper { display: flex; margin-bottom: 0.75rem; }
+    .message-bubble { max-width: 70%; padding: 0.5rem 1rem; border-radius: 1rem; word-wrap: break-word; }
+    .message-sent { background-color: #0d6efd; color: white; margin-left: auto; border-bottom-right-radius: 0.25rem; }
+    .message-received { background-color: #e9ecef; color: black; margin-right: auto; border-bottom-left-radius: 0.25rem; }
+    .chat-input-form { padding: 1rem; border-top: 1px solid #dee2e6; }
 </style>
 {% endblock %}
 
@@ -61,7 +25,7 @@
                 <h5 class="mb-0">
                     <a href="{{ url_for('ver_perfil', slug_perfil=other_user.slug if other_user else '#') }}" class="text-decoration-none text-dark">
                         {% if other_user and other_user.photo %}
-                             <img src="{{ url_for('static', filename='uploads/' + other_user.photo) }}" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;" alt="{{ _('Foto de %(username)s', username=(other_user.username if other_user else _('Usuario'))) }}">
+                             <img src="{{ url_for('static', filename='uploads/' + other_user.photo) }}" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;" alt="">
                         {% endif %}
                         @{{ other_user.username if other_user else _('Usuario') }}
                     </a>
@@ -73,7 +37,7 @@
                     {% for msg in messages %}
                         <div class="message-bubble-wrapper">
                             <div class="message-bubble {% if msg.sender_id == current_user_id %}message-sent{% else %}message-received{% endif %}">
-                                {{ msg.body }} {# El cuerpo del mensaje no se traduce aquí, se guarda como está #}
+                                {{ msg.body | safe }}
                             </div>
                         </div>
                     {% endfor %}
@@ -100,14 +64,6 @@
 {{ super() }}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // ... (JavaScript existente) ...
-    // Los textos dentro del script que se muestran al usuario, como los 'alert',
-    // idealmente se deberían pasar desde el backend o manejar con una librería de i18n para JS.
-    // Por ahora, los dejaremos como están, pero es un punto de mejora futuro.
-    // Ejemplo: alert('{{ _('Hubo un error al enviar tu mensaje. Inténtalo de nuevo.') }}');
-    // Esto requeriría que _() esté disponible en el contexto global de JS o que estos textos
-    // se definan en data-attributes en el HTML y se lean desde JS.
-
     const chatMessagesContainer = document.getElementById('chat-messages-container');
     const messageForm = document.getElementById('send-message-form');
     const messageInput = document.getElementById('message-body-input');
@@ -120,23 +76,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function appendMessage(msg) {
         const placeholder = document.getElementById('no-messages-placeholder');
-        if (placeholder) {
-            placeholder.remove();
-        }
-
+        if (placeholder) { placeholder.remove(); }
         const bubbleWrapper = document.createElement('div');
         bubbleWrapper.className = 'message-bubble-wrapper';
-
         const bubble = document.createElement('div');
-        bubble.className = 'message-bubble';
-        bubble.textContent = msg.body; 
-
-        if (msg.sender_id === currentUserId) {
-            bubble.classList.add('message-sent');
-        } else {
-            bubble.classList.add('message-received');
-        }
-
+        bubble.className = 'message-bubble message-sent';
+        bubble.textContent = msg.body;
         bubbleWrapper.appendChild(bubble);
         chatMessagesContainer.appendChild(bubbleWrapper);
         scrollToBottom();
@@ -146,21 +91,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     messageForm.addEventListener('submit', function(e) {
         e.preventDefault(); 
-
         const messageBody = messageInput.value.trim();
-        if (messageBody === '') {
-            return; 
-        }
+        if (messageBody === '') { return; }
 
         fetch("{{ url_for('api_enviar_mensaje') }}", {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                conversation_id: conversationId,
-                body: messageBody
-            }),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ conversation_id: conversationId, body: messageBody }),
         })
         .then(response => response.json())
         .then(data => {
@@ -168,11 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 appendMessage(data.message);
                 messageInput.value = '';
                 messageInput.focus();
-            } else {
-                console.error('Error al enviar el mensaje:', data.error);
-                // Para traducir este alert, necesitaríamos una estrategia para JS i18n.
-                alert('{{ _('Hubo un error al enviar tu mensaje. Inténtalo de nuevo.') }}');
-            }
+            } else { alert(data.error || '{{ _('Hubo un error al enviar tu mensaje.') }}'); }
         })
         .catch(error => {
             console.error('Error de red:', error);

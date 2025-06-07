@@ -20,23 +20,38 @@
                             <div>
                                 <strong><a href="{{ url_for('ver_perfil', slug_perfil=comentario.slug) }}" class="text-decoration-none text-dark">@{{ comentario.username }}</a></strong>
                             </div>
-                            {% if session.user_id == comentario.user_id %}
-                            <form method="POST" action="{{ url_for('delete_comment', comment_id=comentario.id) }}" class="ms-2" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar este comentario y todas sus respuestas?') }}');">
-                                <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-1" title="{{ _('Eliminar comentario') }}">
-                                    <i class="bi bi-trash" style="font-size: 0.8rem;"></i>
+                            
+                            {# --- INICIO: MENÚ DE ACCIONES (ELIMINAR Y REPORTAR) PARA COMENTARIOS --- #}
+                            <div class="dropdown ms-2">
+                                <button class="btn btn-sm btn-light py-0 px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="{{ _('Más opciones') }}">
+                                    <i class="bi bi-three-dots-vertical"></i>
                                 </button>
-                            </form>
-                            {% endif %}
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item report-trigger-btn" href="#" data-bs-toggle="modal" data-bs-target="#reportModal" data-content-type="comment" data-content-id="{{ comentario.id }}">
+                                            <i class="bi bi-flag-fill me-2"></i>{{ _('Reportar Comentario') }}
+                                        </a>
+                                    </li>
+                                    {% if session.user_id == comentario.user_id or current_user_role in ['moderator', 'coordinator', 'admin'] %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form method="POST" action="{{ url_for('delete_comment', comment_id=comentario.id) }}" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar este comentario y todas sus respuestas?') }}');" class="d-inline">
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <i class="bi bi-trash-fill me-2"></i>{{ _('Eliminar Comentario') }}
+                                            </button>
+                                        </form>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            {# --- FIN: MENÚ DE ACCIONES --- #}
+
                         </div>
                         <span style="white-space: pre-wrap;">{{ comentario.content | safe }}</span>
                     </div>
 
-                    {# --- SECCIÓN DE ACCIONES DEL COMENTARIO MODIFICADA --- #}
-                    <div class="mt-1 d-flex align-items-center"> {# Cambiado: quitado justify-content-between para que el contador no se vaya al extremo si solo hay eso #}
-                        
-                        {# Botón de Reacción para Comentarios (estilo similar a posts) #}
+                    <div class="mt-1 d-flex align-items-center">
                         <div class="reactions-container d-inline-block position-relative me-2">
-                            {# MODIFICADO: Clases del botón y contenido para ser más prominente #}
                             <button class="btn btn-sm {% if comentario.user_reaction %}btn-primary{% else %}btn-outline-primary{% endif %} reaction-trigger-btn">
                                 {% if comentario.user_reaction and comentario.user_reaction.reaction_type == 'love' %} ❤️
                                 {% elif comentario.user_reaction and comentario.user_reaction.reaction_type == 'haha' %} 😂
@@ -45,15 +60,15 @@
                                 {% elif comentario.user_reaction and comentario.user_reaction.reaction_type == 'angry' %} 😠
                                 {% elif comentario.user_reaction and comentario.user_reaction.reaction_type == 'like' %} 👍
                                 {% else %}
-                                    <i class="bi bi-hand-thumbs-up"></i> {# Icono por defecto #}
+                                    <i class="bi bi-hand-thumbs-up"></i>
                                 {% endif %}
                                 
                                 {% if comentario.user_reaction %}
                                     {{ _(comentario.user_reaction.reaction_type.capitalize()) }}
                                 {% else %}
-                                    {{ _('Reaccionar') }} {# Texto por defecto #}
+                                    {{ _('Reaccionar') }}
                                 {% endif %}
-                                ({{ comentario.total_reactions }}) {# Contador dentro del botón #}
+                                ({{ comentario.total_reactions }})
                             </button>
                             <div class="reactions-palette bg-white border rounded shadow-sm p-1" style="display: none; z-index: 20;">
                                 {% set reaction_types = {'like': '👍', 'love': '❤️', 'haha': '😂', 'wow': '😮', 'sad': '😢', 'angry': '😠'} %}
@@ -69,9 +84,8 @@
                         <a href="#comment-form-{{ post_id_for_reply_form }}-{{ comentario.id }}" class="reply-to-comment-btn small text-primary text-decoration-none" data-comment-id="{{ comentario.id }}" data-post-id="{{ post_id_for_reply_form }}" data-username-to-reply="{{ comentario.username }}" data-slug-to-reply="{{ comentario.slug }}">
                             {{ _('Responder') }}
                         </a>
-                        <small class="text-muted ms-auto">{{ comentario.timestamp }}</small> {# Movido timestamp al final para mejor flujo #}
+                        <small class="text-muted ms-auto">{{ format_datetime(comentario.timestamp, 'medium') }}</small>
                     </div>
-                    {# --- FIN SECCIÓN MODIFICADA --- #}
                     
                     <div id="reply-form-container-{{ comentario.id }}" class="reply-form-container mt-2" style="display: none;">
                         <form method="post" action="{{ url_for('comment', post_id=post_id_for_reply_form) }}">
