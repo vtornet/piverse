@@ -1,12 +1,11 @@
 {% extends 'base.html' %}
 {% from '_macros.html' import render_comment_thread %}
 
-{% block title %}{{ _('Sección:') }} {{ section_name }} - PiVerse{% endblock %}
+{% block title %}{{ _('Sección:') }} {{ _(section_name) }} - PiVerse{% endblock %}
 
 {% block head_extra %}
 {{ super() }}
 <style>
-/* Estilos reutilizados de feed.html para consistencia */
 .mention-suggestions-list { position: absolute; background-color: white; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.15); z-index: 1000; width: auto; min-width: 200px; max-height: 200px; overflow-y: auto; margin-top: 2px; }
 .mention-suggestions-list ul { list-style: none; padding: 0; margin: 0; }
 .mention-suggestions-list li { padding: 8px 12px; cursor: pointer; display: flex; align-items: center; font-size: 0.9rem; }
@@ -38,14 +37,13 @@
 <div class="row justify-content-center">
     <div class="col-md-8 col-lg-7">
         <div class="d-flex justify-content-between align-items-center mb-2">
-            <h2 class="mb-0">{{ _('Sección:') }} {{ section_name }}</h2>
+            <h2 class="mb-0">{{ _('Sección:') }} {{ _(section_name) }}</h2>
             <a href="{{ url_for('sections_list') }}" class="btn btn-sm btn-outline-secondary">
                 <i class="bi bi-list-ul"></i> {{ _('Ver todas las secciones') }}
             </a>
         </div>
         <hr>
 
-        {# Formulario para nueva publicación (se mantiene como lo tenías) #}
         <div class="card shadow-sm mb-4">
             <div class="card-body">
                 <h5 class="card-title">{{ _('Nueva Publicación en esta Sección') }}</h5>
@@ -65,7 +63,7 @@
                         <select class="form-select form-select-sm" name="section_id" id="section_id">
                             {% for section_opt in sections %}
                                 <option value="{{ section_opt.id }}" {% if section_opt.slug == section_slug %}selected{% endif %}>
-                                    {{ section_opt.name }}
+                                    {{ _(section_opt.name) }}
                                 </option>
                             {% endfor %}
                         </select>
@@ -84,79 +82,7 @@
 
         <div id="feed-posts-container" data-latest-post-timestamp="{{ posts[0].timestamp.isoformat() if posts and posts[0].timestamp else '' }}">
             {% if posts %}
-                {# El bucle que ya tenías para renderizar los posts iniciales #}
-                {% for item in posts %}
-                    {% if item.item_type == 'original_post' %}
-                    <div class="card shadow-sm mb-4" id="post-{{ item.id }}">
-                        <div class="card-body">
-                            <div class="d-flex align-items-start mb-3">
-                                <div class="flex-grow-1 d-flex align-items-center">
-                                    {% if item.photo %}
-                                        <img src="{{ url_for('static', filename='uploads/' + item.photo) }}" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;" alt="{{ _('Foto de %(username)s', username=item.username) }}">
-                                    {% else %}
-                                        <div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center me-2" style="width: 40px; height: 40px;"><i class="bi bi-person-fill text-white fs-5"></i></div>
-                                    {% endif %}
-                                    <div>
-                                        <strong><a href="{{ url_for('ver_perfil', slug_perfil=item.slug) }}" class="text-decoration-none text-dark">@{{ item.username }}</a></strong><br>
-                                        <a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.id) }}" class="text-decoration-none"><small class="text-muted">{{ format_datetime(item.timestamp, 'medium') if item.timestamp else '' }}</small></a>
-                                    </div>
-                                </div>
-                                {% if session.user_id == item.autor_id_post %}
-                                <form method="POST" action="{{ url_for('delete_post', post_id=item.id) }}" class="ms-auto" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar esta publicación?') }}');">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Eliminar publicación') }}"><i class="bi bi-trash"></i></button>
-                                </form>
-                                {% endif %}
-                            </div>
-                            {% if item.image_filename %}
-                            <div class="mb-2 text-center"><img src="{{ url_for('static', filename='uploads/post_images/' + item.image_filename) }}" class="img-fluid rounded" alt="{{ _('Imagen de la publicación') }}" style="max-height: 450px; object-fit: contain; width: 100%;"></div>
-                            {% endif %}
-                            {% if item.content and item.content.strip() %}
-                                <p class="card-text mt-2" style="white-space: pre-wrap;">{{ item.content | safe }}</p>
-                            {% endif %}
-                            <div class="mt-2 d-flex align-items-center">
-                                <div class="reactions-container d-inline-block position-relative me-2">
-                                    <button class="btn btn-sm {% if item.user_reaction %}btn-primary{% else %}btn-outline-primary{% endif %} reaction-trigger-btn">
-                                        {% if item.user_reaction and item.user_reaction.reaction_type == 'love' %} ❤️
-                                        {% elif item.user_reaction and item.user_reaction.reaction_type == 'haha' %} 😂
-                                        {% elif item.user_reaction and item.user_reaction.reaction_type == 'wow' %} 😮
-                                        {% elif item.user_reaction and item.user_reaction.reaction_type == 'sad' %} 😢
-                                        {% elif item.user_reaction and item.user_reaction.reaction_type == 'angry' %} 😠
-                                        {% elif item.user_reaction and item.user_reaction.reaction_type == 'like' %} 👍
-                                        {% else %}<i class="bi bi-hand-thumbs-up"></i>{% endif %}
-                                        {% if item.user_reaction %}{{ _(item.user_reaction.reaction_type.capitalize()) }}{% else %}{{ _('Reaccionar') }}{% endif %}
-                                        ({{ item.total_reactions }})
-                                    </button>
-                                    <div class="reactions-palette bg-white border rounded shadow-sm p-1">
-                                        {% set reaction_types = {'like': '👍', 'love': '❤️', 'haha': '😂', 'wow': '😮', 'sad': '😢', 'angry': '😠'} %}
-                                        {% for type, icon in reaction_types.items() %}
-                                        <form method="POST" action="{{ url_for('react_to_post', post_id=item.id) }}" class="d-inline-block reaction-form">
-                                            <input type="hidden" name="reaction_type" value="{{ type }}">
-                                            <button type="submit" class="btn btn-link p-1 reaction-icon-btn" title="{{ _(type.capitalize()) }}">{{ icon }}</button>
-                                        </form>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#comments-{{ item.id }}" aria-expanded="false" aria-controls="comments-{{ item.id }}">
-                                    <i class="bi bi-chat-dots"></i> {{ _('Comentarios') }} ({{ item.comments|length }})
-                                </button>
-                                <button type="button" class="btn btn-sm btn-outline-secondary share-trigger-btn ms-2" data-bs-toggle="modal" data-bs-target="#shareModal" data-post-id="{{ item.id }}" title="{{ _('Citar o compartir') }}">
-                                    <i class="bi bi-arrow-repeat"></i> {% if item.share_count > 0 %}{{ item.share_count }}{% endif %}
-                                </button>
-                            </div>
-                            <div class="collapse mt-3 ps-3 border-start" id="comments-{{ item.id }}">
-                                {% if item.comments %}{{ render_comment_thread(item.comments, item.id) }}{% else %}<p class="small text-muted">{{ _('No hay comentarios aún. ¡Sé el primero!') }}</p>{% endif %}
-                            </div>
-                            <form method="post" action="{{ url_for('comment', post_id=item.id) }}" class="mt-3" id="comment-form-{{ item.id }}-toplevel">
-                                <div class="input-group position-relative">
-                                    <input type="text" name="content" class="form-control form-control-sm mentionable-input" placeholder="{{ _('Escribe un comentario...') }}" required>
-                                    <div class="mention-suggestions-list" style="display: none;"></div>
-                                    <button type="submit" class="btn btn-sm btn-outline-secondary">{{ _('Comentar') }}</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    {% endif %}
-                {% endfor %}
+                {% include '_post_card_list.html' %}
             {% else %}
                 <div class="text-center p-5">
                     <i class="bi bi-chat-square-dots-fill" style="font-size: 3rem;"></i>
@@ -175,21 +101,15 @@
 {{ super() }}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Los scripts para menciones, reacciones, etc., que ya tenías
-    document.querySelectorAll('.reply-to-comment-btn').forEach(button => { /* ... tu código de respuesta a comentarios ... */ });
-    document.addEventListener('click', function(event) { /* ... tu código para paleta de reacciones ... */ });
-    // ... tu código para autocompletado de menciones ...
-
-    // --- LÓGICA DE SCROLL Y NUEVAS PUBLICACIONES ---
     const loadingIndicator = document.getElementById('loading-indicator');
     const postsContainer = document.getElementById('feed-posts-container');
     const newPostsButton = document.getElementById('new-posts-button');
-    const currentSectionSlug = "{{ section_slug|e }}"; // Obtenemos el slug de la sección actual
+    const currentSectionSlug = "{{ section_slug|e }}"; 
 
     if (postsContainer) {
         let page = 1;
         let isLoading = false;
-        let postsPerPage = {{ POSTS_PER_PAGE if POSTS_PER_PAGE else 10 }};
+        let postsPerPage = 10;
         let allPostsLoaded = postsContainer.querySelectorAll('.card').length < postsPerPage;
 
         const loadMorePosts = async () => {
@@ -205,7 +125,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     postsContainer.insertAdjacentHTML('beforeend', html);
                     page++;
                     isLoading = false;
-                    // Comprobamos de nuevo por si la nueva página tampoco llena la pantalla
                     setTimeout(checkAndLoadIfIndicatorVisible, 100); 
                 } else {
                     allPostsLoaded = true;
@@ -236,7 +155,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (!allPostsLoaded) {
                 observer.observe(loadingIndicator);
-                // Comprobación inicial por si el contenido no llena la pantalla
                 checkAndLoadIfIndicatorVisible();
             } else if (postsContainer.querySelectorAll('.card').length > 0) {
                  loadingIndicator.innerHTML = '<p class="text-muted">{{ _("Has llegado al final de la sección.") }}</p>';

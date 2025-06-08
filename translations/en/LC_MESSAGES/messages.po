@@ -1,14 +1,14 @@
-# English translations for PROJECT.
+# English translations for PiVerse.
 # Copyright (C) 2025 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
+# This file is distributed under the same license as the PiVerse project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PiVerse 1.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-03 17:07+0200\n"
-"PO-Revision-Date: 2025-06-03 17:09+0200\n"
+"POT-Creation-Date: 2025-06-08 14:35+0200\n"
+"PO-Revision-Date: 2025-06-08 14:00+0200\n"
 "Last-Translator: Gemini Assistant\n"
 "Language: en\n"
 "Language-Team: en <LL@li.org>\n"
@@ -18,45 +18,77 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: app.py:340 app.py:582 app.py:950 app.py:1066 app.py:1098 app.py:1309
-#: app.py:1358 app.py:1475 app.py:1588 app.py:1717 app.py:1790 app.py:1921
-#: app.py:1993 app.py:2139 templates/conversacion.html:3
-#: templates/conversacion.html:64 templates/conversacion.html:66
+#: app.py:475
+msgid "Autenticación requerida. Por favor, inicia sesión."
+msgstr "Authentication required. Please log in."
+
+#: app.py:561 app.py:1031 app.py:1360 app.py:1605 app.py:1640 app.py:1757
+#: app.py:1952 app.py:2111 app.py:2184 app.py:2294 app.py:2413 app.py:2496
+#: app.py:2638 app.py:3341 app.py:3456 templates/conversacion.html:3
+#: templates/conversacion.html:30
 msgid "Usuario"
 msgstr "User"
 
-#: app.py:358 app.py:953 app.py:2069
+#: app.py:579 app.py:1539
 msgid "publicación"
 msgstr "post"
 
-#: app.py:360
+#: app.py:581
 #, python-format
 msgid "%(autor_link)s te mencionó en una %(contenido_link)s."
 msgstr "%(autor_link)s mentioned you in a %(contenido_link)s."
 
-#: app.py:362
+#: app.py:583
 msgid "comentario"
 msgstr "comment"
 
-#: app.py:364
+#: app.py:585
 #, python-format
 msgid "%(autor_link)s te mencionó en un %(contenido_link)s."
 msgstr "%(autor_link)s mentioned you in a %(contenido_link)s."
 
-#: app.py:409 templates/feed.html:48 templates/index.html:32
-#: templates/view_section.html:56
+#: app.py:741 app.py:1945 app.py:2072 app.py:2468
+msgid "Debes iniciar sesión para ver esta página."
+msgstr "You must be logged in to see this page."
+
+#: app.py:772
+msgid "Tu cuenta está suspendida y tu sesión ha sido cerrada."
+msgstr "Your account is suspended and you have been logged out."
+
+#: app.py:780
+msgid "Tu cuenta está silenciada. No puedes publicar ni comentar temporalmente."
+msgstr "Your account is muted. You cannot post or comment temporarily."
+
+#: app.py:790
+msgid "Autenticación requerida."
+msgstr "Authentication required."
+
+#: app.py:801
+msgid "Usuario no encontrado."
+msgstr "User not found."
+
+#: app.py:809
+msgid "Tu cuenta está suspendida."
+msgstr "Your account is suspended."
+
+#: app.py:814
+msgid "Tu cuenta está silenciada. No puedes realizar esta acción."
+msgstr "Your account is muted. You cannot perform this action."
+
+#: app.py:834 templates/feed.html:43 templates/index.html:32
+#: templates/view_section.html:53
 msgid "Pionero"
 msgstr "Pioneer"
 
-#: app.py:453
+#: app.py:885
 msgid "Idioma no soportado."
 msgstr "Unsupported language."
 
-#: app.py:470
+#: app.py:902
 msgid "El nombre de usuario y la contraseña son obligatorios."
 msgstr "Username and password are required."
 
-#: app.py:480
+#: app.py:912
 msgid ""
 "¡Registro exitoso! Ahora puedes iniciar sesión y completar tu perfil "
 "público."
@@ -64,247 +96,242 @@ msgstr ""
 "Registration successful! You can now log in and complete your public "
 "profile."
 
-#: app.py:483
+#: app.py:915
 msgid "Ese nombre de usuario para login ya existe. Por favor, elige otro."
 msgstr "That login username already exists. Please choose another one."
 
-#: app.py:504
+#: app.py:941
+msgid "No se especificó un motivo."
+msgstr "No reason was specified."
+
+#: app.py:942
+#, python-format
+msgid "Tu cuenta está suspendida hasta el %(date)s. Motivo: \"%(reason)s\""
+msgstr "Your account is suspended until %(date)s. Reason: \"%(reason)s\""
+
+#: app.py:956
 msgid "¡Bienvenido! Por favor, completa tu perfil público para continuar."
 msgstr "Welcome! Please complete your public profile to continue."
 
-#: app.py:506
+#: app.py:959
 msgid "Inicio de sesión exitoso."
 msgstr "Login successful."
 
-#: app.py:509
+#: app.py:962
 msgid "Credenciales inválidas. Inténtalo de nuevo."
 msgstr "Invalid credentials. Try again."
 
-#: app.py:515
+#: app.py:968
 msgid "Has cerrado sesión."
 msgstr "You have logged out."
 
-#: app.py:527
+#: app.py:980
 msgid "El nombre de usuario público no puede estar vacío."
 msgstr "The public username cannot be empty."
 
-#: app.py:531
+#: app.py:984
 msgid ""
 "El nombre de usuario público debe contener caracteres alfanuméricos "
 "válidos."
 msgstr "The public username must contain valid alphanumeric characters."
 
-#: app.py:539
+#: app.py:992
 msgid "Ese nombre de usuario público o slug ya está en uso por otra persona."
 msgstr "That public username or slug is already in use by someone else."
 
-#: app.py:547
+#: app.py:1000
 #, python-format
 msgid "Error al guardar la foto: %(error)s"
 msgstr "Error saving the photo: %(error)s"
 
-#: app.py:557
+#: app.py:1010
 msgid "Perfil actualizado correctamente."
 msgstr "Profile updated successfully."
 
-#: app.py:564
+#: app.py:1017
 msgid "Por favor, completa tu nombre de usuario público en el perfil."
 msgstr "Please complete your public username in your profile."
 
-#: app.py:578
+#: app.py:1027
 msgid "Debes completar tu perfil para ver el feed y publicar."
 msgstr "You must complete your profile to see the feed and post."
 
-#: app.py:803
+#: app.py:1161
 msgid "Por favor, completa tu perfil antes de publicar."
 msgstr "Please complete your profile before posting."
 
-#: app.py:817 app.py:840
+#: app.py:1175 app.py:1195
 msgid ""
 "La publicación no puede estar completamente vacía. Añade texto o una "
 "imagen."
 msgstr "The post cannot be completely empty. Add text or an image."
 
-#: app.py:833
+#: app.py:1188
 #, python-format
 msgid "Error al guardar la imagen de la publicación: %(error)s"
 msgstr "Error saving the post image: %(error)s"
 
-#: app.py:836
+#: app.py:1191
 msgid "Tipo de archivo de imagen no permitido. Permitidos: png, jpg, jpeg, gif."
 msgstr "Image file type not allowed. Allowed: png, jpg, jpeg, gif."
 
-#: app.py:854
+#: app.py:1222
 msgid "Publicación creada."
 msgstr "Post created."
 
-#: app.py:860
+#: app.py:1229
 msgid "Debes iniciar sesión para eliminar publicaciones."
 msgstr "You must be logged in to delete posts."
 
-#: app.py:871 app.py:918 app.py:1809
+#: app.py:1246 app.py:1972
 msgid "Publicación no encontrada."
 msgstr "Post not found."
 
-#: app.py:878
+#: app.py:1251
 msgid "No tienes permiso para eliminar esta publicación."
 msgstr "You do not have permission to delete this post."
 
-#: app.py:891
+#: app.py:1262
 msgid "Publicación eliminada correctamente."
 msgstr "Post deleted successfully."
 
-#: app.py:898
-msgid "Debes iniciar sesión para reaccionar."
-msgstr "You must be logged in to react."
-
-#: app.py:903 app.py:1943
-msgid "Por favor, completa tu perfil antes de reaccionar."
-msgstr "Please complete your profile before reacting."
-
-#: app.py:909 app.py:1949
-msgid "Tipo de reacción no válido."
-msgstr "Invalid reaction type."
-
-#: app.py:924 app.py:1034
-msgid "No puedes interactuar con este usuario o publicación."
-msgstr "You cannot interact with this user or post."
-
-#: app.py:936
-msgid "Reacción eliminada."
-msgstr "Reaction removed."
-
-#: app.py:940
-msgid "Reacción actualizada."
-msgstr "Reaction updated."
-
-#: app.py:944
-msgid "Has reaccionado a la publicación."
-msgstr "You reacted to the post."
-
-#: app.py:955
-#, python-format
-msgid "%(reactor_link)s reaccionó a tu %(post_link)s."
-msgstr "%(reactor_link)s reacted to your %(post_link)s."
-
-#: app.py:966
-msgid "Debes iniciar sesión para eliminar comentarios."
-msgstr "You must be logged in to delete comments."
-
-#: app.py:977 app.py:1958
-msgid "Comentario no encontrado."
-msgstr "Comment not found."
-
-#: app.py:984
-msgid "No tienes permiso para eliminar este comentario."
-msgstr "You do not have permission to delete this comment."
-
-#: app.py:992
-msgid "Comentario eliminado correctamente."
-msgstr "Comment deleted successfully."
-
-#: app.py:1004
+#: app.py:1324
 msgid "Por favor, completa tu perfil antes de comentar."
 msgstr "Please complete your profile before commenting."
 
-#: app.py:1015
-msgid "ID de comentario padre inválido."
-msgstr "Invalid parent comment ID."
-
-#: app.py:1019
+#: app.py:1333
 msgid "El comentario no puede estar vacío."
 msgstr "The comment cannot be empty."
 
-#: app.py:1028
+#: app.py:1343
 msgid "La publicación a la que intentas responder no existe."
 msgstr "The post you are trying to reply to does not exist."
 
-#: app.py:1041
-msgid "El comentario al que intentas responder no existe."
-msgstr "The comment you are trying to reply to does not exist."
+#: app.py:1349
+msgid "No puedes interactuar con este usuario o publicación."
+msgstr "You cannot interact with this user or post."
 
-#: app.py:1046 app.py:1966
-msgid "No puedes interactuar con este usuario o comentario."
-msgstr "You cannot interact with this user or comment."
-
-#: app.py:1069
+#: app.py:1370
 #, python-format
-msgid "una <a href=\"%(post_url)s\">publicación</a>"
-msgstr "a <a href=\"%(post_url)s\">post</a>"
+msgid "%(commenter_link)s ha respondido a tu comentario en una %(post_link)s."
+msgstr "%(commenter_link)s replied to your comment in a %(post_link)s."
 
-#: app.py:1071
+#: app.py:1376
 #, python-format
-msgid "%(replier_link)s ha respondido a tu comentario en %(post_link)s."
-msgstr "%(replier_link)s replied to your comment in %(post_link)s."
+msgid "%(commenter_link)s ha comentado en tu %(post_link)s."
+msgstr "%(commenter_link)s commented on your %(post_link)s."
 
-#: app.py:1077
+#: app.py:1382
 msgid "Comentario añadido."
 msgstr "Comment added."
 
-#: app.py:1079
+#: app.py:1384
 #, python-format
 msgid "Error al guardar el comentario: %(error)s"
 msgstr "Error saving comment: %(error)s"
 
-#: app.py:1094
-msgid "No se puede acceder a un perfil sin un slug válido."
-msgstr "A profile cannot be accessed without a valid slug."
+#: app.py:1395
+msgid "Debes iniciar sesión para eliminar comentarios."
+msgstr "You must be logged in to delete comments."
 
-#: app.py:1109
-msgid "Perfil no encontrado."
-msgstr "Profile not found."
+#: app.py:1413
+msgid "Comentario no encontrado."
+msgstr "Comment not found."
 
-#: app.py:1117
-msgid "No puedes ver el perfil de este usuario."
-msgstr "You cannot view this user's profile."
+#: app.py:1420
+msgid "No tienes permiso para eliminar este comentario."
+msgstr "You do not have permission to delete this comment."
 
-#: app.py:1280
+#: app.py:1431
+msgid "Comentario eliminado correctamente."
+msgstr "Comment deleted successfully."
+
+#: app.py:1493
+msgid "Debes iniciar sesión para compartir publicaciones."
+msgstr "You must be logged in to share posts."
+
+#: app.py:1499
+msgid "Por favor, completa tu perfil antes de compartir publicaciones."
+msgstr "Please complete your profile before sharing posts."
+
+#: app.py:1512
+msgid "La publicación que intentas compartir no existe."
+msgstr "The post you are trying to share does not exist."
+
+#: app.py:1519
+msgid "No puedes interactuar con esta publicación."
+msgstr "You cannot interact with this post."
+
+#: app.py:1535
+msgid "Alguien"
+msgstr "Someone"
+
+#: app.py:1543
+#, python-format
+msgid "%(sharer_link)s ha citado tu %(post_link)s."
+msgstr "%(sharer_link)s quoted your %(post_link)s."
+
+#: app.py:1546
+#, python-format
+msgid "%(sharer_link)s ha compartido tu %(post_link)s."
+msgstr "%(sharer_link)s shared your %(post_link)s."
+
+#: app.py:1558
+msgid "Publicación citada correctamente."
+msgstr "Post quoted successfully."
+
+#: app.py:1560
+msgid "Publicación compartida correctamente."
+msgstr "Post shared successfully."
+
+#: app.py:1563
+msgid "Ya has compartido esta publicación anteriormente."
+msgstr "You have already shared this post."
+
+#: app.py:1566
+#, python-format
+msgid "Ha ocurrido un error al intentar compartir la publicación: %(error)s"
+msgstr "An error occurred while trying to share the post: %(error)s"
+
+#: app.py:1576
 msgid "Por favor, completa tu perfil antes de enviar solicitudes."
 msgstr "Please complete your profile before sending requests."
 
-#: app.py:1284
+#: app.py:1580
 msgid "No puedes enviarte una solicitud a ti mismo."
 msgstr "You cannot send a request to yourself."
 
-#: app.py:1292 app.py:1347 app.py:1681
+#: app.py:1588 app.py:1629 app.py:2256
 msgid "No puedes interactuar con este usuario."
 msgstr "You cannot interact with this user."
 
-#: app.py:1299
+#: app.py:1595
 msgid "Ya existe una solicitud o conexión con este usuario."
 msgstr "A request or connection with this user already exists."
 
-#: app.py:1312
+#: app.py:1608
 #, python-format
 msgid "%(solicitante_link)s te ha enviado una solicitud de contacto."
 msgstr "%(solicitante_link)s has sent you a contact request."
 
-#: app.py:1318
+#: app.py:1614
 msgid "Solicitud de contacto enviada."
 msgstr "Contact request sent."
 
-#: app.py:1320
+#: app.py:1616
 msgid "Error al enviar la solicitud. Puede que ya exista una."
 msgstr "Error sending the request. It might already exist."
 
-#: app.py:1333
-msgid "Contacto eliminado."
-msgstr "Contact deleted."
-
-#: app.py:1335
-msgid "No se encontró una relación de contacto para eliminar."
-msgstr "No contact relationship was found to delete."
-
-#: app.py:1354
+#: app.py:1636
 msgid "Solicitud de contacto aceptada."
 msgstr "Contact request accepted."
 
-#: app.py:1361
+#: app.py:1643
 #, python-format
 msgid "%(receptor_link)s aceptó tu solicitud de contacto."
 msgstr "%(receptor_link)s accepted your contact request."
 
-#: app.py:1368
+#: app.py:1650
 msgid ""
 "No se pudo aceptar la solicitud (quizás ya no estaba pendiente o no era "
 "para ti)."
@@ -312,11 +339,11 @@ msgstr ""
 "Could not accept the request (maybe it was no longer pending or wasn't "
 "for you)."
 
-#: app.py:1381
+#: app.py:1664
 msgid "Solicitud de contacto rechazada."
 msgstr "Contact request rejected."
 
-#: app.py:1383
+#: app.py:1666
 msgid ""
 "No se pudo rechazar la solicitud (quizás ya no estaba pendiente o no era "
 "para ti)."
@@ -324,340 +351,814 @@ msgstr ""
 "Could not reject the request (maybe it was no longer pending or wasn't "
 "for you)."
 
-#: app.py:1389
+#: app.py:1680
+msgid "Contacto eliminado."
+msgstr "Contact deleted."
+
+#: app.py:1682
+msgid "No se encontró una relación de contacto para eliminar."
+msgstr "No contact relationship was found to delete."
+
+#: app.py:1689
 msgid "Debes iniciar sesión para bloquear usuarios."
 msgstr "You must be logged in to block users."
 
-#: app.py:1395
+#: app.py:1695
 msgid "No te puedes bloquear a ti mismo."
 msgstr "You cannot block yourself."
 
-#: app.py:1411
+#: app.py:1711
 msgid ""
 "Usuario bloqueado correctamente. Ya no verás sus publicaciones ni podrás "
 "interactuar con él/ella."
 msgstr ""
-"User blocked successfully. You will no longer see their posts or be able to "
-"interact with them."
+"User blocked successfully. You will no longer see their posts or be able "
+"to interact with them."
 
-#: app.py:1414
+#: app.py:1714
 msgid "Este usuario ya está en tu lista de bloqueados."
 msgstr "This user is already on your blocked list."
 
-#: app.py:1418
+#: app.py:1718
 #, python-format
 msgid "Ha ocurrido un error al intentar bloquear al usuario: %(error)s"
 msgstr "An error occurred while trying to block the user: %(error)s"
 
-#: app.py:1425
+#: app.py:1726
 msgid "Debes iniciar sesión para desbloquear usuarios."
 msgstr "You must be logged in to unblock users."
 
-#: app.py:1439
+#: app.py:1740
 msgid "Usuario desbloqueado correctamente."
 msgstr "User unblocked successfully."
 
-#: app.py:1441
+#: app.py:1742
 msgid "Este usuario no estaba en tu lista de bloqueados."
 msgstr "This user was not on your blocked list."
 
-#: app.py:1445
+#: app.py:1746
 #, python-format
 msgid "Ha ocurrido un error al intentar desbloquear al usuario: %(error)s"
 msgstr "An error occurred while trying to unblock the user: %(error)s"
 
-#: app.py:1452 app.py:1783 app.py:2106
-msgid "Debes iniciar sesión para ver esta página."
-msgstr "You must be logged in to see this page."
+#: app.py:1753
+msgid "No se puede acceder a un perfil sin un slug válido."
+msgstr "A profile cannot be accessed without a valid slug."
 
-#: app.py:1469
+#: app.py:1768
+msgid "Perfil no encontrado."
+msgstr "Profile not found."
+
+#: app.py:1776
+msgid "No puedes ver el perfil de este usuario."
+msgstr "You cannot view this user's profile."
+
+#: app.py:1949
+msgid "Por favor, completa tu perfil para ver las publicaciones."
+msgstr "Please complete your profile to see the posts."
+
+#: app.py:1978
+msgid "No puedes ver esta publicación debido a la configuración de bloqueo."
+msgstr "You cannot view this post due to block settings."
+
+#: app.py:2105
 msgid "Por favor, completa tu perfil para ver tus contactos."
 msgstr "Please complete your profile to see your contacts."
 
-#: app.py:1544 app.py:1647 app.py:1887
-msgid "Autenticación requerida"
-msgstr "Authentication required"
-
-#: app.py:1580 app.py:1714
+#: app.py:2176 app.py:2291
 msgid "Debes iniciar sesión para ver tus mensajes."
 msgstr "You must be logged in to see your messages."
 
-#: app.py:1584
+#: app.py:2180
 msgid "Por favor, completa tu perfil para usar la mensajería."
 msgstr "Please complete your profile to use messaging."
 
-#: app.py:1589
+#: app.py:2185
 msgid "No hay mensajes todavía."
 msgstr "No messages yet."
 
-#: app.py:1624
+#: app.py:2220
 #, python-format
 msgid "Tú: %(mensaje)s"
 msgstr "You: %(mensaje)s"
 
-#: app.py:1664
-msgid "Notificación no encontrada, ya marcada como leída o sin permiso."
-msgstr "Notification not found, already marked as read, or permission denied."
-
-#: app.py:1669
+#: app.py:2244
 msgid "Debes iniciar sesión para enviar mensajes."
 msgstr "You must be logged in to send messages."
 
-#: app.py:1673
+#: app.py:2248
 msgid "No puedes iniciar una conversación contigo mismo."
 msgstr "You cannot start a conversation with yourself."
 
-#: app.py:1690
+#: app.py:2265
 msgid "Solo puedes enviar mensajes a tus contactos."
 msgstr "You can only send messages to your contacts."
 
-#: app.py:1725
+#: app.py:2302
 msgid "No tienes permiso para ver esta conversación."
 msgstr "You do not have permission to view this conversation."
 
-#: app.py:1740
+#: app.py:2317
 msgid "No puedes ver esta conversación debido a la configuración de bloqueo."
 msgstr "You cannot view this conversation due to block settings."
 
-#: app.py:1787
-msgid "Por favor, completa tu perfil para ver las publicaciones."
-msgstr "Please complete your profile to see the posts."
+#: app.py:2358 app.py:2379 app.py:2431
+msgid "Autenticación requerida"
+msgstr "Authentication required"
 
-#: app.py:1815
-msgid "No puedes ver esta publicación debido a la configuración de bloqueo."
-msgstr "You cannot view this post due to block settings."
+#: app.py:2372
+msgid "Notificación no encontrada, ya marcada como leída o sin permiso."
+msgstr "Notification not found, already marked as read, or permission denied."
 
-#: app.py:1894
+#: app.py:2386
 msgid "Faltan datos: ID de conversación y cuerpo del mensaje son requeridos."
 msgstr "Missing data: Conversation ID and message body are required."
 
-#: app.py:1902
+#: app.py:2394
 msgid "No tienes permiso para enviar mensajes en esta conversación."
 msgstr "You do not have permission to send messages in this conversation."
 
-#: app.py:1910
+#: app.py:2402
 msgid "No puedes enviar mensajes a este usuario."
 msgstr "You cannot send messages to this user."
 
-#: app.py:1938
-msgid "Debes iniciar sesión para reaccionar a los comentarios."
-msgstr "You must be logged in to react to comments."
-
-#: app.py:1979
-msgid "Reacción al comentario eliminada."
-msgstr "Comment reaction removed."
-
-#: app.py:1983
-msgid "Reacción al comentario actualizada."
-msgstr "Comment reaction updated."
-
-#: app.py:1987
-msgid "Has reaccionado al comentario."
-msgstr "You reacted to the comment."
-
-#: app.py:1997
-#, python-format
-msgid "%(reactor_link)s reaccionó a tu %(comment_link_html)s."
-msgstr "%(reactor_link)s reacted to your %(comment_link_html)s."
-
-#: app.py:2015
-msgid "Debes iniciar sesión para compartir publicaciones."
-msgstr "You must be logged in to share posts."
-
-#: app.py:2021
-msgid "Por favor, completa tu perfil antes de compartir publicaciones."
-msgstr "Please complete your profile before sharing posts."
-
-#: app.py:2035
-msgid "La publicación que intentas compartir no existe."
-msgstr "The post you are trying to share does not exist."
-
-#: app.py:2042
-msgid "No puedes interactuar con esta publicación."
-msgstr "You cannot interact with this post."
-
-#: app.py:2065
-msgid "Alguien"
-msgstr "Someone"
-
-#: app.py:2073
-#, python-format
-msgid "%(sharer_link)s ha citado tu %(post_link)s."
-msgstr "%(sharer_link)s quoted your %(post_link)s."
-
-#: app.py:2076
-#, python-format
-msgid "%(sharer_link)s ha compartido tu %(post_link)s."
-msgstr "%(sharer_link)s shared your %(post_link)s."
-
-#: app.py:2088
-msgid "Publicación citada correctamente."
-msgstr "Post quoted successfully."
-
-#: app.py:2090
-msgid "Publicación compartida correctamente."
-msgstr "Post shared successfully."
-
-#: app.py:2093
-msgid ""
-"Ya has compartido esta publicación anteriormente. Si quieres añadir o "
-"cambiar una cita, primero deberías eliminar el compartido anterior "
-"(función no implementada)."
-msgstr ""
-"You have already shared this post. If you want to add or change a quote, "
-"you should first delete the previous share (feature not implemented)."
-
-#: app.py:2096
-#, python-format
-msgid "Ha ocurrido un error al intentar compartir la publicación: %(error)s"
-msgstr "An error occurred while trying to share the post: %(error)s"
-
-#: app.py:2109
+#: app.py:2471
 msgid "Por favor, completa tu perfil para ver las secciones."
 msgstr "Please complete your profile to see the sections."
 
-#: app.py:2135
+#: app.py:2492
 msgid "Debes completar tu perfil para ver el contenido de las secciones."
 msgstr "You must complete your profile to view the content of the sections."
 
-#: app.py:2149
+#: app.py:2506
 msgid "Sección no encontrada."
 msgstr "Section not found."
 
-#: templates/_macros.html:11 templates/contactos.html:47
-#: templates/contactos.html:87 templates/conversacion.html:64
-#: templates/feed.html:83 templates/feed.html:173 templates/mensajes.html:16
-#: templates/ver_perfil.html:35 templates/ver_perfil.html:110
-#: templates/ver_perfil.html:190 templates/ver_post.html:41
-#: templates/view_section.html:93
+#: app.py:2628
+msgid "Debes iniciar sesión para realizar búsquedas."
+msgstr "You must be logged in to search."
+
+#: app.py:2633
+msgid "Por favor, completa tu perfil para usar la búsqueda."
+msgstr "Please complete your profile to use search."
+
+#: app.py:2974 app.py:3004 app.py:3050 app.py:3136
+msgid "Debes iniciar sesión para acceder a esta página."
+msgstr "You must be logged in to access this page."
+
+#: app.py:2989
+msgid "No tienes permiso para acceder a esta página de administración."
+msgstr "You do not have permission to access this administration page."
+
+#: app.py:3016 app.py:3148
+msgid ""
+"No tienes los permisos necesarios (se requiere ser al menos coordinador) "
+"para acceder a esta página."
+msgstr ""
+"You do not have the necessary permissions (at least coordinator level "
+"required) to access this page."
+
+#: app.py:3062
+msgid ""
+"No tienes los permisos necesarios (se requiere ser al menos moderador) "
+"para acceder a esta página."
+msgstr ""
+"You do not have the necessary permissions (at least moderator level "
+"required) to access this page."
+
+#: app.py:3161
+msgid "No puedes cambiar tu propio rol desde esta interfaz."
+msgstr "You cannot change your own role from this interface."
+
+#: app.py:3176
+msgid "El usuario que intentas modificar no existe."
+msgstr "The user you are trying to modify does not exist."
+
+#: app.py:3186
+msgid "No tienes permiso para modificar a este usuario."
+msgstr "You do not have permission to modify this user."
+
+#: app.py:3204
+msgid "El rol del usuario ha sido actualizado correctamente."
+msgstr "User role has been updated successfully."
+
+#: app.py:3206
+#, python-format
+msgid "Error al actualizar el rol: %(error)s"
+msgstr "Error updating role: %(error)s"
+
+#: app.py:3208
+msgid "Rol no válido o sin permiso para asignarlo."
+msgstr "Invalid role or no permission to assign it."
+
+#: app.py:3257
+msgid "La publicación no existe."
+msgstr "The post does not exist."
+
+#: app.py:3266
+msgid "El contenido de la publicación no puede estar vacío."
+msgstr "The post content cannot be empty."
+
+#: app.py:3282
+msgid "Publicación actualizada correctamente."
+msgstr "Post updated successfully."
+
+#: app.py:3285
+#, python-format
+msgid "Error al actualizar la publicación: %(error)s"
+msgstr "Error updating post: %(error)s"
+
+#: app.py:3337
+msgid "Debes completar tu perfil para ver el feed de tus contactos."
+msgstr "You must complete your profile to see your contacts' feed."
+
+#: app.py:3629
+msgid "Faltan datos en el reporte. Tipo, ID y motivo son obligatorios."
+msgstr "Missing data in the report. Type, ID, and reason are required."
+
+#: app.py:3633
+msgid "Tipo de contenido no válido."
+msgstr "Invalid content type."
+
+#: app.py:3645
+msgid ""
+"Reporte enviado correctamente. Gracias por ayudarnos a mantener la "
+"comunidad segura."
+msgstr ""
+"Report sent successfully. Thank you for helping us keep the community "
+"safe."
+
+#: app.py:3649
+msgid ""
+"Ocurrió un error en el servidor al procesar tu reporte. Inténtalo de "
+"nuevo más tarde."
+msgstr ""
+"A server error occurred while processing your report. Please try again "
+"later."
+
+#: app.py:3652
+msgid "Ocurrió un error inesperado."
+msgstr "An unexpected error occurred."
+
+#: app.py:3729
+msgid "Reporte desestimado y archivado."
+msgstr "Report dismissed and archived."
+
+#: app.py:3744
+msgid ""
+"Reporte marcado para acción. Por favor, elimina el contenido manualmente "
+"si es necesario."
+msgstr "Report marked for action. Please delete the content manually if necessary."
+
+#: app.py:3760 app.py:3990
+msgid "El mensaje personalizado no puede estar vacío."
+msgstr "The custom message cannot be empty."
+
+#: app.py:3769 app.py:3999
+msgid "Motivo predefinido no válido o mensaje no proporcionado."
+msgstr "Invalid predefined reason or message not provided."
+
+#: app.py:3778
+msgid "Reporte no encontrado o ya resuelto."
+msgstr "Report not found or already resolved."
+
+#: app.py:3797
+msgid ""
+"No se pudo encontrar el contenido original (puede haber sido eliminado). "
+"El reporte ha sido archivado."
+msgstr ""
+"Could not find the original content (it may have been deleted). The "
+"report has been archived."
+
+#: app.py:3808
+#, python-format
+msgid ""
+"Tu reporte sobre el contenido publicado el %(date)s ha sido revisado y "
+"desestimado. Motivo: \"%(reason)s\"."
+msgstr ""
+"Your report about the content published on %(date)s has been reviewed and"
+" dismissed. Reason: \"%(reason)s\"."
+
+#: app.py:3814
+msgid "Reporte desestimado. Se ha notificado al usuario que reportó."
+msgstr "Report dismissed. The reporting user has been notified."
+
+#: app.py:3820
+#, python-format
+msgid ""
+"Se ha tomado una acción sobre tu contenido publicado el %(date)s. Motivo:"
+" \"%(reason)s\"."
+msgstr ""
+"Action has been taken on your content published on %(date)s. Reason: "
+"\"%(reason)s\"."
+
+#: app.py:3825
+#, python-format
+msgid ""
+"Gracias por tu ayuda. Tu reporte sobre el contenido publicado el %(date)s"
+" ha sido aprobado y se han tomado las medidas correspondientes."
+msgstr ""
+"Thank you for your help. Your report on the content published on %(date)s"
+" has been approved and corresponding actions have been taken."
+
+#: app.py:3830
+msgid "Acción tomada. Se ha notificado a ambas partes."
+msgstr "Action taken. Both parties have been notified."
+
+#: app.py:3841
+msgid "[Cita eliminada por un moderador]"
+msgstr "[Quote deleted by a moderator]"
+
+#: app.py:3844
+msgid "El contenido ha sido ocultado/eliminado."
+msgstr "The content has been hidden/deleted."
+
+#: app.py:3846 app.py:4033
+msgid "Acción no válida."
+msgstr "Invalid action."
+
+#: app.py:3871
+msgid ""
+"Ya has enviado una apelación para esta decisión. Está pendiente de "
+"revisión."
+msgstr ""
+"You have already submitted an appeal for this decision. It is pending "
+"review."
+
+#: app.py:3877
+msgid "Reporte no encontrado."
+msgstr "Report not found."
+
+#: app.py:3898
+msgid ""
+"No tienes permiso para apelar esta decisión o la apelación no es "
+"aplicable en este estado."
+msgstr ""
+"You do not have permission to appeal this decision or the appeal is not "
+"applicable in this state."
+
+#: app.py:3906
+msgid "El texto de la apelación no puede estar vacío."
+msgstr "The appeal text cannot be empty."
+
+#: app.py:3925
+msgid ""
+"Tu apelación ha sido enviada correctamente. Será revisada por el equipo "
+"de administración."
+msgstr ""
+"Your appeal has been sent successfully. It will be reviewed by the "
+"administration team."
+
+#: app.py:4008
+msgid "Apelación no encontrada o ya resuelta."
+msgstr "Appeal not found or already resolved."
+
+#: app.py:4016
+msgid "Apelación aprobada. La acción original ha sido revertida."
+msgstr "Appeal approved. The original action has been reverted."
+
+#: app.py:4031
+msgid "Apelación rechazada. La decisión original se mantiene."
+msgstr "Appeal denied. The original decision is upheld."
+
+#: app.py:4057
+msgid "El motivo de la sanción es obligatorio."
+msgstr "The reason for the sanction is mandatory."
+
+#: app.py:4060
+msgid "No te puedes sancionar a ti mismo."
+msgstr "You cannot sanction yourself."
+
+#: app.py:4068
+msgid ""
+"Se han levantado todas las sanciones de tu cuenta. Vuelves a tener acceso"
+" completo."
+msgstr ""
+"All sanctions on your account have been lifted. You have full access "
+"again."
+
+#: app.py:4070
+msgid "Sanciones levantadas correctamente."
+msgstr "Sanctions lifted successfully."
+
+#: app.py:4075
+#, python-format
+msgid "Tu cuenta ha sido suspendida de forma permanente. Motivo: \"%(reason)s\""
+msgstr "Your account has been permanently suspended. Reason: \"%(reason)s\""
+
+#: app.py:4077
+msgid "Usuario suspendido permanentemente."
+msgstr "User permanently suspended."
+
+#: app.py:4086
+#, python-format
+msgid ""
+"Tu cuenta ha sido silenciada hasta el %(date)s (solo podrás leer "
+"contenido). Motivo: \"%(reason)s\""
+msgstr ""
+"Your account has been muted until %(date)s (you can only read content). "
+"Reason: \"%(reason)s\""
+
+#: app.py:4088
+msgid "Usuario silenciado correctamente."
+msgstr "User muted successfully."
+
+#: app.py:4091
+#, python-format
+msgid "Tu cuenta ha sido suspendida hasta el %(date)s. Motivo: \"%(reason)s\""
+msgstr "Your account has been suspended until %(date)s. Reason: \"%(reason)s\""
+
+#: app.py:4093
+msgid "Usuario suspendido correctamente."
+msgstr "User suspended successfully."
+
+#: templates/_macros.html:11 templates/_post_card.html:10
+#: templates/_post_card.html:93 templates/contactos.html:47
+#: templates/contactos.html:87 templates/feed_contacts.html:52
+#: templates/feed_contacts.html:94 templates/mensajes.html:16
+#: templates/search_results.html:52 templates/ver_perfil.html:37
+#: templates/ver_perfil.html:111 templates/ver_perfil.html:191
+#: templates/ver_post.html:29
 #, python-format
 msgid "Foto de %(username)s"
 msgstr "Photo of %(username)s"
 
-#: templates/_macros.html:24
+#: templates/_macros.html:26 templates/_post_card.html:22
+#: templates/_post_card.html:103
+msgid "Más opciones"
+msgstr "More options"
+
+#: templates/_macros.html:32
+msgid "Reportar Comentario"
+msgstr "Report Comment"
+
+#: templates/_macros.html:38
 msgid ""
 "¿Estás seguro de que quieres eliminar este comentario y todas sus "
 "respuestas?"
 msgstr "Are you sure you want to delete this comment and all its replies?"
 
-#: templates/_macros.html:25
-msgid "Eliminar comentario"
-msgstr "Delete comment"
+#: templates/_macros.html:40
+msgid "Eliminar Comentario"
+msgstr "Delete Comment"
 
-#: templates/_macros.html:54 templates/feed.html:114 templates/feed.html:199
-#: templates/ver_perfil.html:144 templates/ver_perfil.html:219
-#: templates/ver_post.html:85 templates/view_section.html:124
+#: templates/_macros.html:69 templates/_post_card.html:51
+#: templates/_post_card.html:122 templates/base.html:566
+#: templates/feed_contacts.html:70 templates/feed_contacts.html:111
+#: templates/search_results.html:108 templates/ver_perfil.html:149
+#: templates/ver_perfil.html:224 templates/ver_post.html:101
 msgid "Reaccionar"
 msgstr "React"
 
-#: templates/_macros.html:70
+#: templates/_macros.html:85
 msgid "Responder"
 msgstr "Reply"
 
-#: templates/_macros.html:80
+#: templates/_macros.html:94
 msgid "Escribe tu respuesta..."
 msgstr "Write your reply..."
 
-#: templates/_macros.html:82
+#: templates/_macros.html:96
 msgid "Enviar Respuesta"
 msgstr "Send Reply"
 
-#: templates/base.html:143 templates/index.html:8
+#: templates/_post_card.html:15 templates/_post_card.html:98
+#: templates/feed_contacts.html:57 templates/feed_contacts.html:99
+#: templates/search_results.html:61 templates/ver_perfil.html:121
+#: templates/ver_perfil.html:201 templates/ver_post.html:38
+msgid "en"
+msgstr "in"
+
+#: templates/_post_card.html:28
+msgid "Reportar Publicación"
+msgstr "Report Post"
+
+#: templates/_post_card.html:34 templates/feed_contacts.html:61
+#: templates/search_results.html:67 templates/ver_perfil.html:128
+#: templates/ver_post.html:51
+msgid "¿Estás seguro de que quieres eliminar esta publicación?"
+msgstr "Are you sure you want to delete this post?"
+
+#: templates/_post_card.html:36
+msgid "Eliminar Publicación"
+msgstr "Delete Post"
+
+#: templates/_post_card.html:45 templates/_post_card.html:116
+#: templates/feed_contacts.html:64 templates/feed_contacts.html:105
+#: templates/search_results.html:78 templates/search_results.html:162
+#: templates/ver_perfil.html:134 templates/ver_perfil.html:209
+#: templates/ver_post.html:72
+msgid "Imagen de la publicación"
+msgstr "Post image"
+
+#: templates/_post_card.html:46 templates/_post_card.html:117
+#: templates/feed_contacts.html:65 templates/feed_contacts.html:106
+#: templates/search_results.html:85 templates/ver_post.html:80
+msgid "Imagen de previsualización"
+msgstr "Preview image"
+
+#: templates/_post_card.html:58 templates/_post_card.html:129
+#: templates/admin/comments_list.html:21 templates/admin/log_list.html:23
+#: templates/admin/posts_list.html:21 templates/admin/users_list.html:18
+#: templates/feed_contacts.html:77 templates/feed_contacts.html:118
+#: templates/search_results.html:116 templates/ver_perfil.html:157
+#: templates/ver_perfil.html:232 templates/ver_post.html:115
+#: templates/ver_post.html:129
+msgid "Comentarios"
+msgstr "Comments"
+
+#: templates/_post_card.html:59 templates/_post_card.html:130
+#: templates/feed_contacts.html:78 templates/feed_contacts.html:119
+#: templates/search_results.html:120 templates/ver_perfil.html:162
+#: templates/ver_perfil.html:237 templates/ver_post.html:121
+msgid "Citar o compartir"
+msgstr "Quote or share"
+
+#: templates/_post_card.html:61 templates/feed_contacts.html:80
+#: templates/ver_post.html:133
+msgid "No hay comentarios aún. ¡Sé el primero!"
+msgstr "No comments yet. Be the first!"
+
+#: templates/_post_card.html:63 templates/feed_contacts.html:82
+#: templates/ver_post.html:139
+msgid "Escribe un comentario..."
+msgstr "Write a comment..."
+
+#: templates/_post_card.html:63 templates/_post_card.html:134
+#: templates/feed_contacts.html:82 templates/feed_contacts.html:123
+#: templates/ver_post.html:141
+msgid "Comentar"
+msgstr "Comment"
+
+#: templates/_post_card.html:72 templates/feed_contacts.html:89
+#: templates/search_results.html:142 templates/ver_perfil.html:175
+msgid "compartió esto"
+msgstr "shared this"
+
+#: templates/_post_card.html:72 templates/feed_contacts.html:89
+#: templates/search_results.html:142 templates/ver_perfil.html:175
+msgid "con el siguiente comentario:"
+msgstr "with the following comment:"
+
+#: templates/_post_card.html:76
+msgid "Más opciones para esta cita"
+msgstr "More options for this quote"
+
+#: templates/_post_card.html:82
+msgid "Reportar Cita"
+msgstr "Report Quote"
+
+#: templates/_post_card.html:109
+msgid "Reportar Publicación Original"
+msgstr "Report Original Post"
+
+#: templates/_post_card.html:132 templates/feed_contacts.html:121
+msgid "No hay comentarios aún."
+msgstr "No comments yet."
+
+#: templates/_post_card.html:134 templates/feed_contacts.html:123
+msgid "Escribe un comentario sobre la publicación original..."
+msgstr "Write a comment about the original post..."
+
+#: templates/appeal_form.html:3
+msgid "Apelar Decisión de Reporte"
+msgstr "Appeal Report Decision"
+
+#: templates/appeal_form.html:10
+msgid "Formulario de Apelación"
+msgstr "Appeal Form"
+
+#: templates/appeal_form.html:13
+#, python-format
+msgid "Estás apelando la decisión sobre el reporte con ID #%(report_id)s."
+msgstr "You are appealing the decision on report ID #%(report_id)s."
+
+#: templates/appeal_form.html:14
+msgid ""
+"Por favor, expón tus motivos de forma clara y respetuosa. Adjunta una "
+"captura de pantalla si lo consideras necesario para aportar pruebas."
+msgstr ""
+"Please state your reasons clearly and respectfully. Attach a screenshot "
+"if you consider it necessary to provide evidence."
+
+#: templates/appeal_form.html:18
+msgid "Describe por qué crees que la decisión fue incorrecta:"
+msgstr "Describe why you believe the decision was incorrect:"
+
+#: templates/appeal_form.html:23
+msgid "Adjuntar imagen (opcional):"
+msgstr "Attach image (optional):"
+
+#: templates/appeal_form.html:27
+msgid "Enviar Apelación"
+msgstr "Submit Appeal"
+
+#: templates/admin/appeals_list.html:95 templates/admin/reports_list.html:107
+#: templates/admin/users_list.html:115 templates/appeal_form.html:28
+#: templates/base.html:355 templates/base.html:399
+msgid "Cancelar"
+msgstr "Cancel"
+
+#: templates/base.html:194 templates/index.html:8
 msgid "Logo de PiVerse"
 msgstr "PiVerse Logo"
 
-#: templates/base.html:146
+#: templates/base.html:197
 msgid "Alternar navegación"
 msgstr "Toggle navigation"
 
-#: templates/base.html:154 templates/notificaciones.html:7
+#: templates/base.html:205 templates/base.html:289
+msgid "Buscar..."
+msgstr "Search..."
+
+#: templates/base.html:205 templates/base.html:289
+msgid "Buscar"
+msgstr "Search"
+
+#: templates/base.html:211 templates/notificaciones.html:7
 msgid "Notificaciones"
 msgstr "Notifications"
 
-#: templates/base.html:158
+#: templates/base.html:214
 msgid "notificaciones no leídas"
 msgstr "unread notifications"
 
-#: templates/base.html:165 templates/mensajes.html:9
+#: templates/base.html:220 templates/mensajes.html:9
 msgid "Mensajes"
 msgstr "Messages"
 
-#: templates/base.html:169
+#: templates/base.html:223
 msgid "mensajes no leídos"
 msgstr "unread messages"
 
-#: templates/base.html:174
+#: templates/base.html:227
 msgid "Inicio"
 msgstr "Home"
 
-#: templates/base.html:175
+#: templates/base.html:228
 msgid "Mi Perfil"
 msgstr "My Profile"
 
-#: templates/base.html:176 templates/contactos.html:27
+#: templates/base.html:229 templates/contactos.html:27
 msgid "Mis Contactos"
 msgstr "My Contacts"
 
-#: templates/base.html:181
+#: templates/base.html:234
+msgid "Admin"
+msgstr "Admin"
+
+#: templates/admin/reports_list.html:3 templates/base.html:237
+msgid "Gestionar Reportes"
+msgstr "Manage Reports"
+
+#: templates/admin/appeals_list.html:3 templates/base.html:238
+msgid "Gestionar Apelaciones"
+msgstr "Manage Appeals"
+
+#: templates/admin/users_list.html:3 templates/base.html:240
+msgid "Gestionar Usuarios"
+msgstr "Manage Users"
+
+#: templates/base.html:241
+msgid "Gestionar Publicaciones"
+msgstr "Manage Posts"
+
+#: templates/base.html:242
+msgid "Gestionar Comentarios"
+msgstr "Manage Comments"
+
+#: templates/base.html:245
+msgid "Log de Acciones"
+msgstr "Action Log"
+
+#: templates/base.html:253
 msgid "Secciones"
 msgstr "Sections"
 
-#: templates/base.html:189 templates/base.html:220
+#: templates/base.html:259 templates/base.html:296
 msgid "Idioma"
 msgstr "Language"
 
-#: templates/base.html:205
+#: templates/base.html:275
 #, python-format
 msgid "Foto de perfil de %(username)s"
 msgstr "Profile picture of %(username)s"
 
-#: templates/base.html:209
+#: templates/base.html:279
 msgid "Completar perfil"
 msgstr "Complete profile"
 
-#: templates/base.html:215
+#: templates/base.html:285
 msgid "Cerrar sesión"
 msgstr "Logout"
 
-#: templates/base.html:233 templates/login.html:3 templates/login.html:6
+#: templates/base.html:309 templates/login.html:3 templates/login.html:6
 msgid "Iniciar sesión"
 msgstr "Login"
 
-#: templates/base.html:234 templates/register.html:16
+#: templates/base.html:310 templates/register.html:16
 msgid "Registrarse"
 msgstr "Sign Up"
 
-#: templates/base.html:248 templates/base.html:321
+#: templates/base.html:323 templates/base.html:345 templates/base.html:369
 msgid "Cerrar"
 msgstr "Close"
 
-#: templates/base.html:260
+#: templates/base.html:335
 msgid "Año actual"
 msgstr "Current year"
 
-#: templates/base.html:260
+#: templates/base.html:335
 msgid "Conectando Pioneros."
 msgstr "Connecting Pioneers."
 
-#: templates/base.html:320
+#: templates/base.html:344
 msgid "Citar Publicación"
 msgstr "Quote Post"
 
-#: templates/base.html:326
+#: templates/base.html:350
 msgid "Añade un comentario (opcional):"
 msgstr "Add a comment (optional):"
 
-#: templates/base.html:327
+#: templates/base.html:351
 msgid "¿Qué estás pensando sobre esto?"
 msgstr "What are you thinking about this?"
 
-#: templates/base.html:331
-msgid "Cancelar"
-msgstr "Cancel"
-
-#: templates/base.html:332
+#: templates/base.html:356
 msgid "Compartir ahora"
 msgstr "Share now"
+
+#: templates/base.html:368
+msgid "Reportar Contenido"
+msgstr "Report Content"
+
+#: templates/base.html:376
+msgid ""
+"Gracias por ayudar a mantener segura la comunidad de PiVerse. Por favor, "
+"dinos por qué estás reportando este contenido."
+msgstr ""
+"Thank you for helping keep the PiVerse community safe. Please tell us why"
+" you are reporting this content."
+
+#: templates/base.html:379
+msgid "Motivo del reporte"
+msgstr "Reason for reporting"
+
+#: templates/base.html:381
+msgid "Elige un motivo..."
+msgstr "Choose a reason..."
+
+#: templates/base.html:382
+msgid "Spam o publicidad no deseada"
+msgstr "Spam or unwanted advertising"
+
+#: templates/base.html:383
+msgid "Lenguaje o símbolos que incitan al odio"
+msgstr "Hate speech or symbols"
+
+#: templates/base.html:384
+msgid "Acoso o bullying"
+msgstr "Harassment or bullying"
+
+#: templates/base.html:385
+msgid "Información falsa o engañosa"
+msgstr "False or misleading information"
+
+#: templates/base.html:386
+msgid "Suplantación de identidad"
+msgstr "Impersonation"
+
+#: templates/base.html:387
+msgid "Contenido explícito o inapropiado"
+msgstr "Explicit or inappropriate content"
+
+#: templates/base.html:388
+msgid "Otro motivo"
+msgstr "Other reason"
+
+#: templates/base.html:393
+msgid "Detalles adicionales (opcional)"
+msgstr "Additional details (optional)"
+
+#: templates/base.html:394
+msgid "Proporciona más información si es necesario."
+msgstr "Provide more information if necessary."
+
+#: templates/base.html:400
+msgid "Enviar Reporte"
+msgstr "Send Report"
+
+#: templates/base.html:457
+msgid "Enviando..."
+msgstr "Sending..."
+
+#: templates/base.html:486
+msgid "Error de conexión. Inténtalo de nuevo."
+msgstr "Connection error. Please try again."
+
+#: templates/base.html:598 templates/feed_contacts.html:169
+msgid "Respondiendo a"
+msgstr "Replying to"
 
 #: templates/contactos.html:3
 msgid "Mis Contactos y Bloqueados"
@@ -669,7 +1170,7 @@ msgstr "Manage Contacts"
 
 #: templates/contactos.html:15
 msgid "Buscar en mis contactos..."
-msgstr "Search in my contacts..."
+msgstr "Search my contacts..."
 
 #: templates/contactos.html:32
 msgid "Usuarios Bloqueados"
@@ -686,7 +1187,7 @@ msgstr "No contacts found matching \"<strong>%(term)s</strong>\"."
 msgid "Mostrar todos los contactos"
 msgstr "Show all contacts"
 
-#: templates/contactos.html:68
+#: templates/contactos.html:68 templates/feed_contacts.html:138
 msgid "Aún no tienes contactos."
 msgstr "You don't have any contacts yet."
 
@@ -719,134 +1220,111 @@ msgstr "You haven't blocked any users."
 msgid "Conversación con @%(username)s"
 msgstr "Conversation with @%(username)s"
 
-#: templates/conversacion.html:56
+#: templates/conversacion.html:20
 msgid "Volver a Mensajes"
 msgstr "Back to Messages"
 
-#: templates/conversacion.html:81
+#: templates/conversacion.html:45
 msgid "Aún no hay mensajes. ¡Envía el primero!"
 msgstr "No messages yet. Send the first one!"
 
-#: templates/conversacion.html:89
+#: templates/conversacion.html:53
 msgid "Escribe un mensaje..."
 msgstr "Write a message..."
 
-#: templates/conversacion.html:90
+#: templates/conversacion.html:54
 msgid "Enviar"
 msgstr "Send"
 
-#: templates/conversacion.html:107 templates/conversacion.html:174
-msgid "Hubo un error al enviar tu mensaje. Inténtalo de nuevo."
-msgstr "There was an error sending your message. Please try again."
+#: templates/conversacion.html:108
+msgid "Hubo un error al enviar tu mensaje."
+msgstr "There was an error sending your message."
 
-#: templates/conversacion.html:179
+#: templates/conversacion.html:112
 msgid "Hubo un error de red. Por favor, revisa tu conexión."
 msgstr "There was a network error. Please check your connection."
 
-#: templates/feed.html:4
+#: templates/feed.html:4 templates/feed.html:27 templates/feed_contacts.html:33
 msgid "Feed"
 msgstr "Feed"
 
-#: templates/feed.html:40
-msgid "Últimas publicaciones"
-msgstr "Latest posts"
+#: templates/feed.html:31 templates/feed_contacts.html:38
+msgid "Para ti"
+msgstr "For You"
 
-#: templates/feed.html:45
+#: templates/feed.html:34 templates/feed_contacts.html:41
+msgid "Contactos"
+msgstr "Contacts"
+
+#: templates/feed.html:40
 msgid "Nueva Publicación"
 msgstr "New Post"
 
-#: templates/feed.html:48 templates/view_section.html:56
+#: templates/feed.html:43 templates/view_section.html:53
 #, python-format
 msgid "¿Qué estás pensando, %(username)s?"
 msgstr "What's on your mind, %(username)s?"
 
-#: templates/feed.html:52 templates/view_section.html:60
+#: templates/feed.html:47 templates/view_section.html:57
 msgid "Añadir imagen (opcional)"
 msgstr "Add image (optional)"
 
-#: templates/feed.html:59
+#: templates/feed.html:52
 msgid "Seleccionar Sección (opcional)"
 msgstr "Select Section (optional)"
 
-#: templates/feed.html:61
+#: templates/feed.html:54
 msgid "Ninguna"
 msgstr "None"
 
-#: templates/feed.html:70 templates/view_section.html:78
+#: templates/feed.html:61 templates/view_section.html:72
 msgid "Publicar"
 msgstr "Post"
 
-#: templates/feed.html:93 templates/ver_perfil.html:122
-#: templates/ver_post.html:60 templates/view_section.html:103
-msgid "¿Estás seguro de que quieres eliminar esta publicación?"
-msgstr "Are you sure you want to delete this post?"
+#: templates/feed.html:67 templates/view_section.html:80
+msgid "Ver nuevas publicaciones"
+msgstr "View new posts"
 
-#: templates/feed.html:94 templates/ver_post.html:61
-#: templates/view_section.html:104
-msgid "Eliminar publicación"
-msgstr "Delete post"
-
-#: templates/feed.html:99 templates/feed.html:184 templates/ver_perfil.html:128
-#: templates/ver_perfil.html:203 templates/ver_post.html:67
-#: templates/view_section.html:109
-msgid "Imagen de la publicación"
-msgstr "Post image"
-
-#: templates/feed.html:128 templates/feed.html:213
-#: templates/ver_perfil.html:152 templates/ver_perfil.html:227
-#: templates/ver_post.html:114 templates/view_section.html:138
-msgid "Comentarios"
-msgstr "Comments"
-
-#: templates/feed.html:134 templates/feed.html:219
-#: templates/ver_perfil.html:158 templates/ver_perfil.html:233
-#: templates/ver_post.html:102 templates/view_section.html:144
-msgid "Citar o compartir"
-msgstr "Quote or share"
-
-#: templates/feed.html:139 templates/ver_post.html:119
-#: templates/view_section.html:149
-msgid "No hay comentarios aún. ¡Sé el primero!"
-msgstr "No comments yet. Be the first!"
-
-#: templates/feed.html:143 templates/ver_post.html:126
-#: templates/view_section.html:153
-msgid "Escribe un comentario..."
-msgstr "Write a comment..."
-
-#: templates/feed.html:145 templates/feed.html:230 templates/ver_post.html:129
-#: templates/view_section.html:155
-msgid "Comentar"
-msgstr "Comment"
-
-#: templates/feed.html:159 templates/ver_perfil.html:171
-msgid "compartió esto"
-msgstr "shared this"
-
-#: templates/feed.html:159 templates/ver_perfil.html:171
-msgid "con el siguiente comentario:"
-msgstr "with the following comment:"
-
-#: templates/feed.html:224
-msgid "No hay comentarios aún."
-msgstr "No comments yet."
-
-#: templates/feed.html:228
-msgid "Escribe un comentario sobre la publicación original..."
-msgstr "Write a comment about the original post..."
-
-#: templates/feed.html:240
+#: templates/feed.html:75
 msgid "Aún no hay publicaciones en el feed."
 msgstr "No posts in the feed yet."
 
-#: templates/feed.html:241
+#: templates/feed.html:76
 msgid "¡Sigue a otros pioneros o crea tu primera publicación!"
 msgstr "Follow other Pioneers or create your first post!"
 
-#: templates/feed.html:270 templates/ver_post.html:153
-#: templates/view_section.html:199
-msgid "Respondiendo a"
-msgstr "Replying to"
+#: templates/feed.html:118 templates/feed.html:143
+msgid "Has llegado al final."
+msgstr "You have reached the end."
+
+#: templates/admin/reports_list.html:45 templates/feed.html:155
+#: templates/view_section.html:172
+msgid "Ver"
+msgstr "View"
+
+#: templates/feed.html:155
+msgid "publicaciones nuevas"
+msgstr "new posts"
+
+#: templates/feed_contacts.html:4
+msgid "Feed de Contactos"
+msgstr "Contacts Feed"
+
+#: templates/feed_contacts.html:61 templates/search_results.html:68
+msgid "Eliminar publicación"
+msgstr "Delete post"
+
+#: templates/feed_contacts.html:134
+msgid "Tus contactos aún no han publicado nada."
+msgstr "Your contacts haven't posted anything yet."
+
+#: templates/feed_contacts.html:135
+msgid "¡Anímales a compartir algo!"
+msgstr "Encourage them to share something!"
+
+#: templates/feed_contacts.html:139
+msgid "Cuando conectes con otros pioneros, sus publicaciones aparecerán aquí."
+msgstr "When you connect with other pioneers, their posts will appear here."
 
 #: templates/index.html:3
 msgid "Bienvenido a PiVerse"
@@ -857,25 +1335,25 @@ msgid ""
 "Tu universo social dentro del ecosistema Pi Network. Conéctate, comparte "
 "y crece con otros pioneros."
 msgstr ""
-"Your social universe within the Pi Network ecosystem. Connect, share, and "
-"grow with other pioneers."
+"Your social universe within the Pi Network ecosystem. Connect, share, and"
+" grow with other pioneers."
 
 #: templates/index.html:13
 msgid "Explorar el Feed"
 msgstr "Explore Feed"
 
 #: templates/index.html:17
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "\n"
-"                    Por favor, %(profile_link_start)scompleta tu perfil "
+"                    Por favor, %(profile_link_start)scompleta tu perfil "
 "público%(profile_link_end)s para acceder al feed y todas las funciones.\n"
-"                    "
+"                    "
 msgstr ""
 "\n"
-"                      Please %(profile_link_start)scomplete your public "
+"                    Please, %(profile_link_start)scomplete your public "
 "profile%(profile_link_end)s to access the feed and all features.\n"
-"                    "
+"                "
 
 #: templates/index.html:23
 msgid "Únete a PiVerse"
@@ -961,15 +1439,16 @@ msgstr "Or start a new one from a contact's profile."
 msgid "Mis Notificaciones"
 msgstr "My Notifications"
 
-#: templates/notificaciones.html:20 templates/ver_perfil.html:55
+#: templates/notificaciones.html:26 templates/ver_perfil.html:57
 msgid "Aceptar"
 msgstr "Accept"
 
-#: templates/notificaciones.html:23 templates/ver_perfil.html:56
+#: templates/admin/appeals_list.html:53 templates/notificaciones.html:29
+#: templates/ver_perfil.html:58
 msgid "Rechazar"
 msgstr "Reject"
 
-#: templates/notificaciones.html:33
+#: templates/notificaciones.html:40
 msgid "No tienes notificaciones."
 msgstr "You have no notifications."
 
@@ -1010,15 +1489,45 @@ msgstr "Registration"
 msgid "¿Ya tienes cuenta? <a href=\"%(login_url)s\">Inicia sesión aquí</a>"
 msgstr "Already have an account? <a href=\"%(login_url)s\">Login here</a>"
 
+#: templates/search_results.html:4
+#, python-format
+msgid "Resultados de Búsqueda para \"%(query)s\""
+msgstr "Search Results for \"%(query)s\""
+
+#: templates/search_results.html:35
+msgid "Volver al Feed"
+msgstr "Back to Feed"
+
+#: templates/search_results.html:38
+#, python-format
+msgid "Resultados de búsqueda para: \"<strong>%(query)s</strong>\""
+msgstr "Search results for: \"<strong>%(query)s</strong>\""
+
+#: templates/search_results.html:40
+msgid "Búsqueda de Publicaciones"
+msgstr "Post Search"
+
+#: templates/search_results.html:188
+#, python-format
+msgid ""
+"No se encontraron publicaciones que coincidan con "
+"\"<strong>%(query)s</strong>\"."
+msgstr "No posts found matching \"<strong>%(query)s</strong>\"."
+
 #: templates/sections_list.html:3 templates/sections_list.html:8
 msgid "Secciones de Discusión"
 msgstr "Discussion Sections"
 
-#: templates/sections_list.html:23
+#: templates/sections_list.html:19
+#, python-format
+msgid "Icono de %(section_name)s"
+msgstr "Icon for %(section_name)s"
+
+#: templates/sections_list.html:33
 msgid "Ver publicaciones"
 msgstr "View posts"
 
-#: templates/sections_list.html:30
+#: templates/sections_list.html:41
 msgid "Aún no hay secciones definidas."
 msgstr "No sections defined yet."
 
@@ -1027,127 +1536,518 @@ msgstr "No sections defined yet."
 msgid "Perfil de @%(username)s"
 msgstr "Profile of @%(username)s"
 
-#: templates/ver_perfil.html:44
+#: templates/ver_perfil.html:46
 msgid "Editar mi perfil"
 msgstr "Edit my profile"
 
-#: templates/ver_perfil.html:48
+#: templates/ver_perfil.html:50
 msgid "Sin biografía."
 msgstr "No biography."
 
-#: templates/ver_perfil.html:53
+#: templates/ver_perfil.html:55
 msgid "te ha enviado una solicitud de contacto."
 msgstr "sent you a contact request."
 
-#: templates/ver_perfil.html:60
+#: templates/ver_perfil.html:62
 msgid "Enviar Mensaje"
 msgstr "Send Message"
 
-#: templates/ver_perfil.html:61
+#: templates/ver_perfil.html:63
 msgid "¿Estás seguro de que quieres eliminar este contacto?"
 msgstr "Are you sure you want to delete this contact?"
 
-#: templates/ver_perfil.html:61
+#: templates/ver_perfil.html:63
 msgid "Eliminar contacto"
 msgstr "Delete contact"
 
-#: templates/ver_perfil.html:64
+#: templates/ver_perfil.html:66
 msgid "Solicitud de contacto enviada y pendiente de respuesta."
 msgstr "Contact request sent and awaiting response."
 
-#: templates/ver_perfil.html:65
+#: templates/ver_perfil.html:67
 msgid "¿Estás seguro de que quieres cancelar esta solicitud de contacto?"
 msgstr "Are you sure you want to cancel this contact request?"
 
-#: templates/ver_perfil.html:65
+#: templates/ver_perfil.html:67
 msgid "Cancelar Solicitud"
 msgstr "Cancel Request"
 
-#: templates/ver_perfil.html:67
+#: templates/ver_perfil.html:69
 msgid "Enviar solicitud de contacto"
 msgstr "Send contact request"
 
-#: templates/ver_perfil.html:71
+#: templates/ver_perfil.html:73
 msgid "Más acciones"
 msgstr "More actions"
 
-#: templates/ver_perfil.html:79
+#: templates/ver_perfil.html:81
 msgid "Desbloquear Usuario"
 msgstr "Unblock User"
 
-#: templates/ver_perfil.html:85
+#: templates/ver_perfil.html:87
 msgid ""
 "¿Estás seguro de que quieres bloquear a este usuario? No podrás ver su "
 "contenido ni interactuar, y se eliminará de tus contactos si lo es."
 msgstr ""
 "Are you sure you want to block this user? You will not be able to see "
-"their content or interact, and they will be removed from your contacts if "
-"they are one."
+"their content or interact, and they will be removed from your contacts if"
+" they are one."
 
-#: templates/ver_perfil.html:87
+#: templates/ver_perfil.html:89
 msgid "Bloquear Usuario"
 msgstr "Block User"
 
-#: templates/ver_perfil.html:99
+#: templates/ver_perfil.html:101
 #, python-format
 msgid "Actividad de @%(username)s:"
 msgstr "Activity of @%(username)s:"
 
-#: templates/ver_perfil.html:123
+#: templates/ver_perfil.html:129 templates/ver_post.html:52
 msgid "Eliminar"
 msgstr "Delete"
 
-#: templates/ver_perfil.html:243
+#: templates/ver_perfil.html:247
 msgid ""
 "Este usuario aún no tiene actividad (publicaciones o contenido "
 "compartido)."
 msgstr "This user has no activity yet (posts or shared content)."
 
 #: templates/ver_post.html:4
-#, python-format
-msgid "Publicación de @%(username)s"
-msgstr "Post by @%(username)s"
+msgid "Publicación de"
+msgstr "Post by"
 
-#: templates/ver_post.html:33
+#: templates/ver_post.html:22
 msgid "Volver"
 msgstr "Back"
 
-#: templates/ver_post.html:53
-msgid "en"
-msgstr "in"
+#: templates/ver_post.html:58
+msgid "Reportar"
+msgstr "Report"
 
-#: templates/ver_post.html:123
-msgid "Escribe un nuevo comentario"
-msgstr "Write a new comment"
-
-#: templates/view_section.html:4 templates/view_section.html:41
+#: templates/view_section.html:4 templates/view_section.html:40
 msgid "Sección:"
 msgstr "Section:"
 
-#: templates/view_section.html:43
+#: templates/view_section.html:42
 msgid "Ver todas las secciones"
 msgstr "View all sections"
 
-#: templates/view_section.html:52
+#: templates/view_section.html:49
 msgid "Nueva Publicación en esta Sección"
 msgstr "New Post in this Section"
 
-#: templates/view_section.html:67
+#: templates/view_section.html:62
 msgid "Sección"
 msgstr "Section"
 
-#: templates/view_section.html:82
-#, python-format
+#: templates/view_section.html:77
 msgid "Publicaciones en esta sección"
 msgstr "Posts in this section"
 
-#: templates/view_section.html:165
+#: templates/view_section.html:89
 msgid "Aún no hay publicaciones en esta sección."
 msgstr "No posts in this section yet."
 
-#: templates/view_section.html:166
+#: templates/view_section.html:90
 msgid "¡Sé el primero en publicar algo aquí!"
 msgstr "Be the first to post something here!"
+
+#: templates/view_section.html:132 templates/view_section.html:160
+msgid "Has llegado al final de la sección."
+msgstr "You have reached the end of the section."
+
+#: templates/view_section.html:172
+msgid "nuevas"
+msgstr "new"
+
+#: templates/admin/appeals_list.html:7
+msgid "Centro de Apelaciones"
+msgstr "Appeals Center"
+
+#: templates/admin/appeals_list.html:11
+msgid "Apelaciones Pendientes de Decisión Final"
+msgstr "Appeals Pending Final Decision"
+
+#: templates/admin/appeals_list.html:19
+msgid "ID Apelación"
+msgstr "Appeal ID"
+
+#: templates/admin/appeals_list.html:20
+msgid "Usuario que apela"
+msgstr "Appealing User"
+
+#: templates/admin/appeals_list.html:21
+msgid "Texto de la Apelación"
+msgstr "Appeal Text"
+
+#: templates/admin/appeals_list.html:22
+msgid "Decisión Original"
+msgstr "Original Decision"
+
+#: templates/admin/appeals_list.html:23
+msgid "Contenido Original"
+msgstr "Original Content"
+
+#: templates/admin/appeals_list.html:24 templates/admin/comments_list.html:38
+#: templates/admin/posts_list.html:38 templates/admin/reports_list.html:25
+#: templates/admin/users_list.html:39
+msgid "Acciones"
+msgstr "Actions"
+
+#: templates/admin/appeals_list.html:36
+msgid "Ver adjunto"
+msgstr "View attachment"
+
+#: templates/admin/appeals_list.html:42
+#, python-format
+msgid "Reporte #%(report_id)s revisado por %(mod)s"
+msgstr "Report #%(report_id)s reviewed by %(mod)s"
+
+#: templates/admin/appeals_list.html:52 templates/admin/reports_list.html:54
+msgid "Aprobar"
+msgstr "Approve"
+
+#: templates/admin/appeals_list.html:64
+msgid "No hay apelaciones pendientes."
+msgstr "No pending appeals."
+
+#: templates/admin/appeals_list.html:83 templates/admin/reports_list.html:87
+msgid "Respuesta predefinida"
+msgstr "Predefined response"
+
+#: templates/admin/appeals_list.html:88 templates/admin/reports_list.html:94
+msgid "Mensaje personalizado:"
+msgstr "Custom message:"
+
+#: templates/admin/appeals_list.html:144 templates/admin/reports_list.html:162
+msgid "Otro motivo (escribir manualmente)..."
+msgstr "Other reason (write manually)..."
+
+#: templates/admin/appeals_list.html:147
+msgid "Aprobar Apelación #"
+msgstr "Approve Appeal #"
+
+#: templates/admin/appeals_list.html:148
+msgid ""
+"La decisión original será revertida. Elige o escribe un mensaje para "
+"notificar a"
+msgstr ""
+"The original decision will be reversed. Choose or write a message to "
+"notify"
+
+#: templates/admin/appeals_list.html:150
+msgid "Confirmar Aprobación"
+msgstr "Confirm Approval"
+
+#: templates/admin/appeals_list.html:152
+msgid "Rechazar Apelación #"
+msgstr "Deny Appeal #"
+
+#: templates/admin/appeals_list.html:153
+msgid ""
+"La decisión original será mantenida. Elige o escribe un mensaje para "
+"notificar a"
+msgstr "The original decision will be upheld. Choose or write a message to notify"
+
+#: templates/admin/appeals_list.html:155
+msgid "Confirmar Rechazo"
+msgstr "Confirm Denial"
+
+#: templates/admin/appeals_list.html:170 templates/admin/reports_list.html:189
+#: templates/admin/users_list.html:148
+msgid "Procesando..."
+msgstr "Processing..."
+
+#: templates/admin/appeals_list.html:194 templates/admin/reports_list.html:214
+#: templates/admin/users_list.html:174
+msgid "Error de red."
+msgstr "Network error."
+
+#: templates/admin/comments_list.html:3 templates/admin/comments_list.html:9
+msgid "Administración de Comentarios"
+msgstr "Comment Management"
+
+#: templates/admin/comments_list.html:15 templates/admin/log_list.html:17
+#: templates/admin/posts_list.html:15 templates/admin/users_list.html:12
+msgid "Usuarios"
+msgstr "Users"
+
+#: templates/admin/comments_list.html:18 templates/admin/log_list.html:20
+#: templates/admin/posts_list.html:18 templates/admin/users_list.html:15
+msgid "Publicaciones"
+msgstr "Posts"
+
+#: templates/admin/comments_list.html:24 templates/admin/log_list.html:26
+#: templates/admin/posts_list.html:24 templates/admin/users_list.html:21
+msgid "Registro de Acciones"
+msgstr "Action Log"
+
+#: templates/admin/comments_list.html:34
+msgid "Autor"
+msgstr "Author"
+
+#: templates/admin/comments_list.html:35
+msgid "Comentario"
+msgstr "Comment"
+
+#: templates/admin/comments_list.html:36
+msgid "En Respuesta a Post"
+msgstr "In Reply to Post"
+
+#: templates/admin/comments_list.html:37 templates/admin/log_list.html:35
+#: templates/admin/posts_list.html:37 templates/admin/reports_list.html:20
+msgid "Fecha"
+msgstr "Date"
+
+#: templates/admin/comments_list.html:45 templates/admin/posts_list.html:46
+msgid "Oculto"
+msgstr "Hidden"
+
+#: templates/admin/comments_list.html:60
+msgid "Publicación eliminada"
+msgstr "Post deleted"
+
+#: templates/admin/comments_list.html:70
+#, python-format
+msgid "¿Estás seguro de que quieres ocultar este comentario (ID: %(comment_id)s)?"
+msgstr "Are you sure you want to hide this comment (ID: %(comment_id)s)?"
+
+#: templates/admin/comments_list.html:71
+msgid "Ocultar Comentario"
+msgstr "Hide Comment"
+
+#: templates/admin/comments_list.html:81
+msgid "No se encontraron comentarios."
+msgstr "No comments found."
+
+#: templates/admin/edit_post.html:3 templates/admin/edit_post.html:9
+msgid "Editar Publicación"
+msgstr "Edit Post"
+
+#: templates/admin/edit_post.html:10
+msgid "Volver a la lista de publicaciones"
+msgstr "Back to posts list"
+
+#: templates/admin/edit_post.html:18
+msgid "Contenido de la Publicación"
+msgstr "Post Content"
+
+#: templates/admin/edit_post.html:24
+msgid "Guardar Cambios"
+msgstr "Save Changes"
+
+#: templates/admin/log_list.html:3 templates/admin/log_list.html:9
+msgid "Registro de Auditoría"
+msgstr "Audit Log"
+
+#: templates/admin/log_list.html:10
+msgid "Historial de acciones de moderadores, coordinadores y administradores."
+msgstr "History of actions by moderators, coordinators, and administrators."
+
+#: templates/admin/log_list.html:36
+msgid "Actor"
+msgstr "Actor"
+
+#: templates/admin/log_list.html:37
+msgid "Acción"
+msgstr "Action"
+
+#: templates/admin/log_list.html:38
+msgid "Detalles"
+msgstr "Details"
+
+#: templates/admin/log_list.html:55
+msgid "No hay acciones registradas en el log de auditoría."
+msgstr "No actions registered in the audit log."
+
+#: templates/admin/posts_list.html:3 templates/admin/posts_list.html:9
+msgid "Administración de Publicaciones"
+msgstr "Post Management"
+
+#: templates/admin/posts_list.html:34
+msgid "Autor / Compartido por"
+msgstr "Author / Shared by"
+
+#: templates/admin/posts_list.html:35
+msgid "Contenido"
+msgstr "Content"
+
+#: templates/admin/posts_list.html:36
+msgid "Imagen / Enlace"
+msgstr "Image / Link"
+
+#: templates/admin/posts_list.html:50
+msgid "Post"
+msgstr "Post"
+
+#: templates/admin/posts_list.html:52
+msgid "Share"
+msgstr "Share"
+
+#: templates/admin/posts_list.html:73
+msgid "Cita de post de"
+msgstr "Quote from post by"
+
+#: templates/admin/posts_list.html:80
+msgid "Imagen del post"
+msgstr "Post image"
+
+#: templates/admin/posts_list.html:99
+msgid "Ver Post"
+msgstr "View Post"
+
+#: templates/admin/posts_list.html:100
+msgid "Editar Post"
+msgstr "Edit Post"
+
+#: templates/admin/posts_list.html:101
+#, python-format
+msgid "¿Estás seguro de que quieres ocultar esta publicación (ID: %(post_id)s)?"
+msgstr "Are you sure you want to hide this post (ID: %(post_id)s)?"
+
+#: templates/admin/posts_list.html:102
+msgid "Ocultar Post"
+msgstr "Hide Post"
+
+#: templates/admin/posts_list.html:105
+msgid "Ver Post Original"
+msgstr "View Original Post"
+
+#: templates/admin/posts_list.html:117
+msgid "No se encontraron publicaciones."
+msgstr "No posts found."
+
+#: templates/admin/reports_list.html:7
+msgid "Centro de Reportes"
+msgstr "Reports Center"
+
+#: templates/admin/reports_list.html:11
+msgid "Reportes Pendientes de Revisión"
+msgstr "Reports Pending Review"
+
+#: templates/admin/reports_list.html:19
+msgid "ID"
+msgstr "ID"
+
+#: templates/admin/reports_list.html:21
+msgid "Reportado por"
+msgstr "Reported by"
+
+#: templates/admin/reports_list.html:22
+msgid "Usuario del Contenido"
+msgstr "Content User"
+
+#: templates/admin/reports_list.html:23
+msgid "Motivo"
+msgstr "Reason"
+
+#: templates/admin/reports_list.html:24
+msgid "Ver Contenido"
+msgstr "View Content"
+
+#: templates/admin/reports_list.html:51
+msgid "Desestimar"
+msgstr "Dismiss"
+
+#: templates/admin/reports_list.html:66
+msgid "¡Excelente! No hay reportes pendientes."
+msgstr "Excellent! No pending reports."
+
+#: templates/admin/reports_list.html:78
+msgid "Resolver Reporte"
+msgstr "Resolve Report"
+
+#: templates/admin/reports_list.html:101
+msgid "Eliminar también el contenido reportado (publicación/comentario)"
+msgstr "Also delete the reported content (post/comment)"
+
+#: templates/admin/reports_list.html:108
+msgid "Confirmar Resolución"
+msgstr "Confirm Resolution"
+
+#: templates/admin/reports_list.html:165
+msgid "Acción: APROBAR REPORTE. El mensaje se enviará al usuario reportado:"
+msgstr "Action: APPROVE REPORT. The message will be sent to the reported user:"
+
+#: templates/admin/reports_list.html:169
+msgid "Acción: DESESTIMAR REPORTE. El mensaje se enviará al usuario que reportó:"
+msgstr "Action: DISMISS REPORT. The message will be sent to the user who reported:"
+
+#: templates/admin/users_list.html:7
+msgid "Gestión de Usuarios"
+msgstr "User Management"
+
+#: templates/admin/users_list.html:28
+msgid "Lista de Usuarios"
+msgstr "User List"
+
+#: templates/admin/users_list.html:36
+msgid "Usuario de Login"
+msgstr "Login User"
+
+#: templates/admin/users_list.html:37
+msgid "Usuario de Perfil"
+msgstr "Profile User"
+
+#: templates/admin/users_list.html:38
+msgid "Rol"
+msgstr "Role"
+
+#: templates/admin/users_list.html:51
+msgid "Sin perfil"
+msgstr "No profile"
+
+#: templates/admin/users_list.html:64
+msgid "Guardar"
+msgstr "Save"
+
+#: templates/admin/users_list.html:74
+msgid "Sancionar"
+msgstr "Sanction"
+
+#: templates/admin/users_list.html:97
+msgid "Tipo y Duración de la Sanción"
+msgstr "Type and Duration of Sanction"
+
+#: templates/admin/users_list.html:99
+msgid "Silenciar por 7 Días"
+msgstr "Mute for 7 Days"
+
+#: templates/admin/users_list.html:100
+msgid "Silenciar por 30 Días"
+msgstr "Mute for 30 Days"
+
+#: templates/admin/users_list.html:101
+msgid "Suspender por 1 Día"
+msgstr "Suspend for 1 Day"
+
+#: templates/admin/users_list.html:102
+msgid "Suspender por 7 Días"
+msgstr "Suspend for 7 Days"
+
+#: templates/admin/users_list.html:103
+msgid "Suspender por 30 Días"
+msgstr "Suspend for 30 Days"
+
+#: templates/admin/users_list.html:104
+msgid "Suspensión Permanente"
+msgstr "Permanent Suspension"
+
+#: templates/admin/users_list.html:105
+msgid "Levantar Todas las Sanciones"
+msgstr "Lift All Sanctions"
+
+#: templates/admin/users_list.html:109
+msgid "Motivo de la Sanción (se notificará al usuario)"
+msgstr "Reason for Sanction (user will be notified)"
+
+#: templates/admin/users_list.html:116
+msgid "Aplicar Sanción"
+msgstr "Apply Sanction"
+
+#: templates/admin/users_list.html:139
+msgid "Sancionar a"
+msgstr "Sanction"
 
 #: venv/Lib/site-packages/click/_termui_impl.py:556
 #, python-brace-format
@@ -1446,23 +2346,102 @@ msgid_plural "{len_type} values are required, but {len_value} were given."
 msgstr[0] "{len_type} values are required, but {len_value} was given."
 msgstr[1] "{len_type} values are required, but {len_value} were given."
 
-#~ msgid "Por favor, completa tu perfil antes de dar \"Me gusta\"."
-#~ msgstr "Please complete your profile before liking."
+#: templates/_post_card.html:15 templates/_post_card.html:104
+#: templates/ver_post.html:39 templates/view_section.html:101
+msgid "KYC (Conoce a tu Cliente)"
+msgstr "KYC (Know Your Customer)"
 
-#~ msgid "%(liker_link)s indicó que le gusta tu %(post_link)s."
-#~ msgstr "%(liker_link)s liked your %(post_link)s."
+#: templates/_post_card.html:15 templates/_post_card.html:104
+#: templates/ver_post.html:39 templates/view_section.html:101
+msgid "Círculo de Seguridad"
+msgstr "Security Circle"
 
-#~ msgid "Ver Publicación"
-#~ msgstr "View Post"
+#: templates/_post_card.html:15 templates/_post_card.html:104
+#: templates/ver_post.html:39 templates/view_section.html:101
+msgid "Migraciones a Mainnet"
+msgstr "Mainnet Migrations"
 
-#~ msgid "Te gusta"
-#~ msgstr "Liked\" # O \"You like this"
+#: templates/_post_card.html:15 templates/_post_card.html:104
+#: templates/ver_post.html:39 templates/view_section.html:101
+msgid "Nodos Pi"
+msgstr "Pi Nodes"
 
-#~ msgid "Me gusta"
-#~ msgstr "Like"
+#: templates/_post_card.html:15 templates/_post_card.html:104
+#: templates/ver_post.html:39 templates/view_section.html:101
+msgid "Noticias de Pi Network"
+msgstr "Pi Network News"
 
-#~ msgid "Ya has compartido esta publicación anteriormente."
-#~ msgstr "You have already shared this post."
+#: templates/_post_card.html:15 templates/_post_card.html:104
+#: templates/ver_post.html:39 templates/view_section.html:101
+msgid "Apps del Ecosistema Pi"
+msgstr "Pi Ecosystem Apps"
 
-#~ msgid "Buscar por nombre..."
-#~ msgstr "Search by name..."
+#: templates/_post_card.html:15 templates/_post_card.html:104
+#: templates/ver_post.html:39 templates/view_section.html:101
+msgid "Comercio y Marketplace Pi"
+msgstr "Pi Commerce & Marketplace"
+
+#: templates/_post_card.html:15 templates/_post_card.html:104
+#: templates/ver_post.html:39 templates/view_section.html:101
+msgid "Ayuda y Soporte Técnico"
+msgstr "Help & Technical Support"
+
+#: templates/_post_card.html:15 templates/_post_card.html:104
+#: templates/ver_post.html:39 templates/view_section.html:101
+msgid "Debate General Pi"
+msgstr "General Pi Discussion"
+
+#: templates/_post_card.html:15 templates/_post_card.html:104
+#: templates/ver_post.html:39 templates/view_section.html:101
+msgid "PiVerse: Ideas y Sugerencias"
+msgstr "PiVerse: Ideas & Suggestions"
+
+#: templates/sections_list.html:20
+#, python-format
+msgid "Icono de %(section_name)s"
+msgstr "Icon for %(section_name)s"
+
+#: templates/sections_list.html:31
+msgid "Discusiones sobre el proceso KYC de Pi Network."
+msgstr "Discussions about the Pi Network KYC process."
+
+#: templates/sections_list.html:31
+msgid "Todo sobre cómo construir y mantener tu círculo de seguridad."
+msgstr "All about how to build and maintain your security circle."
+
+#: templates/sections_list.html:31
+msgid "Información y experiencias sobre la migración de Pi a la Mainnet."
+msgstr "Information and experiences about migrating Pi to the Mainnet."
+
+#: templates/sections_list.html:31
+msgid "Configuración, mantenimiento y discusión sobre los Nodos de Pi."
+msgstr "Setup, maintenance, and discussion about Pi Nodes."
+
+#: templates/sections_list.html:31
+msgid "Últimas noticias y anuncios oficiales de Pi Network."
+msgstr "Latest news and official announcements from Pi Network."
+
+#: templates/sections_list.html:31
+msgid "Descubre y discute aplicaciones y utilidades construidas en la red Pi."
+msgstr "Discover and discuss applications and utilities built on the Pi network."
+
+#: templates/sections_list.html:31
+msgid "Espacio para intercambios, y discusión sobre bienes y servicios usando Pi."
+msgstr "Space for exchanges, and discussion about goods and services using Pi."
+
+#: templates/sections_list.html:31
+msgid "¿Necesitas ayuda con la app de Pi, wallet, o tienes dudas técnicas?"
+msgstr "Need help with the Pi app, wallet, or have technical questions?"
+
+#: templates/sections_list.html:31
+msgid "Para temas generales sobre Pi Network que no encajan en otras secciones."
+msgstr "For general topics about Pi Network that don't fit in other sections."
+
+#: templates/sections_list.html:31
+msgid "Feedback y sugerencias para mejorar esta plataforma, PiVerse."
+msgstr "Feedback and suggestions to improve this platform, PiVerse."
+
+#: templates/view_section.html:4
+#, python-format
+msgid "Sección: %(section_name)s"
+msgstr "Section: %(section_name)s"

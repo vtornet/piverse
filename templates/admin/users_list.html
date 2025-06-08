@@ -6,6 +6,23 @@
 <div class="container-fluid mt-4">
     <h2 class="mb-4">{{ _('Gestión de Usuarios') }}</h2>
 
+    {# --- INICIO: BLOQUE DE NAVEGACIÓN AÑADIDO --- #}
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{ url_for('admin_users_list') }}">{{ _('Usuarios') }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('admin_list_posts') }}">{{ _('Publicaciones') }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('admin_list_comments') }}">{{ _('Comentarios') }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('admin_view_log') }}">{{ _('Registro de Acciones') }}</a>
+        </li>
+    </ul>
+    {# --- FIN: BLOQUE DE NAVEGACIÓN AÑADIDO --- #}
+
     <div class="card shadow-sm">
         <div class="card-header">
             <i class="bi bi-people-fill me-2"></i>{{ _('Lista de Usuarios') }}

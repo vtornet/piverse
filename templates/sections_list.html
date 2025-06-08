@@ -16,7 +16,7 @@
                     <div class="me-3">
                         {% if section.icon_filename %}
                             <img src="{{ url_for('static', filename='images/icons/' + section.icon_filename) }}" 
-                                 alt="{{ _('Icono de %(section_name)s', section_name=section.name) }}" 
+                                 alt="{{ _('Icono de %(section_name)s', section_name=_(section.name)) }}" 
                                  style="width: 48px; height: 48px; object-fit: contain;">
                         {% else %}
                             <div style="width: 48px; height: 48px; background-color: #eee; border-radius: 8px;"></div>
@@ -25,10 +25,10 @@
                     
                     <div class="flex-grow-1">
                         <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">{{ section.name }}</h5>
+                            <h5 class="mb-1">{{ _(section.name) }}</h5>
                         </div>
                         {% if section.description %}
-                            <p class="mb-1">{{ section.description }}</p>
+                            <p class="mb-1">{{ _(section.description) }}</p>
                         {% endif %}
                         <small class="text-primary fw-bold">{{ _('Ver publicaciones') }} &rarr;</small>
                     </div>

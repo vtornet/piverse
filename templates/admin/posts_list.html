@@ -3,7 +3,7 @@
 {% block title %}{{ _('Administración de Publicaciones') }} - PiVerse{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container-fluid mt-4">
     <div class="row mb-3">
         <div class="col">
             <h2><i class="bi bi-file-earmark-text-fill"></i> {{ _('Administración de Publicaciones') }}</h2>
@@ -15,7 +15,7 @@
             <a class="nav-link" href="{{ url_for('admin_users_list') }}">{{ _('Usuarios') }}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" href="{{ url_for('admin_list_posts') }}">{{ _('Publicaciones') }}</a>
+            <a class="nav-link active" aria-current="page" href="{{ url_for('admin_list_posts') }}">{{ _('Publicaciones') }}</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{{ url_for('admin_list_comments') }}">{{ _('Comentarios') }}</a>
@@ -31,11 +31,9 @@
             <thead>
                 <tr>
                     <th scope="col">ID</th>
-                    <th scope="col">{{ _('Autor') }}</th>
-                    <th scope="col">{{ _('Contenido (Extracto)') }}</th>
-                    <th scope="col">{{ _('Imagen') }}</th>
-                    <th scope="col">{{ _('Enlace (Título)') }}</th>
-                    <th scope="col">{{ _('Sección') }}</th>
+                    <th scope="col">{{ _('Autor / Compartido por') }}</th>
+                    <th scope="col" style="min-width: 300px;">{{ _('Contenido') }}</th>
+                    <th scope="col">{{ _('Imagen / Enlace') }}</th>
                     <th scope="col">{{ _('Fecha') }}</th>
                     <th scope="col">{{ _('Acciones') }}</th>
                 </tr>
@@ -43,70 +41,70 @@
             <tbody>
                 {% for post in posts_list %}
                 <tr class="{% if not post.is_visible %}table-secondary opacity-75{% endif %}">
+                    {# COLUMNA ID #}
                     <td>
                         {% if not post.is_visible %}<i class="bi bi-eye-slash-fill text-muted" title="{{ _('Oculto') }}"></i> {% endif %}
                         {{ post.id }}
-                    </td>
-                    <td>
-                        {% if post.author_slug %}
-                            <a href="{{ url_for('ver_perfil', slug_perfil=post.author_slug) }}">@{{ post.author_username }}</a>
-                        {% else %}
-                            @{{ post.author_username }}
-                        {% endif %}
-                        <br><small class="text-muted">(ID: {{ post.author_user_id }})</small>
-                    </td>
-                    <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ post.content }}">
-                        {{ post.content_display[:150] | safe }}{% if post.content_display|length > 150 %}...{% endif %}
-                    </td>
-                    <td>
-                        {% if post.image_filename %}
-                            <img src="{{ url_for('static', filename='uploads/post_images/' + post.image_filename) }}" alt="{{ _('Imagen del post') }}" style="max-height: 50px; max-width: 70px; object-fit: cover; cursor: pointer;"
-                                 data-bs-toggle="modal" data-bs-target="#imageModal-{{ post.id }}">
-                            
-                            <div class="modal fade" id="imageModal-{{ post.id }}" tabindex="-1" aria-labelledby="imageModalLabel-{{ post.id }}" aria-hidden="true">
-                                <div class="modal-dialog modal-lg modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="imageModalLabel-{{ post.id }}">{{ _('Imagen del Post') }} #{{ post.id }}</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body text-center">
-                                            <img src="{{ url_for('static', filename='uploads/post_images/' + post.image_filename) }}" class="img-fluid" alt="{{ _('Imagen del post') }}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                        {% if post.preview_url %}
-                            <a href="{{ post.preview_url }}" target="_blank" title="{{ post.preview_url }}">{{ post.preview_title or post.preview_url }}</a>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if post.section_name %}
-                            <a href="{{ url_for('view_section', slug_seccion=post.section_slug) }}">{{ post.section_name }}</a>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td>
-                        <small class="text-muted" title="{{ post.timestamp }}">
-                            {{ format_datetime(post.timestamp_obj, 'short') if post.timestamp_obj else post.timestamp.split('.')[0] }}
+                        <small class="d-block text-muted">
+                            {% if post.item_type == 'original_post' %}
+                                {{ _('Post') }}
+                            {% else %}
+                                {{ _('Share') }}
+                            {% endif %}
                         </small>
                     </td>
+                    
+                    {# COLUMNA AUTOR / COMPARTIDO POR #}
+                    <td>
+                        {% if post.item_type == 'original_post' %}
+                             <a href="{{ url_for('ver_perfil', slug_perfil=post.author_slug) }}">@{{ post.author_username }}</a>
+                             <small class="d-block text-muted">(ID: {{ post.author_user_id }})</small>
+                        {% else %}
+                            <i class="bi bi-arrow-repeat"></i> <a href="{{ url_for('ver_perfil', slug_perfil=post.sharer_slug) }}">@{{ post.sharer_username }}</a>
+                        {% endif %}
+                    </td>
+
+                    {# COLUMNA CONTENIDO #}
+                    <td>
+                        {% if post.item_type == 'original_post' %}
+                            <span title="{{ post.content }}">{{ post.content | striptags | truncate(150) }}</span>
+                        {% else %}
+                            <div class="fst-italic" title="{{ post.quote_content }}">"{{ post.quote_content | striptags | truncate(150) }}"</div>
+                            <small class="text-muted d-block mt-1">{{ _('Cita de post de') }} <a href="{{ url_for('ver_perfil', slug_perfil=post.author_slug) }}">@{{ post.author_username }}</a></small>
+                        {% endif %}
+                    </td>
+
+                    {# COLUMNA IMAGEN / ENLACE #}
+                    <td>
+                        {% if post.image_filename %}
+                            <img src="{{ url_for('static', filename='uploads/post_images/' + post.image_filename) }}" alt="{{ _('Imagen del post') }}" style="max-height: 50px; max-width: 70px; object-fit: cover;">
+                        {% elif post.preview_url %}
+                            <a href="{{ post.preview_url }}" target="_blank" title="{{ post.preview_url }}"><i class="bi bi-link-45deg"></i> {{ post.preview_title | truncate(30) }}</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+
+                    {# COLUMNA FECHA #}
+                    <td>
+                        <small class="text-muted" title="{{ post.timestamp_obj.strftime('%Y-%m-%d %H:%M:%S') if post.timestamp_obj else '' }}">
+                            {{ format_datetime(post.timestamp_obj, 'short') if post.timestamp_obj else '' }}
+                        </small>
+                    </td>
+
+                    {# COLUMNA ACCIONES #}
                     <td>
                         <div class="d-flex align-items-center">
-                            <a href="{{ url_for('ver_publicacion_individual', post_id_vista=post.id) }}" class="btn btn-sm btn-outline-primary" title="{{ _('Ver Post') }}"><i class="bi bi-eye-fill"></i></a>
-                            <a href="{{ url_for('admin_edit_post', post_id=post.id) }}" class="btn btn-sm btn-outline-warning ms-1" title="{{ _('Editar Post') }}"><i class="bi bi-pencil-fill"></i></a>
-                            <form method="POST" action="{{ url_for('delete_post', post_id=post.id) }}" class="ms-1"
-                                  onsubmit="return confirm('{{ _('¿Estás seguro de que quieres ocultar esta publicación (ID: %(post_id)s)?', post_id=post.id) }}');">
-                                <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Ocultar Post') }}"><i class="bi bi-trash-fill"></i></button>
-                            </form>
+                            {% if post.item_type == 'original_post' %}
+                                <a href="{{ url_for('ver_publicacion_individual', post_id_vista=post.id) }}" class="btn btn-sm btn-outline-primary" title="{{ _('Ver Post') }}"><i class="bi bi-eye-fill"></i></a>
+                                <a href="{{ url_for('admin_edit_post', post_id=post.id) }}" class="btn btn-sm btn-outline-warning ms-1" title="{{ _('Editar Post') }}"><i class="bi bi-pencil-fill"></i></a>
+                                <form method="POST" action="{{ url_for('delete_post', post_id=post.id) }}" class="ms-1" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres ocultar esta publicación (ID: %(post_id)s)?', post_id=post.id) }}');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Ocultar Post') }}"><i class="bi bi-trash-fill"></i></button>
+                                </form>
+                            {% else %}
+                                 <a href="{{ url_for('ver_publicacion_individual', post_id_vista=post.original_post_id) }}" class="btn btn-sm btn-outline-primary" title="{{ _('Ver Post Original') }}"><i class="bi bi-eye-fill"></i></a>
+                                 {# Aquí podríamos añadir una acción para eliminar el 'share' en el futuro #}
+                            {% endif %}
                         </div>
                     </td>
                 </tr>

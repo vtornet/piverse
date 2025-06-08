@@ -6,7 +6,6 @@
 {% block head_extra %}
 {{ super() }}
 <style>
-/* Estilos específicos para esta página si fueran necesarios */
 .comment-replies { margin-left: 40px; padding-left: 15px; border-left: 2px solid #eee; margin-top: 10px; }
 .comment-container { margin-bottom: 15px; }
 .reactions-container .reactions-palette { display: none; position: absolute; bottom: 100%; left: 0; margin-bottom: 5px; z-index: 10; white-space: nowrap; gap: 5px; }
@@ -36,7 +35,7 @@
                             <small class="text-muted">
                                 {{ format_datetime(post.timestamp, 'medium') if post.timestamp else '' }}
                                 {% if post.section_name and post.section_slug %}
-                                    <span class="post-section-link">· {{ _('en') }} <a href="{{ url_for('view_section', slug_seccion=post.section_slug) }}" class="text-decoration-none">{{ post.section_name }}</a></span>
+                                    <span class="post-section-link">· {{ _('en') }} <a href="{{ url_for('view_section', slug_seccion=post.section_slug) }}" class="text-decoration-none">{{ _(post.section_name) }}</a></span>
                                 {% endif %}
                             </small>
                         </div>
@@ -55,9 +54,9 @@
                             </li>
                             {% endif %}
                             <li>
-                                <button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#reportModal" data-content-type="post" data-content-id="{{ post.id }}">
+                                <a class="dropdown-item report-trigger-btn" href="#" data-bs-toggle="modal" data-bs-target="#reportModal" data-content-type="post" data-content-id="{{ post.id }}">
                                     <i class="bi bi-flag me-2"></i>{{ _('Reportar') }}
-                                </button>
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -113,7 +112,7 @@
                         </div>
                     </div>
                     <a href="#comment-form-{{ post.id }}-toplevel" class="btn btn-sm btn-outline-secondary">
-                        <i class="bi bi-chat-dots"></i> {{ _('Comentar') }} ({{ post.comments|length }})
+                        <i class="bi bi-chat-dots"></i> {{ _('Comentarios') }} ({{ post.comments|length }})
                     </a>
                     <button type="button" class="btn btn-sm btn-outline-secondary share-trigger-btn ms-2"
                             data-bs-toggle="modal"

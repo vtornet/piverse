@@ -60,8 +60,6 @@ app.config['BABEL_DEFAULT_TIMEZONE'] = 'UTC'
 app.config['LANGUAGES'] = {
     'en': 'English',
     'es': 'Español',
-    'vi': 'Tiếng Việt',
-    'sw': 'Kiswahili'
 }
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
 
@@ -3073,30 +3071,63 @@ def moderator_or_higher_required(f):
 @app.route('/admin/posts')
 @moderator_or_higher_required
 def admin_list_posts():
-    posts_list = []
+    all_content_items = []
     with sqlite3.connect('users.db') as conn:
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
-        # Añadimos p.is_visible a la consulta
+
+        # 1. OBTENER PUBLICACIONES ORIGINALES
         c.execute('''
-            SELECT p.id, p.content, p.is_visible, p.image_filename, p.timestamp,
-                   u.id AS author_user_id, 
-                   COALESCE(pr.username, u.username) AS author_username, 
-                   pr.slug AS author_slug,
-                   s.name AS section_name, s.slug AS section_slug
+            SELECT 
+                'original_post' as item_type,
+                p.id, p.content, p.is_visible, p.image_filename, p.timestamp,
+                p.preview_url, p.preview_title,
+                u.id AS author_user_id, 
+                COALESCE(pr.username, u.username) AS author_username, 
+                pr.slug AS author_slug,
+                s.name AS section_name, s.slug AS section_slug,
+                NULL as sharer_username, NULL as sharer_slug, NULL as quote_content
             FROM posts p
             JOIN users u ON p.user_id = u.id
             LEFT JOIN profiles pr ON u.id = pr.user_id
             LEFT JOIN sections s ON p.section_id = s.id
-            ORDER BY p.timestamp DESC
         ''')
-        posts_raw = c.fetchall()
-        for row in posts_raw:
-            post_item = dict(row) 
-            post_item['content_display'] = procesar_menciones_para_mostrar(row['content'])
-            post_item['timestamp_obj'] = parse_timestamp(row['timestamp'])
-            posts_list.append(post_item)
-    return render_template('admin/posts_list.html', posts_list=posts_list)
+        original_posts_raw = c.fetchall()
+        for row in original_posts_raw:
+            item = dict(row)
+            item['timestamp_obj'] = parse_timestamp(row['timestamp'])
+            all_content_items.append(item)
+
+        # 2. OBTENER PUBLICACIONES COMPARTIDAS
+        c.execute('''
+            SELECT
+                'shared_post' as item_type,
+                sp.id, sp.quote_content, 1 as is_visible, NULL as image_filename, sp.timestamp,
+                NULL as preview_url, NULL as preview_title,
+                op_author_user.id as author_user_id,
+                COALESCE(op_author_profile.username, op_author_user.username) as author_username,
+                op_author_profile.slug as author_slug,
+                NULL as section_name, NULL as section_slug,
+                sharer_profile.username as sharer_username,
+                sharer_profile.slug as sharer_slug,
+                op.id as original_post_id
+            FROM shared_posts sp
+            JOIN users sharer_user ON sp.user_id = sharer_user.id
+            LEFT JOIN profiles sharer_profile ON sp.user_id = sharer_profile.user_id
+            JOIN posts op ON sp.original_post_id = op.id
+            JOIN users op_author_user ON op.user_id = op_author_user.id
+            LEFT JOIN profiles op_author_profile ON op.user_id = op_author_profile.user_id
+        ''')
+        shared_posts_raw = c.fetchall()
+        for row in shared_posts_raw:
+            item = dict(row)
+            item['timestamp_obj'] = parse_timestamp(row['timestamp'])
+            all_content_items.append(item)
+            
+    # 3. ORDENAR TODO POR FECHA
+    all_content_items.sort(key=lambda x: x['timestamp_obj'], reverse=True)
+
+    return render_template('admin/posts_list.html', posts_list=all_content_items)
 
 def coordinator_or_admin_required(f):
     @wraps(f)
@@ -3597,8 +3628,8 @@ def report_content():
     if not all([content_type, content_id, reason]):
         return jsonify(success=False, error=_('Faltan datos en el reporte. Tipo, ID y motivo son obligatorios.')), 400
     
-    # Comprobar que los tipos de contenido son válidos
-    if content_type not in ['post', 'comment']:
+    # Comprobar que los tipos de contenido son válidos (AÑADIMOS 'shared_post')
+    if content_type not in ['post', 'comment', 'shared_post']:
         return jsonify(success=False, error=_('Tipo de contenido no válido.')), 400
 
     try:
@@ -3608,14 +3639,6 @@ def report_content():
                 INSERT INTO reports (reporter_user_id, content_type, content_id, reason, details, created_at)
                 VALUES (?, ?, ?, ?, ?, ?)
             ''', (reporter_user_id, content_type, content_id, reason, details, datetime.utcnow()))
-            
-            # --- Opcional: Registrar la acción en el log de auditoría si se desea ---
-            # log_admin_action(
-            #     actor_user_id=reporter_user_id,
-            #     action_type='CONTENT_REPORT',
-            #     target_content_id=content_id,
-            #     details=f"Reportó {content_type} (ID: {content_id}) por motivo: {reason}"
-            # )
             
             conn.commit()
         
@@ -3628,7 +3651,6 @@ def report_content():
         print(f"Error inesperado al guardar el reporte: {e}")
         return jsonify(success=False, error=_('Ocurrió un error inesperado.')), 500
     
-# Reemplaza tu función admin_list_reports existente con esta:
 @app.route('/admin/reports')
 @moderator_or_higher_required
 def admin_list_reports():
@@ -3637,20 +3659,24 @@ def admin_list_reports():
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
         
+        # MODIFICAMOS LA CONSULTA PARA INCLUIR 'shared_posts' EN LA UNIÓN
         c.execute('''
             SELECT 
                 r.id, r.content_type, r.content_id, r.reason, r.details, r.created_at,
                 reporter.id AS reporter_user_id,
                 COALESCE(reporter_profile.username, reporter.username) AS reporter_username,
                 reported_user.id AS reported_user_id,
-                COALESCE(reported_user_profile.username, reported_user.username) AS reported_user_username
+                COALESCE(reported_user_profile.username, reported_user.username) AS reported_user_username,
+                content_table.original_post_id
             FROM reports r
             JOIN users reporter ON r.reporter_user_id = reporter.id
             LEFT JOIN profiles reporter_profile ON reporter.id = reporter_profile.user_id
             LEFT JOIN (
-                SELECT 'post' as type, id, user_id, content FROM posts
+                SELECT 'post' as type, id, user_id, content, NULL as original_post_id FROM posts
                 UNION ALL
-                SELECT 'comment' as type, id, user_id, content FROM comments
+                SELECT 'comment' as type, id, user_id, content, post_id as original_post_id FROM comments
+                UNION ALL
+                SELECT 'shared_post' as type, id, user_id, quote_content as content, original_post_id FROM shared_posts
             ) AS content_table ON r.content_type = content_table.type AND r.content_id = content_table.id
             JOIN users reported_user ON content_table.user_id = reported_user.id
             LEFT JOIN profiles reported_user_profile ON reported_user.id = reported_user_profile.user_id
@@ -3667,15 +3693,22 @@ def admin_list_reports():
             if item['content_type'] == 'post':
                 item['content_url'] = url_for('ver_publicacion_individual', post_id_vista=item['content_id'])
             elif item['content_type'] == 'comment':
-                c.execute("SELECT post_id FROM comments WHERE id = ?", (item['content_id'],))
-                post_id_res = c.fetchone()
+                # El post_id de un comentario ahora viene del campo original_post_id de la unión
+                post_id_res = item['original_post_id']
                 if post_id_res:
-                    item['content_url'] = url_for('ver_publicacion_individual', post_id_vista=post_id_res['post_id'], _anchor=f"comment-{item['content_id']}")
+                    item['content_url'] = url_for('ver_publicacion_individual', post_id_vista=post_id_res, _anchor=f"comment-{item['content_id']}")
+                else:
+                    item['content_url'] = '#'
+            # AÑADIMOS LA LÓGICA PARA LA URL DE LA CITA
+            elif item['content_type'] == 'shared_post':
+                post_id_res = item['original_post_id']
+                if post_id_res:
+                    # Enlazamos a la publicación original, ya que la cita es parte de ella
+                    item['content_url'] = url_for('ver_publicacion_individual', post_id_vista=post_id_res)
                 else:
                     item['content_url'] = '#'
             reports_list.append(item)
 
-    # Pasamos las listas de respuestas a la plantilla
     return render_template('admin/reports_list.html', 
                            reports_list=reports_list, 
                            uphold_reasons=PREDEFINED_UPHOLD_REASONS,
@@ -3711,7 +3744,6 @@ def admin_uphold_report(report_id):
     flash(_('Reporte marcado para acción. Por favor, elimina el contenido manualmente si es necesario.'), 'info')
     return redirect(url_for('admin_list_reports'))
 
-# Reemplaza la función resolve_report existente por esta versión final:
 @app.route('/admin/report/<int:report_id>/resolve', methods=['POST'])
 @moderator_or_higher_required
 def resolve_report(report_id):
@@ -3749,14 +3781,20 @@ def resolve_report(report_id):
         content_type = report['content_type']
         content_id = report['content_id']
 
+        # AÑADIMOS 'shared_post' A LA BÚSQUEDA DE CONTENIDO
         if content_type == 'post':
             c.execute("SELECT user_id, content, timestamp FROM posts WHERE id = ?", (content_id,))
-        else:
+        elif content_type == 'comment':
             c.execute("SELECT user_id, content, timestamp FROM comments WHERE id = ?", (content_id,))
+        elif content_type == 'shared_post':
+            c.execute("SELECT user_id, quote_content as content, timestamp FROM shared_posts WHERE id = ?", (content_id,))
+
         content_data = c.fetchone()
         
         if not content_data:
-            return jsonify(success=False, error=_("No se pudo encontrar el contenido original.")), 404
+            c.execute("UPDATE reports SET status = 'error_content_not_found' WHERE id = ?", (report_id,))
+            conn.commit()
+            return jsonify(success=False, error=_("No se pudo encontrar el contenido original (puede haber sido eliminado). El reporte ha sido archivado.")), 404
             
         reported_user_id = content_data['user_id']
         content_snippet = (content_data['content'][:75] + '...') if content_data['content'] else '[Contenido sin texto]'
@@ -3792,13 +3830,18 @@ def resolve_report(report_id):
             flash_message = _("Acción tomada. Se ha notificado a ambas partes.")
 
             if delete_content:
-                # --- CORRECCIÓN CLAVE: USAMOS BORRADO SUAVE ---
                 if content_type == 'post':
                     c.execute("UPDATE posts SET is_visible = 0 WHERE id = ?", (content_id,))
+                    log_details += " | Contenido (post) ocultado."
                 elif content_type == 'comment':
                     c.execute("UPDATE comments SET is_visible = 0 WHERE id = ?", (content_id,))
-                log_details += " | Contenido ocultado."
-                flash_message += " " + _("El contenido ha sido ocultado.")
+                    log_details += " | Contenido (comentario) ocultado."
+                # AÑADIMOS LA LÓGICA PARA BORRAR LA CITA
+                elif content_type == 'shared_post':
+                    c.execute("UPDATE shared_posts SET quote_content = ? WHERE id = ?", (_('[Cita eliminada por un moderador]'), content_id))
+                    log_details += " | Contenido (cita) eliminado."
+
+                flash_message += " " + _("El contenido ha sido ocultado/eliminado.")
         else:
             return jsonify(success=False, error=_("Acción no válida.")), 400
 
