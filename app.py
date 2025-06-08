@@ -84,7 +84,6 @@ def init_db():
     with sqlite3.connect('users.db') as conn:
         c = conn.cursor()
 
-        # Dentro de init_db()
         c.execute('''
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -93,13 +92,21 @@ def init_db():
                 role TEXT NOT NULL DEFAULT 'user'
             )
         ''')
-        # --- SALVAGUARDAS PARA 'users' (sanciones) ---
+        
+        # --- SALVAGUARDAS PARA 'users' (Pi SDK) ---
         c.execute("PRAGMA table_info(users)")
         users_columns = [column[1] for column in c.fetchall()]
+        if 'pi_uid' not in users_columns:
+            try:
+                # Usamos TEXT UNIQUE para guardar el User ID de Pi, que es único.
+                c.execute("ALTER TABLE users ADD COLUMN pi_uid TEXT UNIQUE")
+                print("Columna 'pi_uid' añadida a la tabla 'users'.")
+            except sqlite3.OperationalError as e:
+                print(f"DEBUG: No se pudo añadir la columna 'pi_uid': {e}")
 
+        # --- SALVAGUARDAS PARA 'users' (sanciones) ---
         if 'banned_until' not in users_columns:
             try:
-                # Usamos DATETIME para poder guardar fechas y horas específicas
                 c.execute("ALTER TABLE users ADD COLUMN banned_until DATETIME DEFAULT NULL")
                 print("Columna 'banned_until' añadida a la tabla 'users'.")
             except sqlite3.OperationalError as e:
@@ -118,57 +125,6 @@ def init_db():
                 print("Columna 'muted_until' añadida a la tabla 'users'.")
             except sqlite3.OperationalError as e:
                 print(f"DEBUG: No se pudo añadir la columna 'muted_until': {e}")
-                
-        # --- SALVAGUARDAS PARA LA TABLA 'users' (roles) ---
-        c.execute("PRAGMA table_info(users)")
-        users_columns_info = {column[1]: column for column in c.fetchall()} # {name: (cid, name, type, ...)}
-
-        # 1. Añadir la columna 'role' si no existe
-        if 'role' not in users_columns_info:
-            try:
-                c.execute("ALTER TABLE users ADD COLUMN role TEXT NOT NULL DEFAULT 'user'")
-                print("Columna 'role' añadida a la tabla 'users'.")
-                # Refrescar la información de las columnas después de añadirla
-                c.execute("PRAGMA table_info(users)")
-                users_columns_info = {column[1]: column for column in c.fetchall()}
-            except sqlite3.OperationalError as e:
-                print(f"DEBUG: No se pudo añadir la columna 'role' a 'users': {e}")
-
-        # 2. Si la antigua columna 'is_admin' existe y 'role' ya existe
-        if 'is_admin' in users_columns_info and 'role' in users_columns_info:
-            print("Antigua columna 'is_admin' encontrada. Migrando a 'role' donde sea aplicable...")
-            try:
-                # Migrar usuarios que eran admin al nuevo rol 'admin'
-                # Solo si su rol actual es 'user' (para no sobrescribir un rol ya asignado)
-                c.execute("UPDATE users SET role = 'admin' WHERE is_admin = 1 AND role = 'user'")
-                if c.rowcount > 0:
-                    print(f"{c.rowcount} usuarios migrados de is_admin=1 al rol 'admin'.")
-
-                # Eliminar la columna 'is_admin' de forma segura
-                # SQLite no tiene un "DROP COLUMN IF EXISTS" directo y sencillo antes de ciertas versiones.
-                # Una forma es recrear la tabla sin la columna, pero es complejo si hay datos y FKs.
-                # Para desarrollo, si la migración es única, y si da error la siguiente vez, no importa.
-                # O podemos intentar un ALTER TABLE DROP COLUMN si la versión de SQLite lo soporta (3.35.0+)
-                # Por ahora, simplemente intentaremos renombrarla para "archivarla" si la migración ya ocurrió
-                # y si la versión de SQLite no permite DROP COLUMN fácilmente.
-                # O, si es seguro y solo queremos limpiarla después de la migración:
-                print("Intentando renombrar la columna 'is_admin' a 'is_admin_old' para archivarla...")
-                # Esto fallará si 'is_admin_old' ya existe, lo cual está bien después de la primera vez.
-                c.execute("ALTER TABLE users RENAME COLUMN is_admin TO is_admin_old")
-                print("Columna 'is_admin' renombrada a 'is_admin_old'. Puedes eliminarla manualmente si lo deseas.")
-            except sqlite3.OperationalError as e:
-                # Puede fallar si la columna ya fue renombrada/eliminada o si la versión de SQLite es muy antigua.
-                print(f"DEBUG: No se pudo renombrar/procesar la columna 'is_admin': {e}. Puede que ya no exista o haya sido procesada.")
-        # --- FIN SALVAGUARDAS PARA 'users' (roles) ---
-        
-        c.execute("PRAGMA table_info(users)")
-        users_columns = [column[1] for column in c.fetchall()]
-        if 'is_admin' not in users_columns:
-            try:
-                c.execute("ALTER TABLE users ADD COLUMN is_admin INTEGER DEFAULT 0")
-                print("Columna 'is_admin' añadida a la tabla 'users'.")
-            except sqlite3.OperationalError as e:
-                print(f"DEBUG: No se pudo añadir la columna 'is_admin' a 'users': {e}")
                 
         c.execute('''
             CREATE TABLE IF NOT EXISTS profiles (
@@ -893,75 +849,81 @@ def index():
     perfil_esta_completo_actual = check_profile_completion(user_id) if user_id else False
     return render_template('index.html', perfil_completo=perfil_esta_completo_actual)
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username_login = request.form['username'].strip()
-        password = request.form['password']
-        if not username_login or not password:
-            flash(_('El nombre de usuario y la contraseña son obligatorios.'), 'danger')
-            return render_template('register.html')
-        hashed_password = generate_password_hash(password)
-        with sqlite3.connect('users.db') as conn:
-            c = conn.cursor()
-            try:
-                c.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username_login, hashed_password))
-                user_id_nuevo = c.lastrowid
-                c.execute('INSERT INTO profiles (user_id, username, slug) VALUES (?, ?, ?)', (user_id_nuevo, None, None))
-                conn.commit()
-                flash(_('¡Registro exitoso! Ahora puedes iniciar sesión y completar tu perfil público.'), 'success')
-                return redirect(url_for('login'))
-            except sqlite3.IntegrityError:
-                flash(_('Ese nombre de usuario para login ya existe. Por favor, elige otro.'), 'danger')
-    return render_template('register.html')
-
-# Reemplaza la función login existente por esta:
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET'])
 def login():
-    if request.method == 'POST':
-        username_login = request.form['username']
-        password = request.form['password']
-        with sqlite3.connect('users.db') as conn:
-            conn.row_factory = sqlite3.Row # Usamos Row Factory para poder acceder por nombre
-            c = conn.cursor()
-            # Modificamos la consulta para obtener también los datos del baneo
-            c.execute('SELECT id, password, banned_until, ban_reason FROM users WHERE username = ?', (username_login,))
-            user_data = c.fetchone()
-
-        if user_data and check_password_hash(user_data['password'], password):
-            
-            # --- NUEVA COMPROBACIÓN DE BANEO ---
-            if user_data['banned_until']:
-                banned_until_dt = parse_timestamp(user_data['banned_until'])
-                now_utc = datetime.now(timezone.utc)
-
-                if banned_until_dt > now_utc:
-                    # El usuario está actualmente baneado
-                    fecha_fin_baneo = format_datetime(banned_until_dt, 'long')
-                    motivo = user_data['ban_reason'] or _('No se especificó un motivo.')
-                    flash(_('Tu cuenta está suspendida hasta el %(date)s. Motivo: "%(reason)s"', date=fecha_fin_baneo, reason=motivo), 'danger')
-                    return redirect(url_for('login'))
-
-            # Si no está baneado, el flujo continúa como antes
-            session['user_id'] = user_data['id']
-            session['username_login'] = username_login
-            
-            with sqlite3.connect('users.db') as conn_profile:
-                c_profile = conn_profile.cursor()
-                c_profile.execute('SELECT username FROM profiles WHERE user_id = ?', (user_data['id'],))
-                profile_data = c_profile.fetchone()
-                session['display_username'] = profile_data[0] if profile_data and profile_data[0] and profile_data[0].strip() else username_login
-
-            if not check_profile_completion(user_data['id']):
-                 flash(_('¡Bienvenido! Por favor, completa tu perfil público para continuar.'), 'info')
-                 return redirect(url_for('profile'))
-            
-            flash(_('Inicio de sesión exitoso.'), 'success')
-            return redirect(url_for('feed'))
-        else:
-            flash(_("Credenciales inválidas. Inténtalo de nuevo."), 'danger')
-            
+    # Si el usuario ya está en sesión, lo redirigimos al feed.
+    if 'user_id' in session:
+        return redirect(url_for('feed'))
+    # Simplemente muestra la página de login con el botón de Pi.
     return render_template('login.html')
+
+@app.route('/api/pi/auth/complete', methods=['POST'])
+def pi_auth_complete():
+    auth_result = request.json
+    if not auth_result or 'accessToken' not in auth_result:
+        return jsonify(success=False, error=_('Autorización de Pi inválida.'))
+
+    # IMPORTANTE: Debes reemplazar esto con tu clave API del Portal de Desarrolladores de Pi.
+    PI_API_KEY = 'YOUR_PI_API_KEY_HERE' 
+    
+    # Verificación del lado del servidor con los servidores de Pi
+    try:
+        response = requests.post(
+            'https://api.pi.network/v2/auth/serverside-verification',
+            json={'accessToken': auth_result['accessToken']},
+            headers={'Authorization': f'Key {PI_API_KEY}'}
+        )
+        response.raise_for_status() # Lanza un error si la petición falla
+        pi_user_data = response.json()
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error al contactar con los servidores de Pi: {e}")
+        return jsonify(success=False, error=_('No se pudo verificar la sesión con Pi. Inténtalo de nuevo más tarde.'))
+
+    pi_uid = pi_user_data.get('uid')
+    pi_username = pi_user_data.get('username')
+
+    if not pi_uid:
+        return jsonify(success=False, error=_('Respuesta de Pi inválida. No se encontró el UID.'))
+
+    with sqlite3.connect('users.db') as conn:
+        conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+        c.execute("SELECT * FROM users WHERE pi_uid = ?", (pi_uid,))
+        user = c.fetchone()
+
+        if user:
+            # El usuario ya existe, iniciar sesión
+            session['user_id'] = user['id']
+            session['username_login'] = user['username']
+        else:
+            # Es un usuario nuevo, crearlo en nuestra base de datos
+            # Usamos el nombre de usuario de Pi como login y una contraseña placeholder
+            try:
+                c.execute(
+                    "INSERT INTO users (pi_uid, username, password, role) VALUES (?, ?, ?, 'user')",
+                    (pi_uid, pi_username, 'pi_sdk_auth', )
+                )
+                new_user_id = c.lastrowid
+                c.execute("INSERT INTO profiles (user_id) VALUES (?)", (new_user_id,))
+                conn.commit()
+                
+                # Iniciar sesión para el nuevo usuario
+                session['user_id'] = new_user_id
+                session['username_login'] = pi_username
+            except sqlite3.IntegrityError:
+                # Caso muy raro donde el pi_uid no existe pero el username sí.
+                return jsonify(success=False, error=_('Este nombre de usuario ya está en uso por una cuenta no vinculada a Pi.'))
+
+    # Comprobar si el perfil está completo para la redirección
+    is_profile_complete = check_profile_completion(session['user_id'])
+    redirect_url = url_for('feed') if is_profile_complete else url_for('profile')
+    
+    if not is_profile_complete:
+        flash(_('¡Bienvenido! Por favor, completa tu perfil público para continuar.'), 'info')
+
+    return jsonify(success=True, redirect_url=redirect_url)
+
 @app.route('/logout')
 def logout():
     session.clear()
