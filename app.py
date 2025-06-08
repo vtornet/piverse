@@ -14,7 +14,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime, timezone, timedelta
 
 app = Flask(__name__)
-app.secret_key = 'tu_clave_secreta_aqui_MUY_SECRETA'
+app.secret_key = os.environ.get('SECRET_KEY', 'clave-secreta-para-desarrollo-local')
 POSTS_PER_PAGE = 10
 # --- Configuración de Uploads ---
 UPLOAD_FOLDER = 'static/uploads'
@@ -864,7 +864,7 @@ def pi_auth_complete():
         return jsonify(success=False, error=_('Autorización de Pi inválida.'))
 
     # IMPORTANTE: Debes reemplazar esto con tu clave API del Portal de Desarrolladores de Pi.
-    PI_API_KEY = 'YOUR_PI_API_KEY_HERE' 
+    PI_API_KEY = os.environ.get('PI_API_KEY')
     
     # Verificación del lado del servidor con los servidores de Pi
     try:
