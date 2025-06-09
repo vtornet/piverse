@@ -1610,6 +1610,18 @@ def terms_of_service():
     """Renderiza la página de los Términos de Servicio."""
     return render_template('terms_of_service.html')
 
+@app.route('/dev-login/<username>')
+def dev_login(username):
+    # --- IMPORTANTE: Esta ruta es solo para desarrollo local ---
+    if app.debug: # Solo funciona si la app se inicia con debug=True
+        user = User.query.filter_by(username=username).first()
+        if user:
+            session['user_id'] = user.id
+            session['username_login'] = user.username
+            flash(f'Has iniciado sesión como {username} en modo desarrollador.', 'success')
+            return redirect(url_for('feed'))
+    # Si no estamos en modo debug (como en Railway), esta ruta no hará nada.
+    return "Acceso denegado. Esta ruta solo está disponible en modo de depuración.", 403
 
 if __name__ == '__main__':
     app.run(debug=True)
