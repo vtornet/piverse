@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PiVerse 1.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-08 14:35+0200\n"
+"POT-Creation-Date: 2025-06-09 14:03+0200\n"
 "PO-Revision-Date: 2025-06-08 14:00+0200\n"
 "Last-Translator: Gemini Assistant\n"
 "Language: en\n"
@@ -18,499 +18,62 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: app.py:475
+#: app.py:314
 msgid "Autenticación requerida. Por favor, inicia sesión."
 msgstr "Authentication required. Please log in."
 
-#: app.py:561 app.py:1031 app.py:1360 app.py:1605 app.py:1640 app.py:1757
-#: app.py:1952 app.py:2111 app.py:2184 app.py:2294 app.py:2413 app.py:2496
-#: app.py:2638 app.py:3341 app.py:3456 templates/conversacion.html:3
-#: templates/conversacion.html:30
+#: app.py:385 app.py:1023 app.py:1215 app.py:1252 app.py:1557
+#: templates/conversacion.html:3 templates/conversacion.html:30
 msgid "Usuario"
 msgstr "User"
 
-#: app.py:579 app.py:1539
-msgid "publicación"
-msgstr "post"
-
-#: app.py:581
+#: app.py:399
 #, python-format
 msgid "%(autor_link)s te mencionó en una %(contenido_link)s."
 msgstr "%(autor_link)s mentioned you in a %(contenido_link)s."
 
-#: app.py:583
-msgid "comentario"
-msgstr "comment"
-
-#: app.py:585
+#: app.py:402
 #, python-format
 msgid "%(autor_link)s te mencionó en un %(contenido_link)s."
 msgstr "%(autor_link)s mentioned you in a %(contenido_link)s."
 
-#: app.py:741 app.py:1945 app.py:2072 app.py:2468
+#: app.py:536
 msgid "Debes iniciar sesión para ver esta página."
 msgstr "You must be logged in to see this page."
 
-#: app.py:772
+#: app.py:556
 msgid "Tu cuenta está suspendida y tu sesión ha sido cerrada."
 msgstr "Your account is suspended and you have been logged out."
 
-#: app.py:780
+#: app.py:560
 msgid "Tu cuenta está silenciada. No puedes publicar ni comentar temporalmente."
 msgstr "Your account is muted. You cannot post or comment temporarily."
 
-#: app.py:790
+#: app.py:570
 msgid "Autenticación requerida."
 msgstr "Authentication required."
 
-#: app.py:801
+#: app.py:575
 msgid "Usuario no encontrado."
 msgstr "User not found."
 
-#: app.py:809
+#: app.py:581
 msgid "Tu cuenta está suspendida."
 msgstr "Your account is suspended."
 
-#: app.py:814
+#: app.py:584
 msgid "Tu cuenta está silenciada. No puedes realizar esta acción."
 msgstr "Your account is muted. You cannot perform this action."
 
-#: app.py:834 templates/feed.html:43 templates/index.html:32
-#: templates/view_section.html:53
-msgid "Pionero"
-msgstr "Pioneer"
-
-#: app.py:885
-msgid "Idioma no soportado."
-msgstr "Unsupported language."
-
-#: app.py:902
-msgid "El nombre de usuario y la contraseña son obligatorios."
-msgstr "Username and password are required."
-
-#: app.py:912
-msgid ""
-"¡Registro exitoso! Ahora puedes iniciar sesión y completar tu perfil "
-"público."
-msgstr ""
-"Registration successful! You can now log in and complete your public "
-"profile."
-
-#: app.py:915
-msgid "Ese nombre de usuario para login ya existe. Por favor, elige otro."
-msgstr "That login username already exists. Please choose another one."
-
-#: app.py:941
-msgid "No se especificó un motivo."
-msgstr "No reason was specified."
-
-#: app.py:942
-#, python-format
-msgid "Tu cuenta está suspendida hasta el %(date)s. Motivo: \"%(reason)s\""
-msgstr "Your account is suspended until %(date)s. Reason: \"%(reason)s\""
-
-#: app.py:956
-msgid "¡Bienvenido! Por favor, completa tu perfil público para continuar."
-msgstr "Welcome! Please complete your public profile to continue."
-
-#: app.py:959
-msgid "Inicio de sesión exitoso."
-msgstr "Login successful."
-
-#: app.py:962
-msgid "Credenciales inválidas. Inténtalo de nuevo."
-msgstr "Invalid credentials. Try again."
-
-#: app.py:968
-msgid "Has cerrado sesión."
-msgstr "You have logged out."
-
-#: app.py:980
-msgid "El nombre de usuario público no puede estar vacío."
-msgstr "The public username cannot be empty."
-
-#: app.py:984
-msgid ""
-"El nombre de usuario público debe contener caracteres alfanuméricos "
-"válidos."
-msgstr "The public username must contain valid alphanumeric characters."
-
-#: app.py:992
-msgid "Ese nombre de usuario público o slug ya está en uso por otra persona."
-msgstr "That public username or slug is already in use by someone else."
-
-#: app.py:1000
-#, python-format
-msgid "Error al guardar la foto: %(error)s"
-msgstr "Error saving the photo: %(error)s"
-
-#: app.py:1010
-msgid "Perfil actualizado correctamente."
-msgstr "Profile updated successfully."
-
-#: app.py:1017
-msgid "Por favor, completa tu nombre de usuario público en el perfil."
-msgstr "Please complete your public username in your profile."
-
-#: app.py:1027
-msgid "Debes completar tu perfil para ver el feed y publicar."
-msgstr "You must complete your profile to see the feed and post."
-
-#: app.py:1161
-msgid "Por favor, completa tu perfil antes de publicar."
-msgstr "Please complete your profile before posting."
-
-#: app.py:1175 app.py:1195
-msgid ""
-"La publicación no puede estar completamente vacía. Añade texto o una "
-"imagen."
-msgstr "The post cannot be completely empty. Add text or an image."
-
-#: app.py:1188
-#, python-format
-msgid "Error al guardar la imagen de la publicación: %(error)s"
-msgstr "Error saving the post image: %(error)s"
-
-#: app.py:1191
-msgid "Tipo de archivo de imagen no permitido. Permitidos: png, jpg, jpeg, gif."
-msgstr "Image file type not allowed. Allowed: png, jpg, jpeg, gif."
-
-#: app.py:1222
-msgid "Publicación creada."
-msgstr "Post created."
-
-#: app.py:1229
-msgid "Debes iniciar sesión para eliminar publicaciones."
-msgstr "You must be logged in to delete posts."
-
-#: app.py:1246 app.py:1972
-msgid "Publicación no encontrada."
-msgstr "Post not found."
-
-#: app.py:1251
-msgid "No tienes permiso para eliminar esta publicación."
-msgstr "You do not have permission to delete this post."
-
-#: app.py:1262
-msgid "Publicación eliminada correctamente."
-msgstr "Post deleted successfully."
-
-#: app.py:1324
-msgid "Por favor, completa tu perfil antes de comentar."
-msgstr "Please complete your profile before commenting."
-
-#: app.py:1333
-msgid "El comentario no puede estar vacío."
-msgstr "The comment cannot be empty."
-
-#: app.py:1343
-msgid "La publicación a la que intentas responder no existe."
-msgstr "The post you are trying to reply to does not exist."
-
-#: app.py:1349
-msgid "No puedes interactuar con este usuario o publicación."
-msgstr "You cannot interact with this user or post."
-
-#: app.py:1370
-#, python-format
-msgid "%(commenter_link)s ha respondido a tu comentario en una %(post_link)s."
-msgstr "%(commenter_link)s replied to your comment in a %(post_link)s."
-
-#: app.py:1376
-#, python-format
-msgid "%(commenter_link)s ha comentado en tu %(post_link)s."
-msgstr "%(commenter_link)s commented on your %(post_link)s."
-
-#: app.py:1382
-msgid "Comentario añadido."
-msgstr "Comment added."
-
-#: app.py:1384
-#, python-format
-msgid "Error al guardar el comentario: %(error)s"
-msgstr "Error saving comment: %(error)s"
-
-#: app.py:1395
-msgid "Debes iniciar sesión para eliminar comentarios."
-msgstr "You must be logged in to delete comments."
-
-#: app.py:1413
-msgid "Comentario no encontrado."
-msgstr "Comment not found."
-
-#: app.py:1420
-msgid "No tienes permiso para eliminar este comentario."
-msgstr "You do not have permission to delete this comment."
-
-#: app.py:1431
-msgid "Comentario eliminado correctamente."
-msgstr "Comment deleted successfully."
-
-#: app.py:1493
-msgid "Debes iniciar sesión para compartir publicaciones."
-msgstr "You must be logged in to share posts."
-
-#: app.py:1499
-msgid "Por favor, completa tu perfil antes de compartir publicaciones."
-msgstr "Please complete your profile before sharing posts."
-
-#: app.py:1512
-msgid "La publicación que intentas compartir no existe."
-msgstr "The post you are trying to share does not exist."
-
-#: app.py:1519
-msgid "No puedes interactuar con esta publicación."
-msgstr "You cannot interact with this post."
-
-#: app.py:1535
-msgid "Alguien"
-msgstr "Someone"
-
-#: app.py:1543
-#, python-format
-msgid "%(sharer_link)s ha citado tu %(post_link)s."
-msgstr "%(sharer_link)s quoted your %(post_link)s."
-
-#: app.py:1546
-#, python-format
-msgid "%(sharer_link)s ha compartido tu %(post_link)s."
-msgstr "%(sharer_link)s shared your %(post_link)s."
-
-#: app.py:1558
-msgid "Publicación citada correctamente."
-msgstr "Post quoted successfully."
-
-#: app.py:1560
-msgid "Publicación compartida correctamente."
-msgstr "Post shared successfully."
-
-#: app.py:1563
-msgid "Ya has compartido esta publicación anteriormente."
-msgstr "You have already shared this post."
-
-#: app.py:1566
-#, python-format
-msgid "Ha ocurrido un error al intentar compartir la publicación: %(error)s"
-msgstr "An error occurred while trying to share the post: %(error)s"
-
-#: app.py:1576
-msgid "Por favor, completa tu perfil antes de enviar solicitudes."
-msgstr "Please complete your profile before sending requests."
-
-#: app.py:1580
-msgid "No puedes enviarte una solicitud a ti mismo."
-msgstr "You cannot send a request to yourself."
-
-#: app.py:1588 app.py:1629 app.py:2256
-msgid "No puedes interactuar con este usuario."
-msgstr "You cannot interact with this user."
-
-#: app.py:1595
-msgid "Ya existe una solicitud o conexión con este usuario."
-msgstr "A request or connection with this user already exists."
-
-#: app.py:1608
-#, python-format
-msgid "%(solicitante_link)s te ha enviado una solicitud de contacto."
-msgstr "%(solicitante_link)s has sent you a contact request."
-
-#: app.py:1614
-msgid "Solicitud de contacto enviada."
-msgstr "Contact request sent."
-
-#: app.py:1616
-msgid "Error al enviar la solicitud. Puede que ya exista una."
-msgstr "Error sending the request. It might already exist."
-
-#: app.py:1636
-msgid "Solicitud de contacto aceptada."
-msgstr "Contact request accepted."
-
-#: app.py:1643
-#, python-format
-msgid "%(receptor_link)s aceptó tu solicitud de contacto."
-msgstr "%(receptor_link)s accepted your contact request."
-
-#: app.py:1650
-msgid ""
-"No se pudo aceptar la solicitud (quizás ya no estaba pendiente o no era "
-"para ti)."
-msgstr ""
-"Could not accept the request (maybe it was no longer pending or wasn't "
-"for you)."
-
-#: app.py:1664
-msgid "Solicitud de contacto rechazada."
-msgstr "Contact request rejected."
-
-#: app.py:1666
-msgid ""
-"No se pudo rechazar la solicitud (quizás ya no estaba pendiente o no era "
-"para ti)."
-msgstr ""
-"Could not reject the request (maybe it was no longer pending or wasn't "
-"for you)."
-
-#: app.py:1680
-msgid "Contacto eliminado."
-msgstr "Contact deleted."
-
-#: app.py:1682
-msgid "No se encontró una relación de contacto para eliminar."
-msgstr "No contact relationship was found to delete."
-
-#: app.py:1689
-msgid "Debes iniciar sesión para bloquear usuarios."
-msgstr "You must be logged in to block users."
-
-#: app.py:1695
-msgid "No te puedes bloquear a ti mismo."
-msgstr "You cannot block yourself."
-
-#: app.py:1711
-msgid ""
-"Usuario bloqueado correctamente. Ya no verás sus publicaciones ni podrás "
-"interactuar con él/ella."
-msgstr ""
-"User blocked successfully. You will no longer see their posts or be able "
-"to interact with them."
-
-#: app.py:1714
-msgid "Este usuario ya está en tu lista de bloqueados."
-msgstr "This user is already on your blocked list."
-
-#: app.py:1718
-#, python-format
-msgid "Ha ocurrido un error al intentar bloquear al usuario: %(error)s"
-msgstr "An error occurred while trying to block the user: %(error)s"
-
-#: app.py:1726
-msgid "Debes iniciar sesión para desbloquear usuarios."
-msgstr "You must be logged in to unblock users."
-
-#: app.py:1740
-msgid "Usuario desbloqueado correctamente."
-msgstr "User unblocked successfully."
-
-#: app.py:1742
-msgid "Este usuario no estaba en tu lista de bloqueados."
-msgstr "This user was not on your blocked list."
-
-#: app.py:1746
-#, python-format
-msgid "Ha ocurrido un error al intentar desbloquear al usuario: %(error)s"
-msgstr "An error occurred while trying to unblock the user: %(error)s"
-
-#: app.py:1753
-msgid "No se puede acceder a un perfil sin un slug válido."
-msgstr "A profile cannot be accessed without a valid slug."
-
-#: app.py:1768
-msgid "Perfil no encontrado."
-msgstr "Profile not found."
-
-#: app.py:1776
-msgid "No puedes ver el perfil de este usuario."
-msgstr "You cannot view this user's profile."
-
-#: app.py:1949
-msgid "Por favor, completa tu perfil para ver las publicaciones."
-msgstr "Please complete your profile to see the posts."
-
-#: app.py:1978
-msgid "No puedes ver esta publicación debido a la configuración de bloqueo."
-msgstr "You cannot view this post due to block settings."
-
-#: app.py:2105
-msgid "Por favor, completa tu perfil para ver tus contactos."
-msgstr "Please complete your profile to see your contacts."
-
-#: app.py:2176 app.py:2291
-msgid "Debes iniciar sesión para ver tus mensajes."
-msgstr "You must be logged in to see your messages."
-
-#: app.py:2180
-msgid "Por favor, completa tu perfil para usar la mensajería."
-msgstr "Please complete your profile to use messaging."
-
-#: app.py:2185
-msgid "No hay mensajes todavía."
-msgstr "No messages yet."
-
-#: app.py:2220
-#, python-format
-msgid "Tú: %(mensaje)s"
-msgstr "You: %(mensaje)s"
-
-#: app.py:2244
-msgid "Debes iniciar sesión para enviar mensajes."
-msgstr "You must be logged in to send messages."
-
-#: app.py:2248
-msgid "No puedes iniciar una conversación contigo mismo."
-msgstr "You cannot start a conversation with yourself."
-
-#: app.py:2265
-msgid "Solo puedes enviar mensajes a tus contactos."
-msgstr "You can only send messages to your contacts."
-
-#: app.py:2302
-msgid "No tienes permiso para ver esta conversación."
-msgstr "You do not have permission to view this conversation."
-
-#: app.py:2317
-msgid "No puedes ver esta conversación debido a la configuración de bloqueo."
-msgstr "You cannot view this conversation due to block settings."
-
-#: app.py:2358 app.py:2379 app.py:2431
-msgid "Autenticación requerida"
-msgstr "Authentication required"
-
-#: app.py:2372
-msgid "Notificación no encontrada, ya marcada como leída o sin permiso."
-msgstr "Notification not found, already marked as read, or permission denied."
-
-#: app.py:2386
-msgid "Faltan datos: ID de conversación y cuerpo del mensaje son requeridos."
-msgstr "Missing data: Conversation ID and message body are required."
-
-#: app.py:2394
-msgid "No tienes permiso para enviar mensajes en esta conversación."
-msgstr "You do not have permission to send messages in this conversation."
-
-#: app.py:2402
-msgid "No puedes enviar mensajes a este usuario."
-msgstr "You cannot send messages to this user."
-
-#: app.py:2471
-msgid "Por favor, completa tu perfil para ver las secciones."
-msgstr "Please complete your profile to see the sections."
-
-#: app.py:2492
-msgid "Debes completar tu perfil para ver el contenido de las secciones."
-msgstr "You must complete your profile to view the content of the sections."
-
-#: app.py:2506
-msgid "Sección no encontrada."
-msgstr "Section not found."
-
-#: app.py:2628
-msgid "Debes iniciar sesión para realizar búsquedas."
-msgstr "You must be logged in to search."
-
-#: app.py:2633
-msgid "Por favor, completa tu perfil para usar la búsqueda."
-msgstr "Please complete your profile to use search."
-
-#: app.py:2974 app.py:3004 app.py:3050 app.py:3136
+#: app.py:593 app.py:606 app.py:619
 msgid "Debes iniciar sesión para acceder a esta página."
 msgstr "You must be logged in to access this page."
 
-#: app.py:2989
+#: app.py:597
 msgid "No tienes permiso para acceder a esta página de administración."
 msgstr "You do not have permission to access this administration page."
 
-#: app.py:3016 app.py:3148
+#: app.py:610
 msgid ""
 "No tienes los permisos necesarios (se requiere ser al menos coordinador) "
 "para acceder a esta página."
@@ -518,7 +81,7 @@ msgstr ""
 "You do not have the necessary permissions (at least coordinator level "
 "required) to access this page."
 
-#: app.py:3062
+#: app.py:623
 msgid ""
 "No tienes los permisos necesarios (se requiere ser al menos moderador) "
 "para acceder a esta página."
@@ -526,61 +89,319 @@ msgstr ""
 "You do not have the necessary permissions (at least moderator level "
 "required) to access this page."
 
-#: app.py:3161
-msgid "No puedes cambiar tu propio rol desde esta interfaz."
-msgstr "You cannot change your own role from this interface."
+#: app.py:695
+msgid "Autorización de Pi inválida."
+msgstr "Invalid Pi authorization."
 
-#: app.py:3176
-msgid "El usuario que intentas modificar no existe."
-msgstr "The user you are trying to modify does not exist."
+#: app.py:700
+msgid "Clave API de Pi no configurada en el servidor."
+msgstr "Pi API Key not configured on the server."
 
-#: app.py:3186
-msgid "No tienes permiso para modificar a este usuario."
-msgstr "You do not have permission to modify this user."
+#: app.py:712
+msgid "No se pudo verificar la sesión con Pi."
+msgstr "Could not verify session with Pi."
 
-#: app.py:3204
-msgid "El rol del usuario ha sido actualizado correctamente."
-msgstr "User role has been updated successfully."
+#: app.py:717
+msgid "Respuesta de Pi inválida."
+msgstr "Invalid response from Pi."
 
-#: app.py:3206
+#: app.py:726
+msgid "Este nombre de usuario ya está en uso por una cuenta no vinculada a Pi."
+msgstr "This username is already in use by an account not linked to Pi."
+
+#: app.py:744
+msgid "Este nombre de usuario ya está en uso. Por favor, contacta con soporte."
+msgstr "This username is already in use. Please contact support."
+
+#: app.py:748
+msgid "Ocurrió un error al crear tu cuenta."
+msgstr An error occurred while creating your account."
+
+#: app.py:754
+msgid "¡Bienvenido! Por favor, completa tu perfil público para continuar."
+msgstr "Welcome! Please complete your public profile to continue."
+
+#: app.py:761
+msgid "Has cerrado sesión."
+msgstr "You have logged out."
+
+#: app.py:771
+msgid "No se encontró tu perfil, por favor contacta con soporte."
+msgstr "Your profile was not found, please contact support."
+
+#: app.py:780
+msgid "El nombre de usuario público no puede estar vacío."
+msgstr "The public username cannot be empty."
+
+#: app.py:784
+msgid ""
+"El nombre de usuario público debe contener caracteres alfanuméricos "
+"válidos."
+msgstr "The public username must contain valid alphanumeric characters."
+
+#: app.py:793
+msgid "Ese nombre de usuario público o slug ya está en uso por otra persona."
+msgstr "That public username or slug is already in use by someone else."
+
+#: app.py:806
 #, python-format
-msgid "Error al actualizar el rol: %(error)s"
-msgstr "Error updating role: %(error)s"
+msgid "Error al guardar la foto: %(error)s"
+msgstr "Error saving the photo: %(error)s"
 
-#: app.py:3208
-msgid "Rol no válido o sin permiso para asignarlo."
-msgstr "Invalid role or no permission to assign it."
+#: app.py:811
+msgid "Perfil actualizado correctamente."
+msgstr "Profile updated successfully."
 
-#: app.py:3257
-msgid "La publicación no existe."
-msgstr "The post does not exist."
+#: app.py:815
+msgid "Error de integridad. Es posible que el nombre de usuario o slug ya exista."
+msgstr "Integrity error. The username or slug may already exist."
 
-#: app.py:3266
-msgid "El contenido de la publicación no puede estar vacío."
-msgstr "The post content cannot be empty."
+#: app.py:818
+msgid "Ocurrió un error inesperado al actualizar el perfil."
+msgstr "An unexpected error occurred while updating the profile.."
 
-#: app.py:3282
-msgid "Publicación actualizada correctamente."
-msgstr "Post updated successfully."
+#: app.py:828
+msgid "Por favor, completa tu nombre de usuario público en el perfil."
+msgstr "Please complete your public username in your profile."
 
-#: app.py:3285
+#: app.py:838
+msgid "Debes completar tu perfil para ver el feed y publicar."
+msgstr "You must complete your profile to see the feed and post."
+
+#: app.py:858
+msgid "Por favor, completa tu perfil antes de publicar."
+msgstr "Please complete your profile before posting."
+
+#: app.py:866
+msgid ""
+"La publicación no puede estar completamente vacía. Añade texto o una "
+"imagen."
+msgstr "The post cannot be completely empty. Add text or an image."
+
+#: app.py:878
 #, python-format
-msgid "Error al actualizar la publicación: %(error)s"
-msgstr "Error updating post: %(error)s"
+msgid "Error al guardar la imagen de la publicación: %(error)s"
+msgstr "Error saving the post image: %(error)s"
 
-#: app.py:3337
-msgid "Debes completar tu perfil para ver el feed de tus contactos."
-msgstr "You must complete your profile to see your contacts' feed."
+#: app.py:908
+msgid "Publicación creada."
+msgstr "Post created."
 
-#: app.py:3629
+#: app.py:911
+#, python-format
+msgid "Ocurrió un error al crear la publicación."
+msgstr "An error occurred while creating the post."
+
+#: app.py:922
+msgid "Publicación no encontrada."
+msgstr "Post not found."
+
+#: app.py:928
+msgid "No tienes permiso para eliminar esta publicación."
+msgstr "You do not have permission to delete this post."
+
+#: app.py:938
+msgid "Publicación eliminada correctamente."
+msgstr "Post deleted successfully."
+
+#: app.py:990
+msgid "Por favor, completa tu perfil antes de comentar."
+msgstr "Please complete your profile before commenting."
+
+#: app.py:998
+msgid "El comentario no puede estar vacío."
+msgstr "The comment cannot be empty."
+
+#: app.py:1003
+msgid "La publicación a la que intentas responder no existe."
+msgstr "The post you are trying to reply to does not exist."
+
+#: app.py:1008
+msgid "No puedes interactuar con este usuario o publicación."
+msgstr "You cannot interact with this user or post."
+
+#: app.py:1030
+#, python-format
+msgid "%(commenter_link)s ha respondido a tu comentario en una %(post_link)s."
+msgstr "%(commenter_link)s replied to your comment in a %(post_link)s."
+
+#: app.py:1033
+#, python-format
+msgid "%(commenter_link)s ha comentado en tu %(post_link)s."
+msgstr "%(commenter_link)s commented on your %(post_link)s."
+
+#: app.py:1041
+msgid "Comentario añadido."
+msgstr "Comment added."
+
+#: app.py:1044
+#, python-format
+msgid "Ocurrió un error al añadir el comentario."
+msgstr "An error occurred while adding the comment."
+
+#: app.py:1057
+msgid "Comentario no encontrado."
+msgstr "Comment not found."
+
+#: app.py:1065
+msgid "No tienes permiso para eliminar este comentario."
+msgstr "You do not have permission to delete this comment."
+
+#: app.py:1076
+msgid "Comentario eliminado correctamente."
+msgstr "Comment deleted successfully."
+
+#: app.py:1130
+msgid "Por favor, completa tu perfil antes de compartir publicaciones."
+msgstr "Please complete your profile before sharing posts."
+
+#: app.py:1137
+msgid "La publicación que intentas compartir no existe."
+msgstr "The post you are trying to share does not exist."
+
+#: app.py:1142
+msgid "No puedes interactuar con esta publicación."
+msgstr "You cannot interact with this post."
+
+#: app.py:1155
+msgid "Alguien"
+msgstr "Someone"
+
+#: app.py:1161
+#, python-format
+msgid "%(sharer_link)s ha citado tu %(post_link)s."
+msgstr "%(sharer_link)s quoted your %(post_link)s."
+
+#: app.py:1164
+#, python-format
+msgid "%(sharer_link)s ha compartido tu %(post_link)s."
+msgstr "%(sharer_link)s shared your %(post_link)s."
+
+#: app.py:1170
+msgid "Publicación compartida correctamente."
+msgstr "Post shared successfully."
+
+#: app.py:1173
+msgid "Ya has compartido esta publicación anteriormente."
+msgstr "You have already shared this post."
+
+#: app.py:1176
+#, python-format
+msgid "Ha ocurrido un error al intentar compartir la publicación."
+msgstr "An error occurred while trying to share the post."
+
+#: app.py:1186
+msgid "Por favor, completa tu perfil antes de enviar solicitudes."
+msgstr "Please complete your profile before sending requests."
+
+#: app.py:1190
+msgid "No puedes enviarte una solicitud a ti mismo."
+msgstr "You cannot send a request to yourself."
+
+#: app.py:1195 app.py:1238
+msgid "No puedes interactuar con este usuario."
+msgstr "You cannot interact with this user."
+
+#: app.py:1206
+msgid "Ya existe una solicitud o conexión con este usuario."
+msgstr "A request or connection with this user already exists."
+
+#: app.py:1217
+#, python-format
+msgid "%(solicitante_link)s te ha enviado una solicitud de contacto."
+msgstr "%(solicitante_link)s has sent you a contact request."
+
+#: app.py:1222
+msgid "Solicitud de contacto enviada."
+msgstr "Contact request sent."
+
+#: app.py:1225
+msgid "Error al enviar la solicitud."
+msgstr "Error sending the request."
+
+#: app.py:1254
+#, python-format
+msgid "%(receptor_link)s aceptó tu solicitud de contacto."
+msgstr "%(receptor_link)s accepted your contact request."
+
+#: app.py:1259
+msgid "Solicitud de contacto aceptada."
+msgstr "Contact request accepted."
+
+#: app.py:1261
+msgid ""
+"No se pudo aceptar la solicitud (quizás ya no estaba pendiente o no era "
+"para ti)."
+msgstr ""
+"Could not accept the request (maybe it was no longer pending or wasn't "
+"for you)."
+
+#: app.py:1279
+msgid "Solicitud de contacto rechazada."
+msgstr "Contact request rejected."
+
+#: app.py:1281
+msgid ""
+"No se pudo rechazar la solicitud (quizás ya no estaba pendiente o no era "
+"para ti)."
+msgstr ""
+"Could not reject the request (maybe it was no longer pending or wasn't "
+"for you)."
+
+#: app.py:1300
+msgid "Contacto eliminado."
+msgstr "Contact deleted."
+
+#: app.py:1302
+msgid "No se encontró una relación de contacto para eliminar."
+msgstr "No contact relationship was found to delete."
+
+#: app.py:1313
+msgid "No te puedes bloquear a ti mismo."
+msgstr "You cannot block yourself."
+
+#: app.py:1332
+msgid "Usuario bloqueado correctamente."
+msgstr "User blocked successfully."
+
+#: app.py:1335
+msgid "Este usuario ya está en tu lista de bloqueados."
+msgstr "This user is already on your blocked list."
+
+#: app.py:1338
+#, python-format
+msgid "Ha ocurrido un error al intentar bloquear al usuario."
+msgstr "An error occurred while trying to block the user."
+
+#: app.py:1353
+msgid "Usuario desbloqueado correctamente."
+msgstr "User unblocked successfully."
+
+#: app.py:1355
+msgid "Este usuario no estaba en tu lista de bloqueados."
+msgstr "This user was not on your blocked list."
+
+#: app.py:1362
+msgid "No se puede acceder a un perfil sin un slug válido."
+msgstr "A profile cannot be accessed without a valid slug."
+
+#: app.py:1367
+msgid "Perfil no encontrado."
+msgstr "Profile not found."
+
+#: app.py:1376
+msgid "No puedes ver el perfil de este usuario."
+msgstr "You cannot view this user's profile."
+
+#: app.py:1489
 msgid "Faltan datos en el reporte. Tipo, ID y motivo son obligatorios."
 msgstr "Missing data in the report. Type, ID, and reason are required."
 
-#: app.py:3633
+#: app.py:1492
 msgid "Tipo de contenido no válido."
 msgstr "Invalid content type."
 
-#: app.py:3645
+#: app.py:1505
 msgid ""
 "Reporte enviado correctamente. Gracias por ayudarnos a mantener la "
 "comunidad segura."
@@ -588,192 +409,30 @@ msgstr ""
 "Report sent successfully. Thank you for helping us keep the community "
 "safe."
 
-#: app.py:3649
-msgid ""
-"Ocurrió un error en el servidor al procesar tu reporte. Inténtalo de "
-"nuevo más tarde."
+#: app.py:1510
+msgid "Ocurrió un error en el servidor al procesar tu reporte."
 msgstr ""
-"A server error occurred while processing your report. Please try again "
+"A server error occurred while processing your report."
 "later."
 
-#: app.py:3652
-msgid "Ocurrió un error inesperado."
-msgstr "An unexpected error occurred."
+#: app.py:1533
+msgid "Faltan datos."
+msgstr "Missing data."
 
-#: app.py:3729
-msgid "Reporte desestimado y archivado."
-msgstr "Report dismissed and archived."
+#: app.py:1537
+msgid "No tienes permiso para esta conversación."
+msgstr "You do not have permission for this conversation."
 
-#: app.py:3744
-msgid ""
-"Reporte marcado para acción. Por favor, elimina el contenido manualmente "
-"si es necesario."
-msgstr "Report marked for action. Please delete the content manually if necessary."
+#: app.py:1543
+msgid "No puedes enviar mensajes a este usuario."
+msgstr "You cannot send messages to this user."
 
-#: app.py:3760 app.py:3990
-msgid "El mensaje personalizado no puede estar vacío."
-msgstr "The custom message cannot be empty."
+#: app.py:1563
+msgid "Error al enviar el mensaje."
+msgstr "Error sending message."
 
-#: app.py:3769 app.py:3999
-msgid "Motivo predefinido no válido o mensaje no proporcionado."
-msgstr "Invalid predefined reason or message not provided."
-
-#: app.py:3778
-msgid "Reporte no encontrado o ya resuelto."
-msgstr "Report not found or already resolved."
-
-#: app.py:3797
-msgid ""
-"No se pudo encontrar el contenido original (puede haber sido eliminado). "
-"El reporte ha sido archivado."
-msgstr ""
-"Could not find the original content (it may have been deleted). The "
-"report has been archived."
-
-#: app.py:3808
-#, python-format
-msgid ""
-"Tu reporte sobre el contenido publicado el %(date)s ha sido revisado y "
-"desestimado. Motivo: \"%(reason)s\"."
-msgstr ""
-"Your report about the content published on %(date)s has been reviewed and"
-" dismissed. Reason: \"%(reason)s\"."
-
-#: app.py:3814
-msgid "Reporte desestimado. Se ha notificado al usuario que reportó."
-msgstr "Report dismissed. The reporting user has been notified."
-
-#: app.py:3820
-#, python-format
-msgid ""
-"Se ha tomado una acción sobre tu contenido publicado el %(date)s. Motivo:"
-" \"%(reason)s\"."
-msgstr ""
-"Action has been taken on your content published on %(date)s. Reason: "
-"\"%(reason)s\"."
-
-#: app.py:3825
-#, python-format
-msgid ""
-"Gracias por tu ayuda. Tu reporte sobre el contenido publicado el %(date)s"
-" ha sido aprobado y se han tomado las medidas correspondientes."
-msgstr ""
-"Thank you for your help. Your report on the content published on %(date)s"
-" has been approved and corresponding actions have been taken."
-
-#: app.py:3830
-msgid "Acción tomada. Se ha notificado a ambas partes."
-msgstr "Action taken. Both parties have been notified."
-
-#: app.py:3841
-msgid "[Cita eliminada por un moderador]"
-msgstr "[Quote deleted by a moderator]"
-
-#: app.py:3844
-msgid "El contenido ha sido ocultado/eliminado."
-msgstr "The content has been hidden/deleted."
-
-#: app.py:3846 app.py:4033
-msgid "Acción no válida."
-msgstr "Invalid action."
-
-#: app.py:3871
-msgid ""
-"Ya has enviado una apelación para esta decisión. Está pendiente de "
-"revisión."
-msgstr ""
-"You have already submitted an appeal for this decision. It is pending "
-"review."
-
-#: app.py:3877
-msgid "Reporte no encontrado."
-msgstr "Report not found."
-
-#: app.py:3898
-msgid ""
-"No tienes permiso para apelar esta decisión o la apelación no es "
-"aplicable en este estado."
-msgstr ""
-"You do not have permission to appeal this decision or the appeal is not "
-"applicable in this state."
-
-#: app.py:3906
-msgid "El texto de la apelación no puede estar vacío."
-msgstr "The appeal text cannot be empty."
-
-#: app.py:3925
-msgid ""
-"Tu apelación ha sido enviada correctamente. Será revisada por el equipo "
-"de administración."
-msgstr ""
-"Your appeal has been sent successfully. It will be reviewed by the "
-"administration team."
-
-#: app.py:4008
-msgid "Apelación no encontrada o ya resuelta."
-msgstr "Appeal not found or already resolved."
-
-#: app.py:4016
-msgid "Apelación aprobada. La acción original ha sido revertida."
-msgstr "Appeal approved. The original action has been reverted."
-
-#: app.py:4031
-msgid "Apelación rechazada. La decisión original se mantiene."
-msgstr "Appeal denied. The original decision is upheld."
-
-#: app.py:4057
-msgid "El motivo de la sanción es obligatorio."
-msgstr "The reason for the sanction is mandatory."
-
-#: app.py:4060
-msgid "No te puedes sancionar a ti mismo."
-msgstr "You cannot sanction yourself."
-
-#: app.py:4068
-msgid ""
-"Se han levantado todas las sanciones de tu cuenta. Vuelves a tener acceso"
-" completo."
-msgstr ""
-"All sanctions on your account have been lifted. You have full access "
-"again."
-
-#: app.py:4070
-msgid "Sanciones levantadas correctamente."
-msgstr "Sanctions lifted successfully."
-
-#: app.py:4075
-#, python-format
-msgid "Tu cuenta ha sido suspendida de forma permanente. Motivo: \"%(reason)s\""
-msgstr "Your account has been permanently suspended. Reason: \"%(reason)s\""
-
-#: app.py:4077
-msgid "Usuario suspendido permanentemente."
-msgstr "User permanently suspended."
-
-#: app.py:4086
-#, python-format
-msgid ""
-"Tu cuenta ha sido silenciada hasta el %(date)s (solo podrás leer "
-"contenido). Motivo: \"%(reason)s\""
-msgstr ""
-"Your account has been muted until %(date)s (you can only read content). "
-"Reason: \"%(reason)s\""
-
-#: app.py:4088
-msgid "Usuario silenciado correctamente."
-msgstr "User muted successfully."
-
-#: app.py:4091
-#, python-format
-msgid "Tu cuenta ha sido suspendida hasta el %(date)s. Motivo: \"%(reason)s\""
-msgstr "Your account has been suspended until %(date)s. Reason: \"%(reason)s\""
-
-#: app.py:4093
-msgid "Usuario suspendido correctamente."
-msgstr "User suspended successfully."
-
-#: templates/_macros.html:11 templates/_post_card.html:10
-#: templates/_post_card.html:93 templates/contactos.html:47
+#: templates/_macros.html:12 templates/_post_card.html:13
+#: templates/_post_card.html:97 templates/contactos.html:47
 #: templates/contactos.html:87 templates/feed_contacts.html:52
 #: templates/feed_contacts.html:94 templates/mensajes.html:16
 #: templates/search_results.html:52 templates/ver_perfil.html:37
@@ -783,8 +442,8 @@ msgstr "User suspended successfully."
 msgid "Foto de %(username)s"
 msgstr "Photo of %(username)s"
 
-#: templates/_macros.html:26 templates/_post_card.html:22
-#: templates/_post_card.html:103
+#: templates/_macros.html:26 templates/_post_card.html:27
+#: templates/_post_card.html:107
 msgid "Más opciones"
 msgstr "More options"
 
@@ -802,8 +461,8 @@ msgstr "Are you sure you want to delete this comment and all its replies?"
 msgid "Eliminar Comentario"
 msgstr "Delete Comment"
 
-#: templates/_macros.html:69 templates/_post_card.html:51
-#: templates/_post_card.html:122 templates/base.html:566
+#: templates/_macros.html:69 templates/_post_card.html:53
+#: templates/_post_card.html:122 templates/base.html:563
 #: templates/feed_contacts.html:70 templates/feed_contacts.html:111
 #: templates/search_results.html:108 templates/ver_perfil.html:149
 #: templates/ver_perfil.html:224 templates/ver_post.html:101
@@ -822,18 +481,18 @@ msgstr "Write your reply..."
 msgid "Enviar Respuesta"
 msgstr "Send Reply"
 
-#: templates/_post_card.html:15 templates/_post_card.html:98
+#: templates/_post_card.html:21 templates/_post_card.html:102
 #: templates/feed_contacts.html:57 templates/feed_contacts.html:99
 #: templates/search_results.html:61 templates/ver_perfil.html:121
 #: templates/ver_perfil.html:201 templates/ver_post.html:38
 msgid "en"
 msgstr "in"
 
-#: templates/_post_card.html:28
+#: templates/_post_card.html:31
 msgid "Reportar Publicación"
 msgstr "Report Post"
 
-#: templates/_post_card.html:34 templates/feed_contacts.html:61
+#: templates/_post_card.html:35 templates/feed_contacts.html:61
 #: templates/search_results.html:67 templates/ver_perfil.html:128
 #: templates/ver_post.html:51
 msgid "¿Estás seguro de que quieres eliminar esta publicación?"
@@ -843,7 +502,7 @@ msgstr "Are you sure you want to delete this post?"
 msgid "Eliminar Publicación"
 msgstr "Delete Post"
 
-#: templates/_post_card.html:45 templates/_post_card.html:116
+#: templates/_post_card.html:45 templates/_post_card.html:114
 #: templates/feed_contacts.html:64 templates/feed_contacts.html:105
 #: templates/search_results.html:78 templates/search_results.html:162
 #: templates/ver_perfil.html:134 templates/ver_perfil.html:209
@@ -851,13 +510,13 @@ msgstr "Delete Post"
 msgid "Imagen de la publicación"
 msgstr "Post image"
 
-#: templates/_post_card.html:46 templates/_post_card.html:117
-#: templates/feed_contacts.html:65 templates/feed_contacts.html:106
-#: templates/search_results.html:85 templates/ver_post.html:80
+#: templates/_post_card.html:46 templates/feed_contacts.html:65
+#: templates/feed_contacts.html:106 templates/search_results.html:85
+#: templates/ver_post.html:80
 msgid "Imagen de previsualización"
 msgstr "Preview image"
 
-#: templates/_post_card.html:58 templates/_post_card.html:129
+#: templates/_post_card.html:60 templates/_post_card.html:129
 #: templates/admin/comments_list.html:21 templates/admin/log_list.html:23
 #: templates/admin/posts_list.html:21 templates/admin/users_list.html:18
 #: templates/feed_contacts.html:77 templates/feed_contacts.html:118
@@ -867,58 +526,45 @@ msgstr "Preview image"
 msgid "Comentarios"
 msgstr "Comments"
 
-#: templates/_post_card.html:59 templates/_post_card.html:130
+#: templates/_post_card.html:61 templates/_post_card.html:130
 #: templates/feed_contacts.html:78 templates/feed_contacts.html:119
 #: templates/search_results.html:120 templates/ver_perfil.html:162
 #: templates/ver_perfil.html:237 templates/ver_post.html:121
 msgid "Citar o compartir"
 msgstr "Quote or share"
 
-#: templates/_post_card.html:61 templates/feed_contacts.html:80
-#: templates/ver_post.html:133
-msgid "No hay comentarios aún. ¡Sé el primero!"
-msgstr "No comments yet. Be the first!"
-
-#: templates/_post_card.html:63 templates/feed_contacts.html:82
-#: templates/ver_post.html:139
+#: templates/_post_card.html:67 templates/_post_card.html:136
+#: templates/feed_contacts.html:82 templates/ver_post.html:139
 msgid "Escribe un comentario..."
 msgstr "Write a comment..."
 
-#: templates/_post_card.html:63 templates/_post_card.html:134
+#: templates/_post_card.html:67 templates/_post_card.html:136
 #: templates/feed_contacts.html:82 templates/feed_contacts.html:123
 #: templates/ver_post.html:141
 msgid "Comentar"
 msgstr "Comment"
 
-#: templates/_post_card.html:72 templates/feed_contacts.html:89
+#: templates/_post_card.html:79 templates/feed_contacts.html:89
 #: templates/search_results.html:142 templates/ver_perfil.html:175
 msgid "compartió esto"
 msgstr "shared this"
 
-#: templates/_post_card.html:72 templates/feed_contacts.html:89
+#: templates/_post_card.html:79 templates/feed_contacts.html:89
 #: templates/search_results.html:142 templates/ver_perfil.html:175
 msgid "con el siguiente comentario:"
 msgstr "with the following comment:"
 
-#: templates/_post_card.html:76
+#: templates/_post_card.html:83
 msgid "Más opciones para esta cita"
 msgstr "More options for this quote"
 
-#: templates/_post_card.html:82
+#: templates/_post_card.html:87
 msgid "Reportar Cita"
 msgstr "Report Quote"
 
 #: templates/_post_card.html:109
 msgid "Reportar Publicación Original"
 msgstr "Report Original Post"
-
-#: templates/_post_card.html:132 templates/feed_contacts.html:121
-msgid "No hay comentarios aún."
-msgstr "No comments yet."
-
-#: templates/_post_card.html:134 templates/feed_contacts.html:123
-msgid "Escribe un comentario sobre la publicación original..."
-msgstr "Write a comment about the original post..."
 
 #: templates/appeal_form.html:3
 msgid "Apelar Decisión de Reporte"
@@ -955,144 +601,140 @@ msgstr "Submit Appeal"
 
 #: templates/admin/appeals_list.html:95 templates/admin/reports_list.html:107
 #: templates/admin/users_list.html:115 templates/appeal_form.html:28
-#: templates/base.html:355 templates/base.html:399
+#: templates/base.html:352 templates/base.html:396
 msgid "Cancelar"
 msgstr "Cancel"
 
-#: templates/base.html:194 templates/index.html:8
+#: templates/base.html:198 templates/index.html:8
 msgid "Logo de PiVerse"
 msgstr "PiVerse Logo"
 
-#: templates/base.html:197
+#: templates/base.html:201
 msgid "Alternar navegación"
 msgstr "Toggle navigation"
 
-#: templates/base.html:205 templates/base.html:289
+#: templates/base.html:209
 msgid "Buscar..."
 msgstr "Search..."
 
-#: templates/base.html:205 templates/base.html:289
+#: templates/base.html:209
 msgid "Buscar"
 msgstr "Search"
 
-#: templates/base.html:211 templates/notificaciones.html:7
+#: templates/base.html:215 templates/notificaciones.html:7
 msgid "Notificaciones"
 msgstr "Notifications"
 
-#: templates/base.html:214
+#: templates/base.html:218
 msgid "notificaciones no leídas"
 msgstr "unread notifications"
 
-#: templates/base.html:220 templates/mensajes.html:9
+#: templates/base.html:224 templates/mensajes.html:9
 msgid "Mensajes"
 msgstr "Messages"
 
-#: templates/base.html:223
+#: templates/base.html:227
 msgid "mensajes no leídos"
 msgstr "unread messages"
 
-#: templates/base.html:227
+#: templates/base.html:231
 msgid "Inicio"
 msgstr "Home"
 
-#: templates/base.html:228
+#: templates/base.html:232
 msgid "Mi Perfil"
 msgstr "My Profile"
 
-#: templates/base.html:229 templates/contactos.html:27
+#: templates/base.html:233 templates/contactos.html:27
 msgid "Mis Contactos"
 msgstr "My Contacts"
 
-#: templates/base.html:234
+#: templates/base.html:238
 msgid "Admin"
 msgstr "Admin"
 
-#: templates/admin/reports_list.html:3 templates/base.html:237
+#: templates/admin/reports_list.html:3 templates/base.html:241
 msgid "Gestionar Reportes"
 msgstr "Manage Reports"
 
-#: templates/admin/appeals_list.html:3 templates/base.html:238
+#: templates/admin/appeals_list.html:3 templates/base.html:242
 msgid "Gestionar Apelaciones"
 msgstr "Manage Appeals"
 
-#: templates/admin/users_list.html:3 templates/base.html:240
+#: templates/admin/users_list.html:3 templates/base.html:244
 msgid "Gestionar Usuarios"
 msgstr "Manage Users"
 
-#: templates/base.html:241
+#: templates/base.html:245
 msgid "Gestionar Publicaciones"
 msgstr "Manage Posts"
 
-#: templates/base.html:242
+#: templates/base.html:246
 msgid "Gestionar Comentarios"
 msgstr "Manage Comments"
 
-#: templates/base.html:245
+#: templates/base.html:249
 msgid "Log de Acciones"
 msgstr "Action Log"
 
-#: templates/base.html:253
+#: templates/base.html:257
 msgid "Secciones"
 msgstr "Sections"
 
-#: templates/base.html:259 templates/base.html:296
+#: templates/base.html:263 templates/base.html:294
 msgid "Idioma"
 msgstr "Language"
 
-#: templates/base.html:275
+#: templates/base.html:279
 #, python-format
 msgid "Foto de perfil de %(username)s"
 msgstr "Profile picture of %(username)s"
 
-#: templates/base.html:279
+#: templates/base.html:283
 msgid "Completar perfil"
 msgstr "Complete profile"
 
-#: templates/base.html:285
+#: templates/base.html:289
 msgid "Cerrar sesión"
 msgstr "Logout"
 
-#: templates/base.html:309 templates/login.html:3 templates/login.html:6
+#: templates/base.html:307
 msgid "Iniciar sesión"
 msgstr "Login"
 
-#: templates/base.html:310 templates/register.html:16
-msgid "Registrarse"
-msgstr "Sign Up"
-
-#: templates/base.html:323 templates/base.html:345 templates/base.html:369
+#: templates/base.html:320 templates/base.html:342 templates/base.html:366
 msgid "Cerrar"
 msgstr "Close"
 
-#: templates/base.html:335
+#: templates/base.html:332
 msgid "Año actual"
 msgstr "Current year"
 
-#: templates/base.html:335
+#: templates/base.html:332
 msgid "Conectando Pioneros."
 msgstr "Connecting Pioneers."
 
-#: templates/base.html:344
+#: templates/base.html:341
 msgid "Citar Publicación"
 msgstr "Quote Post"
 
-#: templates/base.html:350
+#: templates/base.html:347
 msgid "Añade un comentario (opcional):"
 msgstr "Add a comment (optional):"
 
-#: templates/base.html:351
+#: templates/base.html:348
 msgid "¿Qué estás pensando sobre esto?"
 msgstr "What are you thinking about this?"
 
-#: templates/base.html:356
+#: templates/base.html:353
 msgid "Compartir ahora"
 msgstr "Share now"
 
-#: templates/base.html:368
+#: templates/base.html:365
 msgid "Reportar Contenido"
 msgstr "Report Content"
 
-#: templates/base.html:376
+#: templates/base.html:373
 msgid ""
 "Gracias por ayudar a mantener segura la comunidad de PiVerse. Por favor, "
 "dinos por qué estás reportando este contenido."
@@ -1100,63 +742,63 @@ msgstr ""
 "Thank you for helping keep the PiVerse community safe. Please tell us why"
 " you are reporting this content."
 
-#: templates/base.html:379
+#: templates/base.html:376
 msgid "Motivo del reporte"
 msgstr "Reason for reporting"
 
-#: templates/base.html:381
+#: templates/base.html:378
 msgid "Elige un motivo..."
 msgstr "Choose a reason..."
 
-#: templates/base.html:382
+#: templates/base.html:379
 msgid "Spam o publicidad no deseada"
 msgstr "Spam or unwanted advertising"
 
-#: templates/base.html:383
+#: templates/base.html:380
 msgid "Lenguaje o símbolos que incitan al odio"
 msgstr "Hate speech or symbols"
 
-#: templates/base.html:384
+#: templates/base.html:381
 msgid "Acoso o bullying"
 msgstr "Harassment or bullying"
 
-#: templates/base.html:385
+#: templates/base.html:382
 msgid "Información falsa o engañosa"
 msgstr "False or misleading information"
 
-#: templates/base.html:386
+#: templates/base.html:383
 msgid "Suplantación de identidad"
 msgstr "Impersonation"
 
-#: templates/base.html:387
+#: templates/base.html:384
 msgid "Contenido explícito o inapropiado"
 msgstr "Explicit or inappropriate content"
 
-#: templates/base.html:388
+#: templates/base.html:385
 msgid "Otro motivo"
 msgstr "Other reason"
 
-#: templates/base.html:393
+#: templates/base.html:390
 msgid "Detalles adicionales (opcional)"
 msgstr "Additional details (optional)"
 
-#: templates/base.html:394
+#: templates/base.html:391
 msgid "Proporciona más información si es necesario."
 msgstr "Provide more information if necessary."
 
-#: templates/base.html:400
+#: templates/base.html:397
 msgid "Enviar Reporte"
 msgstr "Send Report"
 
-#: templates/base.html:457
+#: templates/base.html:454
 msgid "Enviando..."
 msgstr "Sending..."
 
-#: templates/base.html:486
+#: templates/base.html:483
 msgid "Error de conexión. Inténtalo de nuevo."
 msgstr "Connection error. Please try again."
 
-#: templates/base.html:598 templates/feed_contacts.html:169
+#: templates/base.html:595 templates/feed_contacts.html:169
 msgid "Respondiendo a"
 msgstr "Replying to"
 
@@ -1265,6 +907,11 @@ msgstr "New Post"
 msgid "¿Qué estás pensando, %(username)s?"
 msgstr "What's on your mind, %(username)s?"
 
+#: templates/feed.html:43 templates/index.html:33
+#: templates/view_section.html:53
+msgid "Pionero"
+msgstr "Pioneer"
+
 #: templates/feed.html:47 templates/view_section.html:57
 msgid "Añadir imagen (opcional)"
 msgstr "Add image (optional)"
@@ -1314,6 +961,18 @@ msgstr "Contacts Feed"
 msgid "Eliminar publicación"
 msgstr "Delete post"
 
+#: templates/feed_contacts.html:80 templates/ver_post.html:133
+msgid "No hay comentarios aún. ¡Sé el primero!"
+msgstr "No comments yet. Be the first!"
+
+#: templates/feed_contacts.html:121
+msgid "No hay comentarios aún."
+msgstr "No comments yet."
+
+#: templates/feed_contacts.html:123
+msgid "Escribe un comentario sobre la publicación original..."
+msgstr "Write a comment about the original post..."
+
 #: templates/feed_contacts.html:134
 msgid "Tus contactos aún no han publicado nada."
 msgstr "Your contacts haven't posted anything yet."
@@ -1343,46 +1002,46 @@ msgid "Explorar el Feed"
 msgstr "Explore Feed"
 
 #: templates/index.html:17
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
-"                    Por favor, %(profile_link_start)scompleta tu perfil "
+"                                Por favor, %(profile_link_start)scompleta tu perfil "
 "público%(profile_link_end)s para acceder al feed y todas las funciones.\n"
-"                    "
+"                                 "
 msgstr ""
 "\n"
-"                    Please, %(profile_link_start)scomplete your public "
+"                                Please, %(profile_link_start)scomplete your public "
 "profile%(profile_link_end)s to access the feed and all features.\n"
-"                "
+"                                 "
 
-#: templates/index.html:23
+#: templates/index.html:24
 msgid "Únete a PiVerse"
 msgstr "Join PiVerse"
 
-#: templates/index.html:24
+#: templates/index.html:25 templates/login.html:3
 msgid "Iniciar Sesión"
 msgstr "Login"
 
-#: templates/index.html:32
+#: templates/index.html:33
 #, python-format
 msgid "Hola de nuevo, <strong>%(username)s</strong>. ¿Listo para interactuar?"
 msgstr "Welcome back, <strong>%(username)s</strong>. Ready to interact?"
 
-#: templates/index.html:41
+#: templates/index.html:42
 msgid "Conecta"
 msgstr "Connect"
 
-#: templates/index.html:42
+#: templates/index.html:43
 msgid ""
 "Encuentra y establece lazos con otros pioneros de la red Pi de todo el "
 "mundo."
 msgstr "Find and connect with other Pi Network pioneers from around the world."
 
-#: templates/index.html:50
+#: templates/index.html:51
 msgid "Comparte"
 msgstr "Share"
 
-#: templates/index.html:51
+#: templates/index.html:52
 msgid ""
 "Publica tus ideas innovadoras, proyectos y las últimas noticias sobre Pi "
 "Network."
@@ -1390,30 +1049,45 @@ msgstr ""
 "Post your innovative ideas, projects, and the latest news about Pi "
 "Network."
 
-#: templates/index.html:59
+#: templates/index.html:60
 msgid "Crece"
 msgstr "Grow"
 
-#: templates/index.html:60
+#: templates/index.html:61
 msgid "Participa en discusiones, aprende y haz crecer el valor del ecosistema Pi."
 msgstr "Participate in discussions, learn, and grow the value of the Pi ecosystem."
 
-#: templates/login.html:9 templates/register.html:9
-msgid "Nombre de usuario:"
-msgstr "Username:"
+#: templates/login.html:12
+msgid "Accede a PiVerse"
+msgstr "Access PiVerse"
 
-#: templates/login.html:13 templates/register.html:13
-msgid "Contraseña:"
-msgstr "Password:"
+#: templates/login.html:13
+msgid "Usa tu cuenta de Pi Network para continuar."
+msgstr "Use your Pi Network account to continue."
 
-#: templates/login.html:16
-msgid "Entrar"
-msgstr "Login"
+#: templates/login.html:19
+msgid "Iniciar Sesión con Pi"
+msgstr "Login with Pi"
 
-#: templates/login.html:18
-#, python-format
-msgid "¿No tienes cuenta? <a href=\"%(register_url)s\">Regístrate aquí</a>"
-msgstr "Don't have an account? <a href=\"%(register_url)s\">Sign up here</a>"
+#: templates/login.html:43
+msgid "Esperando autorización de Pi..."
+msgstr "Waiting for Pi authorization..."
+
+#: templates/login.html:51
+msgid "Verificando con el servidor..."
+msgstr "Verifying with the server..."
+
+#: templates/login.html:63
+msgid "¡Éxito! Redirigiendo..."
+"Success! Redirecting..."
+
+#: templates/login.html:73
+msgid "Error de conexión con el servidor."
+msgstr "Server connection error."
+
+#: templates/login.html:81
+msgid "La autorización con Pi fue cancelada o falló."
+"Pi authorization was canceled or failed."
 
 #: templates/mensajes.html:3
 msgid "Mis Mensajes"
@@ -1483,6 +1157,18 @@ msgstr "Save changes"
 #: templates/register.html:3 templates/register.html:6
 msgid "Registro"
 msgstr "Registration"
+
+#: templates/register.html:9
+msgid "Nombre de usuario:"
+msgstr "Username:"
+
+#: templates/register.html:13
+msgid "Contraseña:"
+msgstr "Password:"
+
+#: templates/register.html:16
+msgid "Registrarse"
+msgstr "Sign Up"
 
 #: templates/register.html:18
 #, python-format
@@ -2346,102 +2032,397 @@ msgid_plural "{len_type} values are required, but {len_value} were given."
 msgstr[0] "{len_type} values are required, but {len_value} was given."
 msgstr[1] "{len_type} values are required, but {len_value} were given."
 
-#: templates/_post_card.html:15 templates/_post_card.html:104
-#: templates/ver_post.html:39 templates/view_section.html:101
-msgid "KYC (Conoce a tu Cliente)"
-msgstr "KYC (Know Your Customer)"
+#~ msgid "publicación"
+#~ msgstr "post"
 
-#: templates/_post_card.html:15 templates/_post_card.html:104
-#: templates/ver_post.html:39 templates/view_section.html:101
-msgid "Círculo de Seguridad"
-msgstr "Security Circle"
+#~ msgid "comentario"
+#~ msgstr "comment"
 
-#: templates/_post_card.html:15 templates/_post_card.html:104
-#: templates/ver_post.html:39 templates/view_section.html:101
-msgid "Migraciones a Mainnet"
-msgstr "Mainnet Migrations"
+#~ msgid "Idioma no soportado."
+#~ msgstr "Unsupported language."
 
-#: templates/_post_card.html:15 templates/_post_card.html:104
-#: templates/ver_post.html:39 templates/view_section.html:101
-msgid "Nodos Pi"
-msgstr "Pi Nodes"
+#~ msgid "El nombre de usuario y la contraseña son obligatorios."
+#~ msgstr "Username and password are required."
 
-#: templates/_post_card.html:15 templates/_post_card.html:104
-#: templates/ver_post.html:39 templates/view_section.html:101
-msgid "Noticias de Pi Network"
-msgstr "Pi Network News"
+#~ msgid ""
+#~ "¡Registro exitoso! Ahora puedes iniciar "
+#~ "sesión y completar tu perfil público."
+#~ msgstr ""
+#~ "Registration successful! You can now log"
+#~ " in and complete your public profile."
 
-#: templates/_post_card.html:15 templates/_post_card.html:104
-#: templates/ver_post.html:39 templates/view_section.html:101
-msgid "Apps del Ecosistema Pi"
-msgstr "Pi Ecosystem Apps"
+#~ msgid "Ese nombre de usuario para login ya existe. Por favor, elige otro."
+#~ msgstr "That login username already exists. Please choose another one."
 
-#: templates/_post_card.html:15 templates/_post_card.html:104
-#: templates/ver_post.html:39 templates/view_section.html:101
-msgid "Comercio y Marketplace Pi"
-msgstr "Pi Commerce & Marketplace"
+#~ msgid "No se especificó un motivo."
+#~ msgstr "No reason was specified."
 
-#: templates/_post_card.html:15 templates/_post_card.html:104
-#: templates/ver_post.html:39 templates/view_section.html:101
-msgid "Ayuda y Soporte Técnico"
-msgstr "Help & Technical Support"
+#~ msgid "Tu cuenta está suspendida hasta el %(date)s. Motivo: \"%(reason)s\""
+#~ msgstr "Your account is suspended until %(date)s. Reason: \"%(reason)s\""
 
-#: templates/_post_card.html:15 templates/_post_card.html:104
-#: templates/ver_post.html:39 templates/view_section.html:101
-msgid "Debate General Pi"
-msgstr "General Pi Discussion"
+#~ msgid "Inicio de sesión exitoso."
+#~ msgstr "Login successful."
 
-#: templates/_post_card.html:15 templates/_post_card.html:104
-#: templates/ver_post.html:39 templates/view_section.html:101
-msgid "PiVerse: Ideas y Sugerencias"
-msgstr "PiVerse: Ideas & Suggestions"
+#~ msgid "Credenciales inválidas. Inténtalo de nuevo."
+#~ msgstr "Invalid credentials. Try again."
 
-#: templates/sections_list.html:20
-#, python-format
-msgid "Icono de %(section_name)s"
-msgstr "Icon for %(section_name)s"
+#~ msgid ""
+#~ "Tipo de archivo de imagen no "
+#~ "permitido. Permitidos: png, jpg, jpeg, "
+#~ "gif."
+#~ msgstr "Image file type not allowed. Allowed: png, jpg, jpeg, gif."
 
-#: templates/sections_list.html:31
-msgid "Discusiones sobre el proceso KYC de Pi Network."
-msgstr "Discussions about the Pi Network KYC process."
+#~ msgid "Debes iniciar sesión para eliminar publicaciones."
+#~ msgstr "You must be logged in to delete posts."
 
-#: templates/sections_list.html:31
-msgid "Todo sobre cómo construir y mantener tu círculo de seguridad."
-msgstr "All about how to build and maintain your security circle."
+#~ msgid "Debes iniciar sesión para eliminar comentarios."
+#~ msgstr "You must be logged in to delete comments."
 
-#: templates/sections_list.html:31
-msgid "Información y experiencias sobre la migración de Pi a la Mainnet."
-msgstr "Information and experiences about migrating Pi to the Mainnet."
+#~ msgid "Debes iniciar sesión para compartir publicaciones."
+#~ msgstr "You must be logged in to share posts."
 
-#: templates/sections_list.html:31
-msgid "Configuración, mantenimiento y discusión sobre los Nodos de Pi."
-msgstr "Setup, maintenance, and discussion about Pi Nodes."
+#~ msgid "Publicación citada correctamente."
+#~ msgstr "Post quoted successfully."
 
-#: templates/sections_list.html:31
-msgid "Últimas noticias y anuncios oficiales de Pi Network."
-msgstr "Latest news and official announcements from Pi Network."
+#~ msgid "Debes iniciar sesión para bloquear usuarios."
+#~ msgstr "You must be logged in to block users."
 
-#: templates/sections_list.html:31
-msgid "Descubre y discute aplicaciones y utilidades construidas en la red Pi."
-msgstr "Discover and discuss applications and utilities built on the Pi network."
+#~ msgid ""
+#~ "Usuario bloqueado correctamente. Ya no "
+#~ "verás sus publicaciones ni podrás "
+#~ "interactuar con él/ella."
+#~ msgstr ""
+#~ "User blocked successfully. You will no"
+#~ " longer see their posts or be "
+#~ "able to interact with them."
 
-#: templates/sections_list.html:31
-msgid "Espacio para intercambios, y discusión sobre bienes y servicios usando Pi."
-msgstr "Space for exchanges, and discussion about goods and services using Pi."
+#~ msgid "Debes iniciar sesión para desbloquear usuarios."
+#~ msgstr "You must be logged in to unblock users."
 
-#: templates/sections_list.html:31
-msgid "¿Necesitas ayuda con la app de Pi, wallet, o tienes dudas técnicas?"
-msgstr "Need help with the Pi app, wallet, or have technical questions?"
+#~ msgid "Ha ocurrido un error al intentar desbloquear al usuario: %(error)s"
+#~ msgstr "An error occurred while trying to unblock the user: %(error)s"
 
-#: templates/sections_list.html:31
-msgid "Para temas generales sobre Pi Network que no encajan en otras secciones."
-msgstr "For general topics about Pi Network that don't fit in other sections."
+#~ msgid "Por favor, completa tu perfil para ver las publicaciones."
+#~ msgstr "Please complete your profile to see the posts."
 
-#: templates/sections_list.html:31
-msgid "Feedback y sugerencias para mejorar esta plataforma, PiVerse."
-msgstr "Feedback and suggestions to improve this platform, PiVerse."
+#~ msgid "No puedes ver esta publicación debido a la configuración de bloqueo."
+#~ msgstr "You cannot view this post due to block settings."
 
-#: templates/view_section.html:4
-#, python-format
-msgid "Sección: %(section_name)s"
-msgstr "Section: %(section_name)s"
+#~ msgid "Por favor, completa tu perfil para ver tus contactos."
+#~ msgstr "Please complete your profile to see your contacts."
+
+#~ msgid "Debes iniciar sesión para ver tus mensajes."
+#~ msgstr "You must be logged in to see your messages."
+
+#~ msgid "Por favor, completa tu perfil para usar la mensajería."
+#~ msgstr "Please complete your profile to use messaging."
+
+#~ msgid "No hay mensajes todavía."
+#~ msgstr "No messages yet."
+
+#~ msgid "Tú: %(mensaje)s"
+#~ msgstr "You: %(mensaje)s"
+
+#~ msgid "Debes iniciar sesión para enviar mensajes."
+#~ msgstr "You must be logged in to send messages."
+
+#~ msgid "No puedes iniciar una conversación contigo mismo."
+#~ msgstr "You cannot start a conversation with yourself."
+
+#~ msgid "Solo puedes enviar mensajes a tus contactos."
+#~ msgstr "You can only send messages to your contacts."
+
+#~ msgid "No puedes ver esta conversación debido a la configuración de bloqueo."
+#~ msgstr "You cannot view this conversation due to block settings."
+
+#~ msgid "Autenticación requerida"
+#~ msgstr "Authentication required"
+
+#~ msgid "Notificación no encontrada, ya marcada como leída o sin permiso."
+#~ msgstr "Notification not found, already marked as read, or permission denied."
+
+#~ msgid "Faltan datos: ID de conversación y cuerpo del mensaje son requeridos."
+#~ msgstr "Missing data: Conversation ID and message body are required."
+
+#~ msgid "No tienes permiso para enviar mensajes en esta conversación."
+#~ msgstr "You do not have permission to send messages in this conversation."
+
+#~ msgid "Por favor, completa tu perfil para ver las secciones."
+#~ msgstr "Please complete your profile to see the sections."
+
+#~ msgid "Debes completar tu perfil para ver el contenido de las secciones."
+#~ msgstr "You must complete your profile to view the content of the sections."
+
+#~ msgid "Sección no encontrada."
+#~ msgstr "Section not found."
+
+#~ msgid "Debes iniciar sesión para realizar búsquedas."
+#~ msgstr "You must be logged in to search."
+
+#~ msgid "Por favor, completa tu perfil para usar la búsqueda."
+#~ msgstr "Please complete your profile to use search."
+
+#~ msgid "No puedes cambiar tu propio rol desde esta interfaz."
+#~ msgstr "You cannot change your own role from this interface."
+
+#~ msgid "El usuario que intentas modificar no existe."
+#~ msgstr "The user you are trying to modify does not exist."
+
+#~ msgid "No tienes permiso para modificar a este usuario."
+#~ msgstr "You do not have permission to modify this user."
+
+#~ msgid "El rol del usuario ha sido actualizado correctamente."
+#~ msgstr "User role has been updated successfully."
+
+#~ msgid "Error al actualizar el rol: %(error)s"
+#~ msgstr "Error updating role: %(error)s"
+
+#~ msgid "Rol no válido o sin permiso para asignarlo."
+#~ msgstr "Invalid role or no permission to assign it."
+
+#~ msgid "La publicación no existe."
+#~ msgstr "The post does not exist."
+
+#~ msgid "El contenido de la publicación no puede estar vacío."
+#~ msgstr "The post content cannot be empty."
+
+#~ msgid "Publicación actualizada correctamente."
+#~ msgstr "Post updated successfully."
+
+#~ msgid "Error al actualizar la publicación: %(error)s"
+#~ msgstr "Error updating post: %(error)s"
+
+#~ msgid "Debes completar tu perfil para ver el feed de tus contactos."
+#~ msgstr "You must complete your profile to see your contacts' feed."
+
+#~ msgid "Reporte desestimado y archivado."
+#~ msgstr "Report dismissed and archived."
+
+#~ msgid ""
+#~ "Reporte marcado para acción. Por favor,"
+#~ " elimina el contenido manualmente si "
+#~ "es necesario."
+#~ msgstr ""
+#~ "Report marked for action. Please delete"
+#~ " the content manually if necessary."
+
+#~ msgid "El mensaje personalizado no puede estar vacío."
+#~ msgstr "The custom message cannot be empty."
+
+#~ msgid "Motivo predefinido no válido o mensaje no proporcionado."
+#~ msgstr "Invalid predefined reason or message not provided."
+
+#~ msgid "Reporte no encontrado o ya resuelto."
+#~ msgstr "Report not found or already resolved."
+
+#~ msgid ""
+#~ "No se pudo encontrar el contenido "
+#~ "original (puede haber sido eliminado). "
+#~ "El reporte ha sido archivado."
+#~ msgstr ""
+#~ "Could not find the original content "
+#~ "(it may have been deleted). The "
+#~ "report has been archived."
+
+#~ msgid ""
+#~ "Tu reporte sobre el contenido publicado"
+#~ " el %(date)s ha sido revisado y "
+#~ "desestimado. Motivo: \"%(reason)s\"."
+#~ msgstr ""
+#~ "Your report about the content published"
+#~ " on %(date)s has been reviewed and"
+#~ " dismissed. Reason: \"%(reason)s\"."
+
+#~ msgid "Reporte desestimado. Se ha notificado al usuario que reportó."
+#~ msgstr "Report dismissed. The reporting user has been notified."
+
+#~ msgid ""
+#~ "Se ha tomado una acción sobre tu"
+#~ " contenido publicado el %(date)s. Motivo:"
+#~ " \"%(reason)s\"."
+#~ msgstr ""
+#~ "Action has been taken on your "
+#~ "content published on %(date)s. Reason: "
+#~ "\"%(reason)s\"."
+
+#~ msgid ""
+#~ "Gracias por tu ayuda. Tu reporte "
+#~ "sobre el contenido publicado el %(date)s"
+#~ " ha sido aprobado y se han "
+#~ "tomado las medidas correspondientes."
+#~ msgstr ""
+#~ "Thank you for your help. Your "
+#~ "report on the content published on "
+#~ "%(date)s has been approved and "
+#~ "corresponding actions have been taken."
+
+#~ msgid "Acción tomada. Se ha notificado a ambas partes."
+#~ msgstr "Action taken. Both parties have been notified."
+
+#~ msgid "[Cita eliminada por un moderador]"
+#~ msgstr "[Quote deleted by a moderator]"
+
+#~ msgid "El contenido ha sido ocultado/eliminado."
+#~ msgstr "The content has been hidden/deleted."
+
+#~ msgid ""
+#~ "Ya has enviado una apelación para "
+#~ "esta decisión. Está pendiente de "
+#~ "revisión."
+#~ msgstr ""
+#~ "You have already submitted an appeal "
+#~ "for this decision. It is pending "
+#~ "review."
+
+#~ msgid "Reporte no encontrado."
+#~ msgstr "Report not found."
+
+#~ msgid ""
+#~ "No tienes permiso para apelar esta "
+#~ "decisión o la apelación no es "
+#~ "aplicable en este estado."
+#~ msgstr ""
+#~ "You do not have permission to "
+#~ "appeal this decision or the appeal "
+#~ "is not applicable in this state."
+
+#~ msgid "El texto de la apelación no puede estar vacío."
+#~ msgstr "The appeal text cannot be empty."
+
+#~ msgid ""
+#~ "Tu apelación ha sido enviada "
+#~ "correctamente. Será revisada por el "
+#~ "equipo de administración."
+#~ msgstr ""
+#~ "Your appeal has been sent successfully."
+#~ " It will be reviewed by the "
+#~ "administration team."
+
+#~ msgid "Apelación no encontrada o ya resuelta."
+#~ msgstr "Appeal not found or already resolved."
+
+#~ msgid "Apelación aprobada. La acción original ha sido revertida."
+#~ msgstr "Appeal approved. The original action has been reverted."
+
+#~ msgid "Apelación rechazada. La decisión original se mantiene."
+#~ msgstr "Appeal denied. The original decision is upheld."
+
+#~ msgid "El motivo de la sanción es obligatorio."
+#~ msgstr "The reason for the sanction is mandatory."
+
+#~ msgid "No te puedes sancionar a ti mismo."
+#~ msgstr "You cannot sanction yourself."
+
+#~ msgid ""
+#~ "Se han levantado todas las sanciones "
+#~ "de tu cuenta. Vuelves a tener "
+#~ "acceso completo."
+#~ msgstr ""
+#~ "All sanctions on your account have "
+#~ "been lifted. You have full access "
+#~ "again."
+
+#~ msgid "Sanciones levantadas correctamente."
+#~ msgstr "Sanctions lifted successfully."
+
+#~ msgid ""
+#~ "Tu cuenta ha sido suspendida de "
+#~ "forma permanente. Motivo: \"%(reason)s\""
+#~ msgstr "Your account has been permanently suspended. Reason: \"%(reason)s\""
+
+#~ msgid "Usuario suspendido permanentemente."
+#~ msgstr "User permanently suspended."
+
+#~ msgid ""
+#~ "Tu cuenta ha sido silenciada hasta "
+#~ "el %(date)s (solo podrás leer "
+#~ "contenido). Motivo: \"%(reason)s\""
+#~ msgstr ""
+#~ "Your account has been muted until "
+#~ "%(date)s (you can only read content)."
+#~ " Reason: \"%(reason)s\""
+
+#~ msgid "Usuario silenciado correctamente."
+#~ msgstr "User muted successfully."
+
+#~ msgid "Tu cuenta ha sido suspendida hasta el %(date)s. Motivo: \"%(reason)s\""
+#~ msgstr "Your account has been suspended until %(date)s. Reason: \"%(reason)s\""
+
+#~ msgid "Usuario suspendido correctamente."
+#~ msgstr "User suspended successfully."
+
+#~ msgid "Entrar"
+#~ msgstr "Login"
+
+#~ msgid "¿No tienes cuenta? <a href=\"%(register_url)s\">Regístrate aquí</a>"
+#~ msgstr "Don't have an account? <a href=\"%(register_url)s\">Sign up here</a>"
+
+#~ msgid "KYC (Conoce a tu Cliente)"
+#~ msgstr "KYC (Know Your Customer)"
+
+#~ msgid "Círculo de Seguridad"
+#~ msgstr "Security Circle"
+
+#~ msgid "Migraciones a Mainnet"
+#~ msgstr "Mainnet Migrations"
+
+#~ msgid "Nodos Pi"
+#~ msgstr "Pi Nodes"
+
+#~ msgid "Noticias de Pi Network"
+#~ msgstr "Pi Network News"
+
+#~ msgid "Apps del Ecosistema Pi"
+#~ msgstr "Pi Ecosystem Apps"
+
+#~ msgid "Comercio y Marketplace Pi"
+#~ msgstr "Pi Commerce & Marketplace"
+
+#~ msgid "Ayuda y Soporte Técnico"
+#~ msgstr "Help & Technical Support"
+
+#~ msgid "Debate General Pi"
+#~ msgstr "General Pi Discussion"
+
+#~ msgid "PiVerse: Ideas y Sugerencias"
+#~ msgstr "PiVerse: Ideas & Suggestions"
+
+#~ msgid "Discusiones sobre el proceso KYC de Pi Network."
+#~ msgstr "Discussions about the Pi Network KYC process."
+
+#~ msgid "Todo sobre cómo construir y mantener tu círculo de seguridad."
+#~ msgstr "All about how to build and maintain your security circle."
+
+#~ msgid "Información y experiencias sobre la migración de Pi a la Mainnet."
+#~ msgstr "Information and experiences about migrating Pi to the Mainnet."
+
+#~ msgid "Configuración, mantenimiento y discusión sobre los Nodos de Pi."
+#~ msgstr "Setup, maintenance, and discussion about Pi Nodes."
+
+#~ msgid "Últimas noticias y anuncios oficiales de Pi Network."
+#~ msgstr "Latest news and official announcements from Pi Network."
+
+#~ msgid "Descubre y discute aplicaciones y utilidades construidas en la red Pi."
+#~ msgstr ""
+#~ "Discover and discuss applications and "
+#~ "utilities built on the Pi network."
+
+#~ msgid ""
+#~ "Espacio para intercambios, y discusión "
+#~ "sobre bienes y servicios usando Pi."
+#~ msgstr "Space for exchanges, and discussion about goods and services using Pi."
+
+#~ msgid "¿Necesitas ayuda con la app de Pi, wallet, o tienes dudas técnicas?"
+#~ msgstr "Need help with the Pi app, wallet, or have technical questions?"
+
+#~ msgid ""
+#~ "Para temas generales sobre Pi Network"
+#~ " que no encajan en otras secciones."
+#~ msgstr "For general topics about Pi Network that don't fit in other sections."
+
+#~ msgid "Feedback y sugerencias para mejorar esta plataforma, PiVerse."
+#~ msgstr "Feedback and suggestions to improve this platform, PiVerse."
+
+#~ msgid "Sección: %(section_name)s"
+#~ msgstr "Section: %(section_name)s"
+

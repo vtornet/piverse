@@ -327,9 +327,14 @@
     </div>
 </div> 
 
-<footer class="footer-main text-center">
+<footer class="footer-main text-center py-3">
     <div class="container">
-        <small>&copy; {% if now %}{{ now().year }}{% else %}{{ _('Año actual') }}{% endif %} PiVerse - {{ _('Conectando Pioneros.') }}</small>
+        <small class="text-muted">&copy; {{ now().year if now else '2025' }} PiVerse - {{ _('Conectando Pioneros.') }}</small>
+        <div class="mt-2">
+            <a href="{{ url_for('privacy_policy') }}" class="text-decoration-none text-muted small mx-2">{{ _('Política de Privacidad') }}</a>
+            <span class="text-muted">|</span>
+            <a href="{{ url_for('terms_of_service') }}" class="text-decoration-none text-muted small mx-2">{{ _('Términos de Servicio') }}</a>
+        </div>
     </div>
 </footer>
 

@@ -1600,6 +1600,16 @@ def stream_notifications():
         pass
     return Response(event_stream(), mimetype='text/event-stream')
 
+@app.route('/privacy')
+def privacy_policy():
+    """Renderiza la página de la Política de Privacidad."""
+    return render_template('privacy_policy.html')
+
+@app.route('/terms')
+def terms_of_service():
+    """Renderiza la página de los Términos de Servicio."""
+    return render_template('terms_of_service.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
