@@ -1470,6 +1470,44 @@ def init_db_command():
 def regenerate_slugs_command():
     """Regenera los slugs faltantes para los perfiles."""
     regenerar_slugs_si_faltan()
+    
+@app.route('/api/report/content', methods=['POST'])
+@login_required_api
+def report_content():
+    """
+    Gestiona la recepción de un nuevo reporte de contenido desde el frontend.
+    """
+    reporter_user_id = session['user_id']
+    data = request.get_json()
+
+    content_type = data.get('content_type')
+    content_id = data.get('content_id')
+    reason = data.get('reason')
+    details = data.get('details', '').strip()
+
+    if not all([content_type, content_id, reason]):
+        return jsonify(success=False, error=_('Faltan datos en el reporte. Tipo, ID y motivo son obligatorios.')), 400
+
+    if content_type not in ['post', 'comment', 'shared_post']:
+        return jsonify(success=False, error=_('Tipo de contenido no válido.')), 400
+
+    try:
+        new_report = Report(
+            reporter_user_id=reporter_user_id,
+            content_type=content_type,
+            content_id=content_id,
+            reason=reason,
+            details=details
+        )
+        db.session.add(new_report)
+        db.session.commit()
+
+        return jsonify(success=True, message=_('Reporte enviado correctamente. Gracias por ayudarnos a mantener la comunidad segura.'))
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error de base de datos al guardar el reporte: {e}")
+        return jsonify(success=False, error=_('Ocurrió un error en el servidor al procesar tu reporte.')), 500
 
 
 if __name__ == '__main__':
