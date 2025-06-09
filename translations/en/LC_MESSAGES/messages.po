@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PiVerse 1.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-09 20:45+0200\n"
+"POT-Creation-Date: 2025-06-09 23:10+0200\n"
 "PO-Revision-Date: 2025-06-08 14:00+0200\n"
 "Last-Translator: Gemini Assistant\n"
 "Language: en\n"
@@ -1263,10 +1263,13 @@ msgid "9. Contacto"
 msgstr "Contacts"
 
 #: templates/privacy_policy.html:43
+#, fuzzy
 msgid ""
 "Si tienes alguna pregunta sobre esta Política de Privacidad, contáctanos "
 "en: support@piverse.app"
 msgstr ""
+"If you have any questions about this Privacy Policy, please contact us "
+"at: support@piverse.app"
 
 #: templates/profile.html:3
 msgid "Mi perfil"
@@ -1361,7 +1364,7 @@ msgstr "No sections defined yet."
 
 #: templates/terms_of_service.html:13
 msgid "1. Aceptación de los Términos"
-msgstr ""
+msgstr "1. Acceptance of Terms"
 
 #: templates/terms_of_service.html:14
 msgid ""
@@ -1369,21 +1372,26 @@ msgid ""
 "(\"Términos\") rigen tu acceso y uso de nuestra plataforma. Al acceder o "
 "utilizar el Servicio, aceptas estar sujeto a estos Términos."
 msgstr ""
+"Welcome to PiVerse (the \"Service\"). These Terms of Service (\"Terms\") "
+"govern your access to and use of our platform. By accessing or using the "
+"Service, you agree to be bound by these Terms."
 
 #: templates/terms_of_service.html:16
 msgid "2. Cuentas de Usuario y Elegibilidad"
-msgstr ""
+msgstr "2. User Accounts and Eligibility"
 
 #: templates/terms_of_service.html:17
 msgid ""
 "Debes tener una cuenta de Pi Network y ser mayor de 16 años para usar "
 "PiVerse. Eres responsable de la seguridad de tu cuenta."
 msgstr ""
+"You must have a valid Pi Network account and be over 16 years old to use "
+"PiVerse. You are responsible for the security of your account."
 
 #: templates/terms_of_service.html:19
 #, fuzzy
 msgid "3. Contenido del Usuario"
-msgstr "Username:"
+msgstr "3. User Content"
 
 #: templates/terms_of_service.html:20
 msgid ""
@@ -1392,21 +1400,27 @@ msgid ""
 "dentro de la plataforma PiVerse. No puedes publicar contenido ilegal, que"
 " incite al odio, spam o que infrinja los derechos de otros."
 msgstr ""
+"You retain ownership of all content you post. However, by posting it, you"
+" grant us a license to display and distribute it within the PiVerse "
+"platform. You may not post illegal content, hate speech, spam, or content"
+" that infringes on the rights of others."
 
 #: templates/terms_of_service.html:22
 #, fuzzy
 msgid "4. Conducta del Usuario"
-msgstr "User List"
+msgstr "4. User Conduct"
 
 #: templates/terms_of_service.html:23
 msgid ""
 "Te comprometes a no acosar a otros usuarios, no suplantar identidades ni "
 "intentar dañar la integridad de la plataforma."
 msgstr ""
+"You agree not to harass other users, impersonate others, or attempt to "
+"harm the integrity of the platform."
 
 #: templates/terms_of_service.html:25
 msgid "5. Moderación y Aplicación de Normas"
-msgstr ""
+msgstr "5. Moderation and Enforcement"
 
 #: templates/terms_of_service.html:26
 msgid ""
@@ -1414,10 +1428,13 @@ msgid ""
 "la suspensión de cuentas) a quienes violen estos Términos, ofreciendo un "
 "proceso de apelación."
 msgstr ""
+"We reserve the right to moderate content and apply sanctions (such as "
+"account suspension) to those who violate these Terms, while offering an "
+"appeals process."
 
 #: templates/terms_of_service.html:28
 msgid "6. Propinas (Tipping) y Transacciones P2P"
-msgstr ""
+msgstr "6. Tipping and P2P Transactions"
 
 #: templates/terms_of_service.html:29
 msgid ""
@@ -1426,10 +1443,14 @@ msgid ""
 "transacción, no custodiamos fondos y no somos responsables de disputas, "
 "pérdidas o implicaciones fiscales entre usuarios."
 msgstr ""
+"PiVerse acts solely as a technical facilitator for Peer-to-Peer (P2P) "
+"transactions with the Pi currency. We are not a party to any transaction,"
+" do not hold funds, and are not responsible for disputes, losses, or tax "
+"implications between users."
 
 #: templates/terms_of_service.html:31
 msgid "7. Limitación de Responsabilidad"
-msgstr ""
+msgstr "7. Limitation of Liability"
 
 #: templates/terms_of_service.html:32
 msgid ""
@@ -1437,35 +1458,43 @@ msgid ""
 "responsabilidad por cualquier daño derivado del uso del servicio es "
 "limitada en la máxima medida permitida por la ley."
 msgstr ""
+"The Service is provided \"as is\", without warranties of any kind. Our "
+"liability for any damages arising from your use of the service is limited"
+" to the fullest extent permitted by law."
 
 #: templates/terms_of_service.html:34
 msgid "8. Terminación"
-msgstr ""
+msgstr "8. Termination"
 
 #: templates/terms_of_service.html:35
 msgid ""
 "Podemos suspender o cancelar tu cuenta si violas estos Términos. Puedes "
 "solicitar la eliminación de tu cuenta contactándonos."
 msgstr ""
+"We may suspend or terminate your account if you violate these Terms. You "
+"may request the deletion of your account by contacting us."
 
 #: templates/terms_of_service.html:37
 msgid "9. Ley Aplicable"
-msgstr ""
+msgstr "9. Governing Law"
 
 #: templates/terms_of_service.html:38
 msgid "Estos Términos se regirán por las leyes de España."
-msgstr ""
+msgstr "These Terms shall be governed by the laws of Spain."
 
 #: templates/terms_of_service.html:40
 #, fuzzy
 msgid "10. Contacto"
-msgstr "Contacts"
+msgstr "Contact"
 
 #: templates/terms_of_service.html:41
+#, fuzzy
 msgid ""
 "Si tienes alguna pregunta sobre estos Términos, contáctanos en: "
 "support@piverse.app"
 msgstr ""
+"If you have any questions about this Privacy Policy, please contact us "
+"at: support@piverse.app"
 
 #: templates/ver_perfil.html:3
 #, python-format
@@ -2680,5 +2709,17 @@ msgstr[1] "{len_type} values are required, but {len_value} were given."
 #~ msgstr "Current year"
 
 #~ msgid "¡Éxito! Redirigiendo...Success! Redirecting..."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Nos reservamos el derecho de moderar "
+#~ "contenido y aplicar sanciones (como la"
+#~ " suspensión de cuentas) a quienes "
+#~ "violen estos Términos, ofreciendo un "
+#~ "proceso de apelación.We reserve the "
+#~ "right to moderate content and apply "
+#~ "sanctions (such as account suspension) "
+#~ "to those who violate these Terms, "
+#~ "while offering an appeals process."
 #~ msgstr ""
 
