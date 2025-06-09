@@ -1,110 +1,112 @@
-{# templates/_macros.html #}
+{# templates/_macros.html (CORREGIDO) #}
 
 {# ================================================================= #}
-{# =         MACRO PARA RENDERIZAR UN HILO DE COMENTARIOS          = #}
+{# =         MACRO PARA RENDERIZAR UN HILO DE COMENTARIOS          = #}
 {# ================================================================= #}
 {% macro render_comment_thread(comments_list, post_id_for_reply_form) %}
-    {% for comentario in comments_list %}
-        <div class="comment-container mb-3" id="comment-{{ comentario.id }}">
-            <div class="d-flex">
-                {% if comentario.photo %}
-                    <img src="{{ url_for('static', filename='uploads/' + comentario.photo) }}" class="rounded-circle me-2 mt-1" style="width: 30px; height: 30px; object-fit: cover;" alt="{{ _('Foto de %(username)s', username=comentario.username) }}">
-                {% else %}
-                    <div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center me-2 mt-1" style="width: 30px; height: 30px;">
-                        <i class="bi bi-person-fill text-white fs-6"></i>
-                    </div>
-                {% endif %}
-                <div class="flex-grow-1">
-                    <div class="bg-light p-2 rounded">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <strong><a href="{{ url_for('ver_perfil', slug_perfil=comentario.slug) }}" class="text-decoration-none text-dark">@{{ comentario.username }}</a></strong>
-                            </div>
-                            
-                            {# --- INICIO: MENÚ DE ACCIONES (ELIMINAR Y REPORTAR) PARA COMENTARIOS --- #}
-                            <div class="dropdown ms-2">
-                                <button class="btn btn-sm btn-light py-0 px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="{{ _('Más opciones') }}">
-                                    <i class="bi bi-three-dots-vertical"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <a class="dropdown-item report-trigger-btn" href="#" data-bs-toggle="modal" data-bs-target="#reportModal" data-content-type="comment" data-content-id="{{ comentario.id }}">
-                                            <i class="bi bi-flag-fill me-2"></i>{{ _('Reportar Comentario') }}
-                                        </a>
-                                    </li>
-                                    {% if session.user_id == comentario.user_id or current_user_role in ['moderator', 'coordinator', 'admin'] %}
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <form method="POST" action="{{ url_for('delete_comment', comment_id=comentario.id) }}" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar este comentario y todas sus respuestas?') }}');" class="d-inline">
-                                            <button type="submit" class="dropdown-item text-danger">
-                                                <i class="bi bi-trash-fill me-2"></i>{{ _('Eliminar Comentario') }}
-                                            </button>
-                                        </form>
-                                    </li>
-                                    {% endif %}
-                                </ul>
-                            </div>
-                            {# --- FIN: MENÚ DE ACCIONES --- #}
+    {% for comentario in comments_list %}
+    {% if comentario.is_visible and comentario.author %} {# Añadimos comprobación para evitar errores si el autor fue eliminado #}
+        <div class="comment-container mb-3" id="comment-{{ comentario.id }}">
+            <div class="d-flex">
+                {% if comentario.author.profile.photo %}
+                    <img src="{{ url_for('static', filename='uploads/' + comentario.author.profile.photo) }}" class="rounded-circle me-2 mt-1" style="width: 30px; height: 30px; object-fit: cover;" alt="{{ _('Foto de %(username)s', username=comentario.author.profile.username) }}">
+                {% else %}
+                    <div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center me-2 mt-1" style="width: 30px; height: 30px;">
+                        <i class="bi bi-person-fill text-white fs-6"></i>
+                    </div>
+                {% endif %}
+                <div class="flex-grow-1">
+                    <div class="bg-light p-2 rounded">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <strong><a href="{{ url_for('ver_perfil', slug_perfil=comentario.author.profile.slug) }}" class="text-decoration-none text-dark">@{{ comentario.author.profile.username or comentario.author.username }}</a></strong>
+                            </div>
+                            
+                            <div class="dropdown ms-2">
+                                <button class="btn btn-sm btn-light py-0 px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="{{ _('Más opciones') }}">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item report-trigger-btn" href="#" data-bs-toggle="modal" data-bs-target="#reportModal" data-content-type="comment" data-content-id="{{ comentario.id }}">
+                                            <i class="bi bi-flag-fill me-2"></i>{{ _('Reportar Comentario') }}
+                                        </a>
+                                    </li>
+                                    {% if session.user_id == comentario.user_id or current_user_role in ['moderator', 'coordinator', 'admin'] %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form method="POST" action="{{ url_for('delete_comment', comment_id=comentario.id) }}" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar este comentario y todas sus respuestas?') }}');" class="d-inline">
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <i class="bi bi-trash-fill me-2"></i>{{ _('Eliminar Comentario') }}
+                                            </button>
+                                        </form>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                        <span style="white-space: pre-wrap;">{{ comentario.content | safe }}</span>
+                    </div>
 
-                        </div>
-                        <span style="white-space: pre-wrap;">{{ comentario.content | safe }}</span>
-                    </div>
+                    <div class="mt-1 d-flex align-items-center">
+                        {# --- LÓGICA PARA REACCIONES --- #}
+                        {% set u_reaction = (comentario.reactions|selectattr('user_id', 'equalto', session.user_id)|first) %}
+                        <div class="reactions-container d-inline-block position-relative me-2">
+                            <button class="btn btn-sm {% if u_reaction %}btn-primary{% else %}btn-outline-primary{% endif %} reaction-trigger-btn">
+                                {% if u_reaction and u_reaction.reaction_type == 'love' %} ❤️
+                                {% elif u_reaction and u_reaction.reaction_type == 'haha' %} 😂
+                                {% elif u_reaction and u_reaction.reaction_type == 'wow' %} 😮
+                                {% elif u_reaction and u_reaction.reaction_type == 'sad' %} 😢
+                                {% elif u_reaction and u_reaction.reaction_type == 'angry' %} 😠
+                                {% elif u_reaction and u_reaction.reaction_type == 'like' %} 👍
+                                {% else %}
+                                    <i class="bi bi-hand-thumbs-up"></i>
+                                {% endif %}
+                                
+                                {% if u_reaction %}
+                                    {{ _(u_reaction.reaction_type.capitalize()) }}
+                                {% else %}
+                                    {{ _('Reaccionar') }}
+                                {% endif %}
+                                ({{ comentario.reactions.count() }})
+                            </button>
+                            <div class="reactions-palette bg-white border rounded shadow-sm p-1" style="display: none; z-index: 20;">
+                                {% set reaction_types = {'like': '👍', 'love': '❤️', 'haha': '😂', 'wow': '😮', 'sad': '😢', 'angry': '😠'} %}
+                                {% for type, icon in reaction_types.items() %}
+                                <form method="POST" action="{{ url_for('react_to_comment', comment_id=comentario.id) }}" class="d-inline-block reaction-form">
+                                    <input type="hidden" name="reaction_type" value="{{ type }}">
+                                    <button type="submit" class="btn btn-link p-1 reaction-icon-btn" title="{{ _(type.capitalize()) }}">{{ icon }}</button>
+                                </form>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <a href="#" class="reply-to-comment-btn small text-primary text-decoration-none" data-comment-id="{{ comentario.id }}" data-username-to-reply="{{ comentario.author.profile.username or comentario.author.username }}" data-slug-to-reply="{{ comentario.author.profile.slug }}">
+                            {{ _('Responder') }}
+                        </a>
+                        <small class="text-muted ms-auto">{{ format_datetime(comentario.timestamp, 'medium') if comentario.timestamp else '' }}</small>
+                    </div>
+                    
+                    <div id="reply-form-container-{{ comentario.id }}" class="reply-form-container mt-2" style="display: none;">
+                        <form method="post" action="{{ url_for('comment', post_id=post_id_for_reply_form) }}">
+                            <input type="hidden" name="parent_comment_id" value="{{ comentario.id }}">
+                            <div class="input-group input-group-sm">
+                                <textarea name="content" class="form-control mentionable-input" rows="2" placeholder="{{ _('Escribe tu respuesta...') }}" required></textarea>
+                                <div class="mention-suggestions-list" style="display: none;"></div>
+                                <button type="submit" class="btn btn-sm btn-outline-primary">{{ _('Enviar Respuesta') }}</button>
+                            </div>
+                        </form>
+                    </div>
 
-                    <div class="mt-1 d-flex align-items-center">
-                        <div class="reactions-container d-inline-block position-relative me-2">
-                            <button class="btn btn-sm {% if comentario.user_reaction %}btn-primary{% else %}btn-outline-primary{% endif %} reaction-trigger-btn">
-                                {% if comentario.user_reaction and comentario.user_reaction.reaction_type == 'love' %} ❤️
-                                {% elif comentario.user_reaction and comentario.user_reaction.reaction_type == 'haha' %} 😂
-                                {% elif comentario.user_reaction and comentario.user_reaction.reaction_type == 'wow' %} 😮
-                                {% elif comentario.user_reaction and comentario.user_reaction.reaction_type == 'sad' %} 😢
-                                {% elif comentario.user_reaction and comentario.user_reaction.reaction_type == 'angry' %} 😠
-                                {% elif comentario.user_reaction and comentario.user_reaction.reaction_type == 'like' %} 👍
-                                {% else %}
-                                    <i class="bi bi-hand-thumbs-up"></i>
-                                {% endif %}
-                                
-                                {% if comentario.user_reaction %}
-                                    {{ _(comentario.user_reaction.reaction_type.capitalize()) }}
-                                {% else %}
-                                    {{ _('Reaccionar') }}
-                                {% endif %}
-                                ({{ comentario.total_reactions }})
-                            </button>
-                            <div class="reactions-palette bg-white border rounded shadow-sm p-1" style="display: none; z-index: 20;">
-                                {% set reaction_types = {'like': '👍', 'love': '❤️', 'haha': '😂', 'wow': '😮', 'sad': '😢', 'angry': '😠'} %}
-                                {% for type, icon in reaction_types.items() %}
-                                <form method="POST" action="{{ url_for('react_to_comment', comment_id=comentario.id) }}" class="d-inline-block reaction-form">
-                                    <input type="hidden" name="reaction_type" value="{{ type }}">
-                                    <button type="submit" class="btn btn-link p-1 reaction-icon-btn" title="{{ _(type.capitalize()) }}">{{ icon }}</button>
-                                </form>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        
-                        <a href="#comment-form-{{ post_id_for_reply_form }}-{{ comentario.id }}" class="reply-to-comment-btn small text-primary text-decoration-none" data-comment-id="{{ comentario.id }}" data-post-id="{{ post_id_for_reply_form }}" data-username-to-reply="{{ comentario.username }}" data-slug-to-reply="{{ comentario.slug }}">
-                            {{ _('Responder') }}
-                        </a>
-                        <small class="text-muted ms-auto">{{ format_datetime(comentario.timestamp, 'medium') }}</small>
-                    </div>
-                    
-                    <div id="reply-form-container-{{ comentario.id }}" class="reply-form-container mt-2" style="display: none;">
-                        <form method="post" action="{{ url_for('comment', post_id=post_id_for_reply_form) }}">
-                            <input type="hidden" name="parent_comment_id" value="{{ comentario.id }}">
-                            <div class="input-group input-group-sm">
-                                <textarea name="content" class="form-control mentionable-input" rows="2" placeholder="{{ _('Escribe tu respuesta...') }}" required></textarea>
-                                <div class="mention-suggestions-list" style="display: none;"></div>
-                                <button type="submit" class="btn btn-sm btn-outline-primary">{{ _('Enviar Respuesta') }}</button>
-                            </div>
-                        </form>
-                    </div>
-
-                    {% if comentario.replies %}
-                        <div class="comment-replies">
-                            {{ render_comment_thread(comentario.replies, post_id_for_reply_form) }}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    {% endfor %}
+                    {% if comentario.replies.count() > 0 %}
+                        <div class="comment-replies">
+                            {# Llamada recursiva a la misma macro para las respuestas #}
+                            {{ render_comment_thread(comentario.replies.order_by('timestamp'), post_id_for_reply_form) }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% endfor %}
 {% endmacro %}
