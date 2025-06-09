@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PiVerse 1.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-09 23:10+0200\n"
+"POT-Creation-Date: 2025-06-09 23:22+0200\n"
 "PO-Revision-Date: 2025-06-08 14:00+0200\n"
 "Last-Translator: Gemini Assistant\n"
 "Language: en\n"
@@ -1133,7 +1133,7 @@ msgstr "Effective Date:"
 
 #: templates/privacy_policy.html:13
 msgid "1. Introducción"
-msgstr ""
+msgstr "1. Introduction"
 
 #: templates/privacy_policy.html:14
 msgid ""
@@ -1143,15 +1143,19 @@ msgid ""
 " plataforma (el \"Servicio\"). Al usar PiVerse, aceptas las prácticas "
 "aquí descritas."
 msgstr ""
+"Welcome to PiVerse. Your privacy is critical to us. This Privacy Policy "
+"explains what information we collect from you, how we use it, and the "
+"measures we take to protect it when you use our platform (the \"Service\")."
+" By using PiVerse, you agree to the practices described herein."
 
 #: templates/privacy_policy.html:16
 msgid "2. Información que Recopilamos"
-msgstr ""
+msgstr "2. Information We Collect"
 
 #: templates/privacy_policy.html:18
 #, fuzzy
 msgid "Información de tu Cuenta de Pi:"
-msgstr "Comment Management"
+msgstr "Information From Your Pi Account:"
 
 #: templates/privacy_policy.html:18
 msgid ""
@@ -1160,11 +1164,14 @@ msgid ""
 " de Usuario único (UID de Pi). No recibimos ni almacenamos tu contraseña "
 "de Pi ni información de tu wallet."
 msgstr ""
+"To create your account, we connect to the Pi Network via the official SDK, "
+"from which we receive your Pi username and unique User ID (Pi UID). We do "
+"not receive or store your Pi password or wallet information."
 
 #: templates/privacy_policy.html:19
 #, fuzzy
 msgid "Información de tu Perfil:"
-msgstr "Profile picture"
+msgstr "Your Profile Information:"
 
 #: templates/privacy_policy.html:19
 msgid ""
@@ -1173,10 +1180,13 @@ msgid ""
 "biografía y una foto de perfil. Esta información será visible para otros "
 "usuarios."
 msgstr ""
+"You have the option to provide additional information for your public profile,"
+"including: a unique public username (slug)," 
+"a biography, and a profile photo. This information will be visible to other users.
 
 #: templates/privacy_policy.html:20
 msgid "Contenido Generado por el Usuario:"
-msgstr ""
+msgstr "User-Generated Content:"
 
 #: templates/privacy_policy.html:20
 msgid ""
@@ -1184,10 +1194,12 @@ msgid ""
 "publicaciones, comentarios, reacciones, mensajes privados y reportes de "
 "contenido."
 msgstr ""
+"We collect the content you create on the platform, including: "
+"posts, comments, reactions, private messages, and content reports."
 
 #: templates/privacy_policy.html:21
 msgid "Información Técnica Recopilada Automáticamente:"
-msgstr ""
+msgstr "Automatically Collected Technical Information:"
 
 #: templates/privacy_policy.html:21
 msgid ""
@@ -1195,10 +1207,13 @@ msgid ""
 " iniciada y registramos datos técnicos estándar (como dirección IP) para "
 "seguridad y diagnóstico de errores."
 msgstr ""
+"We use strictly necessary session cookies to keep your session"
+"active and log standard technical data (such as IP address) for "
+"security and error diagnostics."
 
 #: templates/privacy_policy.html:24
 msgid "3. Cómo Usamos tu Información"
-msgstr ""
+msgstr "3. How We Use Your Information"
 
 #: templates/privacy_policy.html:25
 msgid ""
@@ -1206,10 +1221,13 @@ msgid ""
 "autenticarte, permitir la interacción con otros usuarios, aplicar "
 "nuestras normas y comunicarnos contigo."
 msgstr ""
+"We use the collected information to operate and maintain the service, "
+"authenticate you, enable interaction with other users, enforce "
+"our rules, and communicate with you."
 
 #: templates/privacy_policy.html:27
 msgid "4. Cómo Compartimos tu Información"
-msgstr ""
+msgstr "4. How We Share Your Information"
 
 #: templates/privacy_policy.html:28
 msgid ""
@@ -1217,10 +1235,13 @@ msgid ""
 "privados son confidenciales. Nunca venderemos ni alquilaremos tu "
 "información personal a terceros para fines de marketing."
 msgstr ""
+"Your public profile and content are visible to others. Private "
+"messages remain confidential. We will never sell or rent your "
+"personal information to third parties for marketing purposes."
 
 #: templates/privacy_policy.html:30
 msgid "5. Tus Derechos y Control"
-msgstr ""
+msgstr "5. Your Rights and Control"
 
 #: templates/privacy_policy.html:31
 msgid ""
@@ -1228,48 +1249,55 @@ msgid ""
 " tus publicaciones y comentarios. Para eliminar tu cuenta, por favor, "
 "contacta con nosotros."
 msgstr ""
+"You can access and modify your profile information, as well as delete"
+"your posts and comments. To delete your account,"
+"please contact us."
 
 #: templates/privacy_policy.html:33
 msgid "6. Seguridad de los Datos"
-msgstr ""
+msgstr "6. Data Security"
 
 #: templates/privacy_policy.html:34
 msgid ""
 "Implementamos medidas de seguridad razonables para proteger tus datos, "
 "incluyendo conexiones seguras (HTTPS) y técnicas de hasheo."
 msgstr ""
+"We implement reasonable security measures to protect your data, "
+"including secure connections (HTTPS) and hashing techniques."
 
 #: templates/privacy_policy.html:36
 msgid "7. Privacidad de los Menores"
-msgstr ""
+msgstr "7. Children's Privacy"
 
 #: templates/privacy_policy.html:37
-msgid "Nuestro servicio no está dirigido a personas menores de 16 años."
-msgstr ""
+msgid "Nuestro servicio no está dirigido a personas menores de 18 años."
+msgstr "Our service is not intended for individuals under the age of 18."
 
 #: templates/privacy_policy.html:39
 msgid "8. Cambios en esta Política"
-msgstr ""
+msgstr "8. Changes to This Policy"
 
 #: templates/privacy_policy.html:40
 msgid ""
 "Te notificaremos de los cambios materiales en esta política publicando la"
 " nueva versión en esta página."
 msgstr ""
+"We will notify you of any material changes to this policy by posting the"
+"new version on this page."
 
 #: templates/privacy_policy.html:42
 #, fuzzy
 msgid "9. Contacto"
-msgstr "Contacts"
+msgstr "Contact"
 
 #: templates/privacy_policy.html:43
 #, fuzzy
 msgid ""
 "Si tienes alguna pregunta sobre esta Política de Privacidad, contáctanos "
-"en: support@piverse.app"
+"en: contact@piverse.app"
 msgstr ""
 "If you have any questions about this Privacy Policy, please contact us "
-"at: support@piverse.app"
+"at: contact@piverse.app"
 
 #: templates/profile.html:3
 msgid "Mi perfil"
@@ -1494,7 +1522,7 @@ msgid ""
 "support@piverse.app"
 msgstr ""
 "If you have any questions about this Privacy Policy, please contact us "
-"at: support@piverse.app"
+"at: contact@piverse.app"
 
 #: templates/ver_perfil.html:3
 #, python-format
