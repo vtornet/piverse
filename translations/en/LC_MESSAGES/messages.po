@@ -18,6 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
+msgid "Política de Privacidad"
+msgstr "Privacy Policy"
+
+msgid "Términos de Servicio"
+msgstr "Terms of Service"
+
+msgid "Fecha de entrada en vigor:"
+msgstr "Effective Date:"
+
 #: app.py:314
 msgid "Autenticación requerida. Por favor, inicia sesión."
 msgstr "Authentication required. Please log in."
@@ -1085,9 +1094,24 @@ msgid "¡Éxito! Redirigiendo..."
 msgid "Error de conexión con el servidor."
 msgstr "Server connection error."
 
+msgid "Usa tu cuenta de Pi Network para continuar."
+msgstr "Use your Pi Network account to continue."
+
+msgid "Iniciar Sesión con Pi"
+msgstr "Login with Pi"
+
+msgid "Esperando autorización de Pi..."
+msgstr "Waiting for Pi authorization..."
+
+msgid "Verificando con el servidor..."
+msgstr "Verifying with the server..."
+
+msgid "¡Éxito! Redirigiendo..."
+msgstr "Success! Redirecting..."
+
 #: templates/login.html:81
 msgid "La autorización con Pi fue cancelada o falló."
-"Pi authorization was canceled or failed."
+msgstr "Pi authorization was canceled or failed."
 
 #: templates/mensajes.html:3
 msgid "Mis Mensajes"
