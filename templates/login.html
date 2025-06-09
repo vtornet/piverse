@@ -1,22 +1,29 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ _('Iniciar sesión') }} - PiVerse{% endblock %}
+{% block title %}{{ _('Iniciar Sesión') }} - PiVerse{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-6 text-center">
-        <h2>{{ _('Iniciar sesión') }}</h2>
-        <p class="lead">{{ _('Usa tu cuenta de Pi para acceder a PiVerse.') }}</p>
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <img src="{{ url_for('static', filename='images/piverse.png') }}" alt="Logo de PiVerse" style="max-height: 80px;">
+                    <h3 class="mt-3">{{ _('Accede a PiVerse') }}</h3>
+                    <p class="text-muted">{{ _('Usa tu cuenta de Pi Network para continuar.') }}</p>
+                </div>
 
-        <div id="auth-button-container" class="my-4">
-            {# Este botón será nuestro fallback si el de Pi no carga. #}
-            <button id="pi-auth-button" class="btn btn-primary btn-lg">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-2"><path d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24Z" fill="white"></path><path d="M7.74971 6.39237H10.232C10.7011 6.39237 11.1396 6.55422 11.5475 6.87791C11.9554 7.2016 12.1593 7.64376 12.1593 8.20439C12.1593 8.68354 12.0224 9.10512 11.7485 9.46815C11.4746 9.83117 11.1093 10.082 10.6524 10.2207V10.28C11.2307 10.3787 11.6998 10.6436 12.0605 11.0747C12.4211 11.5057 12.6015 12.0488 12.6015 12.7041C12.6015 13.2948 12.4211 13.8114 12.0605 14.2537C11.7044 14.6959 11.2307 14.9591 10.6395 15.0436C10.5199 15.0583 10.4003 15.0657 10.2807 15.0657H7.74971V6.39237ZM9.04353 9.49755H9.84378C10.2218 9.49755 10.5085 9.41608 10.704 9.25286C10.8995 9.08964 10.9972 8.84904 10.9972 8.53133C10.9972 8.20627 10.8995 7.96567 10.704 7.80981C10.5085 7.65395 10.2218 7.57548 9.84378 7.57548H9.04353V9.49755ZM9.04353 13.8828H10.0212C10.3442 13.8828 10.6029 13.8044 10.7984 13.6485C10.9939 13.4926 11.0917 13.242 11.0917 12.8964C11.0917 12.5583 10.9939 12.3103 10.7984 12.152C10.6029 11.9937 10.3442 11.9144 10.0212 11.9144H9.04353V13.8828ZM14.0729 6.39237V15.0657H15.3671V7.57548H16.8528V6.39237H14.0729Z" fill="#A065E4"></path></svg>
-                {{ _('Iniciar Sesión con Pi') }}
-            </button>
+                {# --- BOTÓN DE LOGIN CON PI --- #}
+                <div class="d-grid">
+                    <button id="pi-login-button" class="btn btn-lg btn-primary" style="background-color: #593A88; border-color: #593A88;">
+                        <i class="bi bi-box-arrow-in-right me-2"></i> {{ _('Iniciar Sesión con Pi') }}
+                    </button>
+                </div>
+                
+                <div id="login-feedback" class="mt-3 text-center"></div>
+
+            </div>
         </div>
-
-        <div id="login-feedback" class="mt-3 text-danger"></div>
     </div>
 </div>
 {% endblock %}
@@ -25,66 +32,59 @@
 {{ super() }}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // 1. Inicializamos el SDK de Pi.
-    // El modo 'sandbox: true' es CRUCIAL para nuestras pruebas.
-    // Esto asegura que usemos la versión de pruebas de Pi y no la real.
-    Pi.init({ version: "2.0", sandbox: true });
-
-    const loginButton = document.getElementById('pi-auth-button');
+    const loginButton = document.getElementById('pi-login-button');
     const feedbackDiv = document.getElementById('login-feedback');
 
-    // 2. Definimos los 'scopes' o permisos que pediremos al usuario.
-    // 'username' para obtener su identificador y 'payments' para poder
-    // implementar la función de propinas en el futuro.
-    const scopes = ['username', 'payments'];
+    // 1. Inicializar el SDK de Pi
+    Pi.init({ version: "2.0", sandbox: true });
 
-    // 3. El SDK requiere esta función de callback, aunque no la usemos aún.
-    // Se usaría para gestionar pagos incompletos.
-    function onIncompletePaymentFound(payment) {
-        console.log("Pago incompleto encontrado:", payment);
-        // Aquí podrías redirigir a una página para completar el pago.
-    };
-
-    // 4. Esta es la función principal que se ejecuta al hacer clic en el botón.
-    async function authenticateWithPi() {
-        feedbackDiv.textContent = ''; // Limpiar errores previos
+    // 2. Lógica para el botón de login
+    loginButton.addEventListener('click', function() {
+        feedbackDiv.innerHTML = `<div class="spinner-border spinner-border-sm" role="status"></div><span class="ms-2">{{ _('Esperando autorización de Pi...') }}</span>`;
         loginButton.disabled = true;
 
-        try {
-            // 5. Llamamos a Pi.authenticate para que el usuario inicie sesión.
-            const authResult = await Pi.authenticate(scopes, onIncompletePaymentFound);
-            console.log("Autenticación de Pi exitosa:", authResult);
+        // 3. Alcances que solicitamos al usuario
+        const scopes = ['username', 'payments']; // 'payments' lo usaremos en el futuro para propinas
 
-            // 6. Enviamos el resultado de la autenticación a nuestro propio backend.
-            // Nuestro servidor verificará que todo es correcto y creará la sesión.
-            const response = await fetch("{{ url_for('pi_auth_complete') }}", {
+        // 4. Función que se ejecutará si el login con Pi es exitoso
+        function onLoginSuccess(authResult) {
+            feedbackDiv.innerHTML = `<div class="spinner-border spinner-border-sm" role="status"></div><span class="ms-2">{{ _('Verificando con el servidor...') }}</span>`;
+            
+            fetch("{{ url_for('pi_auth_complete') }}", {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(authResult)
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                // 7. Si nuestro backend confirma el éxito, redirigimos al usuario.
-                window.location.href = data.redirect_url;
-            } else {
-                // 8. Si nuestro backend detecta un problema, mostramos el error.
-                feedbackDiv.textContent = data.error || '{{ _('Ocurrió un error al iniciar sesión.') }}';
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    feedbackDiv.innerHTML = `<div class="alert alert-success p-2 mt-3">{{ _('¡Éxito! Redirigiendo...') }}</div>`;
+                    // Redirigir al usuario a la página que indica el backend
+                    window.location.href = data.redirect_url;
+                } else {
+                    feedbackDiv.innerHTML = `<div class="alert alert-danger p-2 mt-3">${data.error}</div>`;
+                    loginButton.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error en el fetch:', error);
+                feedbackDiv.innerHTML = `<div class="alert alert-danger p-2 mt-3">{{ _('Error de conexión con el servidor.') }}</div>`;
                 loginButton.disabled = false;
-            }
+            });
+        }
 
-        } catch (error) {
-            console.error("Error durante la autenticación de Pi:", error);
-            feedbackDiv.textContent = '{{ _('No se pudo completar el inicio de sesión con Pi. Por favor, inténtalo de nuevo.') }} (' + (error.message || error) + ')';
+        // 5. Función que se ejecutará si el usuario cancela o hay un error
+        function onLoginFailure(error) {
+            console.error('Fallo en la autenticación de Pi:', error);
+            feedbackDiv.innerHTML = `<div class="alert alert-warning p-2 mt-3">{{ _('La autorización con Pi fue cancelada o falló.') }}</div>`;
             loginButton.disabled = false;
         }
-    }
 
-    // 9. Asociamos la función de autenticación al clic del botón.
-    if(loginButton) {
-        loginButton.addEventListener('click', authenticateWithPi);
-    }
+        // 6. Llamada principal al SDK para autenticar
+        Pi.authenticate(scopes, onLoginSuccess, onLoginFailure);
+    });
 });
 </script>
 {% endblock %}
