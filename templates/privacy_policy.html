@@ -7,40 +7,40 @@
     <div class="col-md-8">
         <div class="card shadow-sm">
             <div class="card-body p-4">
-                <h2 class="card-title mb-4">{{ _('Política de Privacidad de PiVerse') }}</h2>
+                <h2 class="card-title mb-4">{{ _('Política de Privacidad') }}</h2>
                 <p class="text-muted">{{ _('Fecha de entrada en vigor:') }} 10 de junio de 2025</p>
 
                 <p><strong>{{ _('1. Introducción') }}</strong></p>
-                <p>{{ _('Bienvenido a PiVerse. Tu privacidad es fundamental para nosotros. Esta Política de Privacidad explica qué información recopilamos de ti, cómo la usamos y las medidas que tomamos para protegerla cuando utilizas nuestra plataforma (el "Servicio"). Al usar PiVerse, aceptas las prácticas aquí descritas.') }}</p>
+                <p>{% trans %}Bienvenido a PiVerse. Tu privacidad es fundamental para nosotros. Esta Política de Privacidad explica qué información recopilamos de ti, cómo la usamos y las medidas que tomamos para protegerla cuando utilizas nuestra plataforma (el "Servicio"). Al usar PiVerse, aceptas las prácticas aquí descritas.{% endtrans %}</p>
 
                 <p><strong>{{ _('2. Información que Recopilamos') }}</strong></p>
                 <ul>
-                    <li><strong>{{ _('Información de tu Cuenta de Pi:') }}</strong> {{ _('Para crear tu cuenta, nos conectamos a la red de Pi a través del SDK oficial, del cual recibimos tu nombre de usuario de Pi y tu Identificador de Usuario único (UID de Pi). No recibimos ni almacenamos tu contraseña de Pi ni información de tu wallet.') }}</li>
-                    <li><strong>{{ _('Información de tu Perfil:') }}</strong> {{ _('Tienes la opción de proporcionar información adicional para tu perfil público, que incluye: un nombre de usuario público único (slug), una biografía y una foto de perfil. Esta información será visible para otros usuarios.') }}</li>
-                    <li><strong>{{ _('Contenido Generado por el Usuario:') }}</strong> {{ _('Recopilamos el contenido que creas en la plataforma, incluyendo: publicaciones, comentarios, reacciones, mensajes privados y reportes de contenido.') }}</li>
-                    <li><strong>{{ _('Información Técnica Recopilada Automáticamente:') }}</strong> {{ _('Usamos cookies de sesión estrictamente necesarias para mantener tu sesión iniciada y registramos datos técnicos estándar (como dirección IP) para seguridad y diagnóstico de errores.') }}</li>
+                    <li><strong>{{ _('Información de tu Cuenta de Pi:') }}</strong> {% trans %}Para crear tu cuenta, nos conectamos a la red de Pi a través del SDK oficial, del cual recibimos tu nombre de usuario de Pi y tu Identificador de Usuario único (UID de Pi). No recibimos ni almacenamos tu contraseña de Pi ni información de tu wallet.{% endtrans %}</li>
+                    <li><strong>{{ _('Información de tu Perfil:') }}</strong> {% trans %}Tienes la opción de proporcionar información adicional para tu perfil público, que incluye: un nombre de usuario público único (slug), una biografía y una foto de perfil. Esta información será visible para otros usuarios.{% endtrans %}</li>
+                    <li><strong>{{ _('Contenido Generado por el Usuario:') }}</strong> {% trans %}Recopilamos el contenido que creas en la plataforma, incluyendo: publicaciones, comentarios, reacciones, mensajes privados y reportes de contenido.{% endtrans %}</li>
+                    <li><strong>{{ _('Información Técnica Recopilada Automáticamente:') }}</strong> {% trans %}Usamos cookies de sesión estrictamente necesarias para mantener tu sesión iniciada y registramos datos técnicos estándar (como dirección IP) para seguridad y diagnóstico de errores.{% endtrans %}</li>
                 </ul>
 
                 <p><strong>{{ _('3. Cómo Usamos tu Información') }}</strong></p>
-                <p>{{ _('Utilizamos la información recopilada para operar y mantener el servicio, autenticarte, permitir la interacción con otros usuarios, aplicar nuestras normas y comunicarnos contigo.') }}</p>
+                <p>{% trans %}Utilizamos la información recopilada para operar y mantener el servicio, autenticarte, permitir la interacción con otros usuarios, aplicar nuestras normas y comunicarnos contigo.{% endtrans %}</p>
 
                 <p><strong>{{ _('4. Cómo Compartimos tu Información') }}</strong></p>
-                <p>{{ _('Tu perfil y contenido público son visibles para otros. Los mensajes privados son confidenciales. Nunca venderemos ni alquilaremos tu información personal a terceros para fines de marketing.') }}</p>
+                <p>{% trans %}Tu perfil y contenido público son visibles para otros. Los mensajes privados son confidenciales. Nunca venderemos ni alquilaremos tu información personal a terceros para fines de marketing.{% endtrans %}</p>
 
                 <p><strong>{{ _('5. Tus Derechos y Control') }}</strong></p>
-                <p>{{ _('Puedes acceder y modificar la información de tu perfil, así como eliminar tus publicaciones y comentarios. Para eliminar tu cuenta, por favor, contacta con nosotros.') }}</p>
+                <p>{% trans %}Puedes acceder y modificar la información de tu perfil, así como eliminar tus publicaciones y comentarios. Para eliminar tu cuenta, por favor, contacta con nosotros.{% endtrans %}</p>
 
                 <p><strong>{{ _('6. Seguridad de los Datos') }}</strong></p>
-                <p>{{ _('Implementamos medidas de seguridad razonables para proteger tus datos, incluyendo conexiones seguras (HTTPS) y técnicas de hasheo.') }}</p>
+                <p>{% trans %}Implementamos medidas de seguridad razonables para proteger tus datos, incluyendo conexiones seguras (HTTPS) y técnicas de hasheo.{% endtrans %}</p>
 
                 <p><strong>{{ _('7. Privacidad de los Menores') }}</strong></p>
-                <p>{{ _('Nuestro servicio no está dirigido a personas menores de 16 años.') }}</p>
+                <p>{% trans %}Nuestro servicio no está dirigido a personas menores de 16 años.{% endtrans %}</p>
 
                 <p><strong>{{ _('8. Cambios en esta Política') }}</strong></p>
-                <p>{{ _('Te notificaremos de los cambios materiales en esta política publicando la nueva versión en esta página.') }}</p>
+                <p>{% trans %}Te notificaremos de los cambios materiales en esta política publicando la nueva versión en esta página.{% endtrans %}</p>
                 
                 <p><strong>{{ _('9. Contacto') }}</strong></p>
-                <p>{{ _('Si tienes alguna pregunta sobre esta Política de Privacidad, contáctanos en: contact@piverse.app') }}</p>
+                <p>{% trans %}Si tienes alguna pregunta sobre esta Política de Privacidad, contáctanos en: support@piverse.app{% endtrans %}</p>
             </div>
         </div>
     </div>

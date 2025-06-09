@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PiVerse 1.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-09 14:03+0200\n"
+"POT-Creation-Date: 2025-06-09 20:45+0200\n"
 "PO-Revision-Date: 2025-06-09 14:05+0200\n"
 "Last-Translator: Gemini Assistant\n"
 "Language: es\n"
@@ -134,8 +134,12 @@ msgid "El nombre de usuario público no puede estar vacío."
 msgstr "El nombre de usuario público no puede estar vacío."
 
 #: app.py:784
-msgid "El nombre de usuario público debe contener caracteres alfanuméricos válidos."
-msgstr "El nombre de usuario público debe contener caracteres alfanuméricos válidos."
+msgid ""
+"El nombre de usuario público debe contener caracteres alfanuméricos "
+"válidos."
+msgstr ""
+"El nombre de usuario público debe contener caracteres alfanuméricos "
+"válidos."
 
 #: app.py:793
 msgid "Ese nombre de usuario público o slug ya está en uso por otra persona."
@@ -171,8 +175,12 @@ msgid "Por favor, completa tu perfil antes de publicar."
 msgstr "Por favor, completa tu perfil antes de publicar."
 
 #: app.py:866
-msgid "La publicación no puede estar completamente vacía. Añade texto o una imagen."
-msgstr "La publicación no puede estar completamente vacía. Añade texto o una imagen."
+msgid ""
+"La publicación no puede estar completamente vacía. Añade texto o una "
+"imagen."
+msgstr ""
+"La publicación no puede estar completamente vacía. Añade texto o una "
+"imagen."
 
 #: app.py:878
 #, python-format
@@ -216,5 +224,2080 @@ msgid "No puedes interactuar con este usuario o publicación."
 msgstr "No puedes interactuar con este usuario o publicación."
 
 #: app.py:1030
+#, fuzzy, python-format
+msgid "%(commenter_link)s ha respondido a tu comentario en una %(post_link)s."
+msgstr "%(commenter_link)s ha respondido a tu comentario en una %(post_link)s."
+
+#: app.py:1033
+#, fuzzy, python-format
+msgid "%(commenter_link)s ha comentado en tu %(post_link)s."
+msgstr "%(commenter_link)s ha comentado en tu %(post_link)s."
+
+#: app.py:1041
+msgid "Comentario añadido."
+msgstr ""
+
+#: app.py:1044
+#, fuzzy
+msgid "Ocurrió un error al añadir el comentario."
+msgstr "Ocurrió un error al crear tu cuenta."
+
+#: app.py:1057
+#, fuzzy
+msgid "Comentario no encontrado."
+msgstr "Usuario no encontrado."
+
+#: app.py:1065
+#, fuzzy
+msgid "No tienes permiso para eliminar este comentario."
+msgstr "No tienes permiso para eliminar esta publicación."
+
+#: app.py:1076
+#, fuzzy
+msgid "Comentario eliminado correctamente."
+msgstr "Perfil actualizado correctamente."
+
+#: app.py:1130
+#, fuzzy
+msgid "Por favor, completa tu perfil antes de compartir publicaciones."
+msgstr "Por favor, completa tu perfil antes de publicar."
+
+#: app.py:1137
+#, fuzzy
+msgid "La publicación que intentas compartir no existe."
+msgstr "La publicación a la que intentas responder no existe."
+
+#: app.py:1142
+#, fuzzy
+msgid "No puedes interactuar con esta publicación."
+msgstr "No puedes interactuar con este usuario o publicación."
+
+#: app.py:1155
+msgid "Alguien"
+msgstr ""
+
+#: app.py:1161
+#, fuzzy, python-format
+msgid "%(sharer_link)s ha citado tu %(post_link)s."
+msgstr "%(sharer_link)s ha citado tu %(post_link)s."
+
+#: app.py:1164
 #, python-format
-msgid "%(commenter_link
+msgid "%(sharer_link)s ha compartido tu %(post_link)s."
+msgstr ""
+
+#: app.py:1170
+#, fuzzy
+msgid "Publicación compartida correctamente."
+msgstr "Publicación eliminada correctamente."
+
+#: app.py:1173
+msgid "Ya has compartido esta publicación anteriormente."
+msgstr ""
+
+#: app.py:1176
+#, fuzzy
+msgid "Ha ocurrido un error al intentar compartir la publicación."
+msgstr "Ocurrió un error al crear la publicación."
+
+#: app.py:1186
+#, fuzzy
+msgid "Por favor, completa tu perfil antes de enviar solicitudes."
+msgstr "Por favor, completa tu perfil antes de comentar."
+
+#: app.py:1190
+msgid "No puedes enviarte una solicitud a ti mismo."
+msgstr ""
+
+#: app.py:1195 app.py:1238
+#, fuzzy
+msgid "No puedes interactuar con este usuario."
+msgstr "No puedes interactuar con este usuario o publicación."
+
+#: app.py:1206
+msgid "Ya existe una solicitud o conexión con este usuario."
+msgstr ""
+
+#: app.py:1217
+#, python-format
+msgid "%(solicitante_link)s te ha enviado una solicitud de contacto."
+msgstr ""
+
+#: app.py:1222
+msgid "Solicitud de contacto enviada."
+msgstr ""
+
+#: app.py:1225
+#, fuzzy
+msgid "Error al enviar la solicitud."
+msgstr "Ocurrió un error al crear la publicación."
+
+#: app.py:1254
+#, python-format
+msgid "%(receptor_link)s aceptó tu solicitud de contacto."
+msgstr ""
+
+#: app.py:1259
+msgid "Solicitud de contacto aceptada."
+msgstr ""
+
+#: app.py:1261
+msgid ""
+"No se pudo aceptar la solicitud (quizás ya no estaba pendiente o no era "
+"para ti)."
+msgstr ""
+
+#: app.py:1279
+msgid "Solicitud de contacto rechazada."
+msgstr ""
+
+#: app.py:1281
+msgid ""
+"No se pudo rechazar la solicitud (quizás ya no estaba pendiente o no era "
+"para ti)."
+msgstr ""
+
+#: app.py:1300
+msgid "Contacto eliminado."
+msgstr ""
+
+#: app.py:1302
+msgid "No se encontró una relación de contacto para eliminar."
+msgstr ""
+
+#: app.py:1313
+msgid "No te puedes bloquear a ti mismo."
+msgstr ""
+
+#: app.py:1332
+#, fuzzy
+msgid "Usuario bloqueado correctamente."
+msgstr "Perfil actualizado correctamente."
+
+#: app.py:1335
+msgid "Este usuario ya está en tu lista de bloqueados."
+msgstr ""
+
+#: app.py:1338
+#, fuzzy
+msgid "Ha ocurrido un error al intentar bloquear al usuario."
+msgstr "Ocurrió un error al crear tu cuenta."
+
+#: app.py:1353
+#, fuzzy
+msgid "Usuario desbloqueado correctamente."
+msgstr "Perfil actualizado correctamente."
+
+#: app.py:1355
+msgid "Este usuario no estaba en tu lista de bloqueados."
+msgstr ""
+
+#: app.py:1362
+msgid "No se puede acceder a un perfil sin un slug válido."
+msgstr ""
+
+#: app.py:1367
+#, fuzzy
+msgid "Perfil no encontrado."
+msgstr "Usuario no encontrado."
+
+#: app.py:1376
+#, fuzzy
+msgid "No puedes ver el perfil de este usuario."
+msgstr "No puedes interactuar con este usuario o publicación."
+
+#: app.py:1489
+msgid "Faltan datos en el reporte. Tipo, ID y motivo son obligatorios."
+msgstr ""
+
+#: app.py:1492
+msgid "Tipo de contenido no válido."
+msgstr ""
+
+#: app.py:1505
+msgid ""
+"Reporte enviado correctamente. Gracias por ayudarnos a mantener la "
+"comunidad segura."
+msgstr ""
+
+#: app.py:1510
+#, fuzzy
+msgid "Ocurrió un error en el servidor al procesar tu reporte."
+msgstr "Ocurrió un error al crear tu cuenta."
+
+#: app.py:1533
+msgid "Faltan datos."
+msgstr ""
+
+#: app.py:1537
+#, fuzzy
+msgid "No tienes permiso para esta conversación."
+msgstr "No tienes permiso para eliminar esta publicación."
+
+#: app.py:1543
+#, fuzzy
+msgid "No puedes enviar mensajes a este usuario."
+msgstr "No puedes interactuar con este usuario o publicación."
+
+#: app.py:1563
+msgid "Error al enviar el mensaje."
+msgstr ""
+
+#: templates/_macros.html:12 templates/_post_card.html:13
+#: templates/_post_card.html:97 templates/contactos.html:47
+#: templates/contactos.html:87 templates/feed_contacts.html:52
+#: templates/feed_contacts.html:94 templates/mensajes.html:16
+#: templates/search_results.html:52 templates/ver_perfil.html:37
+#: templates/ver_perfil.html:111 templates/ver_perfil.html:191
+#: templates/ver_post.html:29
+#, python-format
+msgid "Foto de %(username)s"
+msgstr ""
+
+#: templates/_macros.html:26 templates/_post_card.html:27
+#: templates/_post_card.html:107
+msgid "Más opciones"
+msgstr ""
+
+#: templates/_macros.html:32
+msgid "Reportar Comentario"
+msgstr ""
+
+#: templates/_macros.html:38
+msgid ""
+"¿Estás seguro de que quieres eliminar este comentario y todas sus "
+"respuestas?"
+msgstr ""
+
+#: templates/_macros.html:40
+msgid "Eliminar Comentario"
+msgstr ""
+
+#: templates/_macros.html:69 templates/_post_card.html:53
+#: templates/_post_card.html:122 templates/base.html:568
+#: templates/feed_contacts.html:70 templates/feed_contacts.html:111
+#: templates/search_results.html:108 templates/ver_perfil.html:149
+#: templates/ver_perfil.html:224 templates/ver_post.html:101
+msgid "Reaccionar"
+msgstr ""
+
+#: templates/_macros.html:85
+msgid "Responder"
+msgstr ""
+
+#: templates/_macros.html:94
+msgid "Escribe tu respuesta..."
+msgstr ""
+
+#: templates/_macros.html:96
+msgid "Enviar Respuesta"
+msgstr ""
+
+#: templates/_post_card.html:21 templates/_post_card.html:102
+#: templates/feed_contacts.html:57 templates/feed_contacts.html:99
+#: templates/search_results.html:61 templates/ver_perfil.html:121
+#: templates/ver_perfil.html:201 templates/ver_post.html:38
+msgid "en"
+msgstr ""
+
+#: templates/_post_card.html:31
+msgid "Reportar Publicación"
+msgstr ""
+
+#: templates/_post_card.html:35 templates/feed_contacts.html:61
+#: templates/search_results.html:67 templates/ver_perfil.html:128
+#: templates/ver_post.html:51
+#, fuzzy
+msgid "¿Estás seguro de que quieres eliminar esta publicación?"
+msgstr "No tienes permiso para eliminar esta publicación."
+
+#: templates/_post_card.html:36
+msgid "Eliminar Publicación"
+msgstr ""
+
+#: templates/_post_card.html:45 templates/_post_card.html:114
+#: templates/feed_contacts.html:64 templates/feed_contacts.html:105
+#: templates/search_results.html:78 templates/search_results.html:162
+#: templates/ver_perfil.html:134 templates/ver_perfil.html:209
+#: templates/ver_post.html:72
+#, fuzzy
+msgid "Imagen de la publicación"
+msgstr "Error al guardar la imagen de la publicación: %(error)s"
+
+#: templates/_post_card.html:46 templates/feed_contacts.html:65
+#: templates/feed_contacts.html:106 templates/search_results.html:85
+#: templates/ver_post.html:80
+msgid "Imagen de previsualización"
+msgstr ""
+
+#: templates/_post_card.html:60 templates/_post_card.html:129
+#: templates/admin/comments_list.html:21 templates/admin/log_list.html:23
+#: templates/admin/posts_list.html:21 templates/admin/users_list.html:18
+#: templates/feed_contacts.html:77 templates/feed_contacts.html:118
+#: templates/search_results.html:116 templates/ver_perfil.html:157
+#: templates/ver_perfil.html:232 templates/ver_post.html:115
+#: templates/ver_post.html:129
+msgid "Comentarios"
+msgstr ""
+
+#: templates/_post_card.html:61 templates/_post_card.html:130
+#: templates/feed_contacts.html:78 templates/feed_contacts.html:119
+#: templates/search_results.html:120 templates/ver_perfil.html:162
+#: templates/ver_perfil.html:237 templates/ver_post.html:121
+msgid "Citar o compartir"
+msgstr ""
+
+#: templates/_post_card.html:67 templates/_post_card.html:136
+#: templates/feed_contacts.html:82 templates/ver_post.html:139
+msgid "Escribe un comentario..."
+msgstr ""
+
+#: templates/_post_card.html:67 templates/_post_card.html:136
+#: templates/feed_contacts.html:82 templates/feed_contacts.html:123
+#: templates/ver_post.html:141
+msgid "Comentar"
+msgstr ""
+
+#: templates/_post_card.html:79 templates/feed_contacts.html:89
+#: templates/search_results.html:142 templates/ver_perfil.html:175
+msgid "compartió esto"
+msgstr ""
+
+#: templates/_post_card.html:79 templates/feed_contacts.html:89
+#: templates/search_results.html:142 templates/ver_perfil.html:175
+msgid "con el siguiente comentario:"
+msgstr ""
+
+#: templates/_post_card.html:83
+msgid "Más opciones para esta cita"
+msgstr ""
+
+#: templates/_post_card.html:87
+msgid "Reportar Cita"
+msgstr ""
+
+#: templates/_post_card.html:109
+msgid "Reportar Publicación Original"
+msgstr ""
+
+#: templates/appeal_form.html:3
+msgid "Apelar Decisión de Reporte"
+msgstr ""
+
+#: templates/appeal_form.html:10
+msgid "Formulario de Apelación"
+msgstr ""
+
+#: templates/appeal_form.html:13
+#, python-format
+msgid "Estás apelando la decisión sobre el reporte con ID #%(report_id)s."
+msgstr ""
+
+#: templates/appeal_form.html:14
+msgid ""
+"Por favor, expón tus motivos de forma clara y respetuosa. Adjunta una "
+"captura de pantalla si lo consideras necesario para aportar pruebas."
+msgstr ""
+
+#: templates/appeal_form.html:18
+msgid "Describe por qué crees que la decisión fue incorrecta:"
+msgstr ""
+
+#: templates/appeal_form.html:23
+msgid "Adjuntar imagen (opcional):"
+msgstr ""
+
+#: templates/appeal_form.html:27
+msgid "Enviar Apelación"
+msgstr ""
+
+#: templates/admin/appeals_list.html:95 templates/admin/reports_list.html:107
+#: templates/admin/users_list.html:115 templates/appeal_form.html:28
+#: templates/base.html:357 templates/base.html:401
+msgid "Cancelar"
+msgstr ""
+
+#: templates/base.html:198 templates/index.html:8
+msgid "Logo de PiVerse"
+msgstr ""
+
+#: templates/base.html:201
+msgid "Alternar navegación"
+msgstr ""
+
+#: templates/base.html:209
+msgid "Buscar..."
+msgstr ""
+
+#: templates/base.html:209
+#, fuzzy
+msgid "Buscar"
+msgstr "Usuario"
+
+#: templates/base.html:215 templates/notificaciones.html:7
+msgid "Notificaciones"
+msgstr ""
+
+#: templates/base.html:218
+msgid "notificaciones no leídas"
+msgstr ""
+
+#: templates/base.html:224 templates/mensajes.html:9
+msgid "Mensajes"
+msgstr ""
+
+#: templates/base.html:227
+msgid "mensajes no leídos"
+msgstr ""
+
+#: templates/base.html:231
+msgid "Inicio"
+msgstr ""
+
+#: templates/base.html:232
+msgid "Mi Perfil"
+msgstr ""
+
+#: templates/base.html:233 templates/contactos.html:27
+msgid "Mis Contactos"
+msgstr ""
+
+#: templates/base.html:238
+msgid "Admin"
+msgstr ""
+
+#: templates/admin/reports_list.html:3 templates/base.html:241
+msgid "Gestionar Reportes"
+msgstr ""
+
+#: templates/admin/appeals_list.html:3 templates/base.html:242
+msgid "Gestionar Apelaciones"
+msgstr ""
+
+#: templates/admin/users_list.html:3 templates/base.html:244
+msgid "Gestionar Usuarios"
+msgstr ""
+
+#: templates/base.html:245
+msgid "Gestionar Publicaciones"
+msgstr ""
+
+#: templates/base.html:246
+msgid "Gestionar Comentarios"
+msgstr ""
+
+#: templates/base.html:249
+msgid "Log de Acciones"
+msgstr ""
+
+#: templates/base.html:257
+msgid "Secciones"
+msgstr ""
+
+#: templates/base.html:263 templates/base.html:294
+msgid "Idioma"
+msgstr ""
+
+#: templates/base.html:279
+#, python-format
+msgid "Foto de perfil de %(username)s"
+msgstr ""
+
+#: templates/base.html:283
+msgid "Completar perfil"
+msgstr ""
+
+#: templates/base.html:289
+#, fuzzy
+msgid "Cerrar sesión"
+msgstr "Has cerrado sesión."
+
+#: templates/base.html:307
+msgid "Iniciar sesión"
+msgstr ""
+
+#: templates/base.html:320 templates/base.html:347 templates/base.html:371
+msgid "Cerrar"
+msgstr ""
+
+#: templates/base.html:332
+msgid "Conectando Pioneros."
+msgstr ""
+
+#: templates/base.html:334 templates/privacy_policy.html:3
+#: templates/privacy_policy.html:10
+msgid "Política de Privacidad"
+msgstr ""
+
+#: templates/base.html:336 templates/terms_of_service.html:3
+#: templates/terms_of_service.html:10
+msgid "Términos de Servicio"
+msgstr ""
+
+#: templates/base.html:346
+#, fuzzy
+msgid "Citar Publicación"
+msgstr "Publicación creada."
+
+#: templates/base.html:352
+msgid "Añade un comentario (opcional):"
+msgstr ""
+
+#: templates/base.html:353
+msgid "¿Qué estás pensando sobre esto?"
+msgstr ""
+
+#: templates/base.html:358
+msgid "Compartir ahora"
+msgstr ""
+
+#: templates/base.html:370
+msgid "Reportar Contenido"
+msgstr ""
+
+#: templates/base.html:378
+msgid ""
+"Gracias por ayudar a mantener segura la comunidad de PiVerse. Por favor, "
+"dinos por qué estás reportando este contenido."
+msgstr ""
+
+#: templates/base.html:381
+msgid "Motivo del reporte"
+msgstr ""
+
+#: templates/base.html:383
+msgid "Elige un motivo..."
+msgstr ""
+
+#: templates/base.html:384
+msgid "Spam o publicidad no deseada"
+msgstr ""
+
+#: templates/base.html:385
+msgid "Lenguaje o símbolos que incitan al odio"
+msgstr ""
+
+#: templates/base.html:386
+msgid "Acoso o bullying"
+msgstr ""
+
+#: templates/base.html:387
+msgid "Información falsa o engañosa"
+msgstr ""
+
+#: templates/base.html:388
+#, fuzzy
+msgid "Suplantación de identidad"
+msgstr "Autorización de Pi inválida."
+
+#: templates/base.html:389
+msgid "Contenido explícito o inapropiado"
+msgstr ""
+
+#: templates/base.html:390
+msgid "Otro motivo"
+msgstr ""
+
+#: templates/base.html:395
+msgid "Detalles adicionales (opcional)"
+msgstr ""
+
+#: templates/base.html:396
+msgid "Proporciona más información si es necesario."
+msgstr ""
+
+#: templates/base.html:402
+msgid "Enviar Reporte"
+msgstr ""
+
+#: templates/base.html:459
+msgid "Enviando..."
+msgstr ""
+
+#: templates/base.html:488
+msgid "Error de conexión. Inténtalo de nuevo."
+msgstr ""
+
+#: templates/base.html:600 templates/feed_contacts.html:169
+msgid "Respondiendo a"
+msgstr ""
+
+#: templates/contactos.html:3
+msgid "Mis Contactos y Bloqueados"
+msgstr ""
+
+#: templates/contactos.html:10
+msgid "Gestionar Contactos"
+msgstr ""
+
+#: templates/contactos.html:15
+msgid "Buscar en mis contactos..."
+msgstr ""
+
+#: templates/contactos.html:32
+#, fuzzy
+msgid "Usuarios Bloqueados"
+msgstr "Usuario no encontrado."
+
+#: templates/contactos.html:62
+#, python-format
+msgid ""
+"No se encontraron contactos que coincidan con "
+"\"<strong>%(term)s</strong>\"."
+msgstr ""
+
+#: templates/contactos.html:63
+msgid "Mostrar todos los contactos"
+msgstr ""
+
+#: templates/contactos.html:68 templates/feed_contacts.html:138
+#, fuzzy
+msgid "Aún no tienes contactos."
+msgstr "Usuario no encontrado."
+
+#: templates/contactos.html:69
+msgid ""
+"Puedes enviar solicitudes de contacto desde los perfiles de otros "
+"usuarios."
+msgstr ""
+
+#: templates/contactos.html:81
+msgid ""
+"Aquí puedes ver a los usuarios que has bloqueado. Si desbloqueas a "
+"alguien, podrás ver su contenido de nuevo, pero tendrás que volver a "
+"enviar una solicitud de contacto si deseas reconectar."
+msgstr ""
+
+#: templates/contactos.html:100
+msgid "Desbloquear"
+msgstr ""
+
+#: templates/contactos.html:108
+msgid "No has bloqueado a ningún usuario."
+msgstr ""
+
+#: templates/conversacion.html:3
+#, python-format
+msgid "Conversación con @%(username)s"
+msgstr ""
+
+#: templates/conversacion.html:20
+msgid "Volver a Mensajes"
+msgstr ""
+
+#: templates/conversacion.html:45
+msgid "Aún no hay mensajes. ¡Envía el primero!"
+msgstr ""
+
+#: templates/conversacion.html:53
+msgid "Escribe un mensaje..."
+msgstr ""
+
+#: templates/conversacion.html:54
+msgid "Enviar"
+msgstr ""
+
+#: templates/conversacion.html:108
+#, fuzzy
+msgid "Hubo un error al enviar tu mensaje."
+msgstr "Ocurrió un error al crear tu cuenta."
+
+#: templates/conversacion.html:112
+msgid "Hubo un error de red. Por favor, revisa tu conexión."
+msgstr ""
+
+#: templates/feed.html:4 templates/feed.html:27 templates/feed_contacts.html:33
+msgid "Feed"
+msgstr ""
+
+#: templates/feed.html:31 templates/feed_contacts.html:38
+msgid "Para ti"
+msgstr ""
+
+#: templates/feed.html:34 templates/feed_contacts.html:41
+msgid "Contactos"
+msgstr ""
+
+#: templates/feed.html:40
+#, fuzzy
+msgid "Nueva Publicación"
+msgstr "Publicación creada."
+
+#: templates/feed.html:43 templates/view_section.html:53
+#, python-format
+msgid "¿Qué estás pensando, %(username)s?"
+msgstr ""
+
+#: templates/feed.html:43 templates/index.html:33
+#: templates/view_section.html:53
+msgid "Pionero"
+msgstr ""
+
+#: templates/feed.html:47 templates/view_section.html:57
+msgid "Añadir imagen (opcional)"
+msgstr ""
+
+#: templates/feed.html:52
+msgid "Seleccionar Sección (opcional)"
+msgstr ""
+
+#: templates/feed.html:54
+msgid "Ninguna"
+msgstr ""
+
+#: templates/feed.html:61 templates/view_section.html:72
+msgid "Publicar"
+msgstr ""
+
+#: templates/feed.html:67 templates/view_section.html:80
+msgid "Ver nuevas publicaciones"
+msgstr ""
+
+#: templates/feed.html:75
+msgid "Aún no hay publicaciones en el feed."
+msgstr ""
+
+#: templates/feed.html:76
+msgid "¡Sigue a otros pioneros o crea tu primera publicación!"
+msgstr ""
+
+#: templates/feed.html:118 templates/feed.html:143
+#, fuzzy
+msgid "Has llegado al final."
+msgstr "Has cerrado sesión."
+
+#: templates/admin/reports_list.html:45 templates/feed.html:155
+#: templates/view_section.html:172
+msgid "Ver"
+msgstr ""
+
+#: templates/feed.html:155
+#, fuzzy
+msgid "publicaciones nuevas"
+msgstr "Publicación creada."
+
+#: templates/feed_contacts.html:4
+msgid "Feed de Contactos"
+msgstr ""
+
+#: templates/feed_contacts.html:61 templates/search_results.html:68
+msgid "Eliminar publicación"
+msgstr ""
+
+#: templates/feed_contacts.html:80 templates/ver_post.html:133
+msgid "No hay comentarios aún. ¡Sé el primero!"
+msgstr ""
+
+#: templates/feed_contacts.html:121
+msgid "No hay comentarios aún."
+msgstr ""
+
+#: templates/feed_contacts.html:123
+#, fuzzy
+msgid "Escribe un comentario sobre la publicación original..."
+msgstr "Ocurrió un error al crear la publicación."
+
+#: templates/feed_contacts.html:134
+msgid "Tus contactos aún no han publicado nada."
+msgstr ""
+
+#: templates/feed_contacts.html:135
+msgid "¡Anímales a compartir algo!"
+msgstr ""
+
+#: templates/feed_contacts.html:139
+msgid "Cuando conectes con otros pioneros, sus publicaciones aparecerán aquí."
+msgstr ""
+
+#: templates/index.html:3
+msgid "Bienvenido a PiVerse"
+msgstr ""
+
+#: templates/index.html:9
+msgid ""
+"Tu universo social dentro del ecosistema Pi Network. Conéctate, comparte "
+"y crece con otros pioneros."
+msgstr ""
+
+#: templates/index.html:13
+msgid "Explorar el Feed"
+msgstr ""
+
+#: templates/index.html:17
+#, python-format
+msgid ""
+"\n"
+"                    Por favor, %(profile_link_start)scompleta tu perfil "
+"público%(profile_link_end)s para acceder al feed y todas las funciones.\n"
+"                    "
+msgstr ""
+
+#: templates/index.html:24
+msgid "Únete a PiVerse"
+msgstr ""
+
+#: templates/index.html:25 templates/login.html:3
+msgid "Iniciar Sesión"
+msgstr ""
+
+#: templates/index.html:33
+#, python-format
+msgid "Hola de nuevo, <strong>%(username)s</strong>. ¿Listo para interactuar?"
+msgstr ""
+
+#: templates/index.html:42
+msgid "Conecta"
+msgstr ""
+
+#: templates/index.html:43
+msgid ""
+"Encuentra y establece lazos con otros pioneros de la red Pi de todo el "
+"mundo."
+msgstr ""
+
+#: templates/index.html:51
+msgid "Comparte"
+msgstr ""
+
+#: templates/index.html:52
+msgid ""
+"Publica tus ideas innovadoras, proyectos y las últimas noticias sobre Pi "
+"Network."
+msgstr ""
+
+#: templates/index.html:60
+msgid "Crece"
+msgstr ""
+
+#: templates/index.html:61
+msgid "Participa en discusiones, aprende y haz crecer el valor del ecosistema Pi."
+msgstr ""
+
+#: templates/login.html:12
+msgid "Accede a PiVerse"
+msgstr ""
+
+#: templates/login.html:13
+msgid "Usa tu cuenta de Pi Network para continuar."
+msgstr ""
+
+#: templates/login.html:19
+#, fuzzy
+msgid "Iniciar Sesión con Pi"
+msgstr "No se pudo verificar la sesión con Pi."
+
+#: templates/login.html:43
+#, fuzzy
+msgid "Esperando autorización de Pi..."
+msgstr "Autorización de Pi inválida."
+
+#: templates/login.html:51
+msgid "Verificando con el servidor..."
+msgstr ""
+
+#: templates/login.html:63
+msgid "¡Éxito! Redirigiendo..."
+msgstr ""
+
+#: templates/login.html:73
+#, fuzzy
+msgid "Error de conexión con el servidor."
+msgstr "Clave API de Pi no configurada en el servidor."
+
+#: templates/login.html:81
+#, fuzzy
+msgid "La autorización con Pi fue cancelada o falló."
+msgstr "Autorización de Pi inválida."
+
+#: templates/mensajes.html:3
+msgid "Mis Mensajes"
+msgstr ""
+
+#: templates/mensajes.html:35
+msgid "No tienes conversaciones."
+msgstr ""
+
+#: templates/mensajes.html:36
+msgid "Puedes iniciar una conversación desde el perfil de uno de tus contactos."
+msgstr ""
+
+#: templates/mensajes.html:46
+msgid "Selecciona una conversación"
+msgstr ""
+
+#: templates/mensajes.html:47
+msgid "O inicia una nueva desde el perfil de un contacto."
+msgstr ""
+
+#: templates/notificaciones.html:3
+msgid "Mis Notificaciones"
+msgstr ""
+
+#: templates/notificaciones.html:26 templates/ver_perfil.html:57
+msgid "Aceptar"
+msgstr ""
+
+#: templates/admin/appeals_list.html:53 templates/notificaciones.html:29
+#: templates/ver_perfil.html:58
+msgid "Rechazar"
+msgstr ""
+
+#: templates/notificaciones.html:40
+msgid "No tienes notificaciones."
+msgstr ""
+
+#: templates/privacy_policy.html:11 templates/terms_of_service.html:11
+msgid "Fecha de entrada en vigor:"
+msgstr ""
+
+#: templates/privacy_policy.html:13
+msgid "1. Introducción"
+msgstr ""
+
+#: templates/privacy_policy.html:14
+msgid ""
+"Bienvenido a PiVerse. Tu privacidad es fundamental para nosotros. Esta "
+"Política de Privacidad explica qué información recopilamos de ti, cómo la"
+" usamos y las medidas que tomamos para protegerla cuando utilizas nuestra"
+" plataforma (el \"Servicio\"). Al usar PiVerse, aceptas las prácticas "
+"aquí descritas."
+msgstr ""
+
+#: templates/privacy_policy.html:16
+msgid "2. Información que Recopilamos"
+msgstr ""
+
+#: templates/privacy_policy.html:18
+msgid "Información de tu Cuenta de Pi:"
+msgstr ""
+
+#: templates/privacy_policy.html:18
+msgid ""
+"Para crear tu cuenta, nos conectamos a la red de Pi a través del SDK "
+"oficial, del cual recibimos tu nombre de usuario de Pi y tu Identificador"
+" de Usuario único (UID de Pi). No recibimos ni almacenamos tu contraseña "
+"de Pi ni información de tu wallet."
+msgstr ""
+
+#: templates/privacy_policy.html:19
+msgid "Información de tu Perfil:"
+msgstr ""
+
+#: templates/privacy_policy.html:19
+msgid ""
+"Tienes la opción de proporcionar información adicional para tu perfil "
+"público, que incluye: un nombre de usuario público único (slug), una "
+"biografía y una foto de perfil. Esta información será visible para otros "
+"usuarios."
+msgstr ""
+
+#: templates/privacy_policy.html:20
+msgid "Contenido Generado por el Usuario:"
+msgstr ""
+
+#: templates/privacy_policy.html:20
+msgid ""
+"Recopilamos el contenido que creas en la plataforma, incluyendo: "
+"publicaciones, comentarios, reacciones, mensajes privados y reportes de "
+"contenido."
+msgstr ""
+
+#: templates/privacy_policy.html:21
+msgid "Información Técnica Recopilada Automáticamente:"
+msgstr ""
+
+#: templates/privacy_policy.html:21
+msgid ""
+"Usamos cookies de sesión estrictamente necesarias para mantener tu sesión"
+" iniciada y registramos datos técnicos estándar (como dirección IP) para "
+"seguridad y diagnóstico de errores."
+msgstr ""
+
+#: templates/privacy_policy.html:24
+msgid "3. Cómo Usamos tu Información"
+msgstr ""
+
+#: templates/privacy_policy.html:25
+msgid ""
+"Utilizamos la información recopilada para operar y mantener el servicio, "
+"autenticarte, permitir la interacción con otros usuarios, aplicar "
+"nuestras normas y comunicarnos contigo."
+msgstr ""
+
+#: templates/privacy_policy.html:27
+msgid "4. Cómo Compartimos tu Información"
+msgstr ""
+
+#: templates/privacy_policy.html:28
+msgid ""
+"Tu perfil y contenido público son visibles para otros. Los mensajes "
+"privados son confidenciales. Nunca venderemos ni alquilaremos tu "
+"información personal a terceros para fines de marketing."
+msgstr ""
+
+#: templates/privacy_policy.html:30
+msgid "5. Tus Derechos y Control"
+msgstr ""
+
+#: templates/privacy_policy.html:31
+msgid ""
+"Puedes acceder y modificar la información de tu perfil, así como eliminar"
+" tus publicaciones y comentarios. Para eliminar tu cuenta, por favor, "
+"contacta con nosotros."
+msgstr ""
+
+#: templates/privacy_policy.html:33
+msgid "6. Seguridad de los Datos"
+msgstr ""
+
+#: templates/privacy_policy.html:34
+msgid ""
+"Implementamos medidas de seguridad razonables para proteger tus datos, "
+"incluyendo conexiones seguras (HTTPS) y técnicas de hasheo."
+msgstr ""
+
+#: templates/privacy_policy.html:36
+msgid "7. Privacidad de los Menores"
+msgstr ""
+
+#: templates/privacy_policy.html:37
+msgid "Nuestro servicio no está dirigido a personas menores de 16 años."
+msgstr ""
+
+#: templates/privacy_policy.html:39
+msgid "8. Cambios en esta Política"
+msgstr ""
+
+#: templates/privacy_policy.html:40
+msgid ""
+"Te notificaremos de los cambios materiales en esta política publicando la"
+" nueva versión en esta página."
+msgstr ""
+
+#: templates/privacy_policy.html:42
+msgid "9. Contacto"
+msgstr ""
+
+#: templates/privacy_policy.html:43
+msgid ""
+"Si tienes alguna pregunta sobre esta Política de Privacidad, contáctanos "
+"en: support@piverse.app"
+msgstr ""
+
+#: templates/profile.html:3
+msgid "Mi perfil"
+msgstr ""
+
+#: templates/profile.html:6
+msgid "Editar perfil"
+msgstr ""
+
+#: templates/profile.html:10
+#, fuzzy
+msgid "Nombre de usuario público"
+msgstr "El nombre de usuario público no puede estar vacío."
+
+#: templates/profile.html:16
+msgid "Biografía"
+msgstr ""
+
+#: templates/profile.html:21 templates/profile.html:28
+msgid "Imagen de perfil"
+msgstr ""
+
+#: templates/profile.html:27
+msgid "Vista previa actual:"
+msgstr ""
+
+#: templates/profile.html:32
+msgid "Guardar cambios"
+msgstr ""
+
+#: templates/register.html:3 templates/register.html:6
+msgid "Registro"
+msgstr ""
+
+#: templates/register.html:9
+msgid "Nombre de usuario:"
+msgstr ""
+
+#: templates/register.html:13
+msgid "Contraseña:"
+msgstr ""
+
+#: templates/register.html:16
+msgid "Registrarse"
+msgstr ""
+
+#: templates/register.html:18
+#, python-format
+msgid "¿Ya tienes cuenta? <a href=\"%(login_url)s\">Inicia sesión aquí</a>"
+msgstr ""
+
+#: templates/search_results.html:4
+#, python-format
+msgid "Resultados de Búsqueda para \"%(query)s\""
+msgstr ""
+
+#: templates/search_results.html:35
+msgid "Volver al Feed"
+msgstr ""
+
+#: templates/search_results.html:38
+#, python-format
+msgid "Resultados de búsqueda para: \"<strong>%(query)s</strong>\""
+msgstr ""
+
+#: templates/search_results.html:40
+msgid "Búsqueda de Publicaciones"
+msgstr ""
+
+#: templates/search_results.html:188
+#, python-format
+msgid ""
+"No se encontraron publicaciones que coincidan con "
+"\"<strong>%(query)s</strong>\"."
+msgstr ""
+
+#: templates/sections_list.html:3 templates/sections_list.html:8
+msgid "Secciones de Discusión"
+msgstr ""
+
+#: templates/sections_list.html:19
+#, python-format
+msgid "Icono de %(section_name)s"
+msgstr ""
+
+#: templates/sections_list.html:33
+#, fuzzy
+msgid "Ver publicaciones"
+msgstr "Publicación creada."
+
+#: templates/sections_list.html:41
+msgid "Aún no hay secciones definidas."
+msgstr ""
+
+#: templates/terms_of_service.html:13
+msgid "1. Aceptación de los Términos"
+msgstr ""
+
+#: templates/terms_of_service.html:14
+msgid ""
+"Bienvenido a PiVerse (el \"Servicio\"). Estos Términos de Servicio "
+"(\"Términos\") rigen tu acceso y uso de nuestra plataforma. Al acceder o "
+"utilizar el Servicio, aceptas estar sujeto a estos Términos."
+msgstr ""
+
+#: templates/terms_of_service.html:16
+msgid "2. Cuentas de Usuario y Elegibilidad"
+msgstr ""
+
+#: templates/terms_of_service.html:17
+msgid ""
+"Debes tener una cuenta de Pi Network y ser mayor de 16 años para usar "
+"PiVerse. Eres responsable de la seguridad de tu cuenta."
+msgstr ""
+
+#: templates/terms_of_service.html:19
+msgid "3. Contenido del Usuario"
+msgstr ""
+
+#: templates/terms_of_service.html:20
+msgid ""
+"Tú retienes la propiedad de todo el contenido que publicas. Sin embargo, "
+"al publicarlo, nos otorgas una licencia para mostrarlo y distribuirlo "
+"dentro de la plataforma PiVerse. No puedes publicar contenido ilegal, que"
+" incite al odio, spam o que infrinja los derechos de otros."
+msgstr ""
+
+#: templates/terms_of_service.html:22
+msgid "4. Conducta del Usuario"
+msgstr ""
+
+#: templates/terms_of_service.html:23
+msgid ""
+"Te comprometes a no acosar a otros usuarios, no suplantar identidades ni "
+"intentar dañar la integridad de la plataforma."
+msgstr ""
+
+#: templates/terms_of_service.html:25
+msgid "5. Moderación y Aplicación de Normas"
+msgstr ""
+
+#: templates/terms_of_service.html:26
+msgid ""
+"Nos reservamos el derecho de moderar contenido y aplicar sanciones (como "
+"la suspensión de cuentas) a quienes violen estos Términos, ofreciendo un "
+"proceso de apelación."
+msgstr ""
+
+#: templates/terms_of_service.html:28
+msgid "6. Propinas (Tipping) y Transacciones P2P"
+msgstr ""
+
+#: templates/terms_of_service.html:29
+msgid ""
+"PiVerse actúa únicamente como un facilitador técnico para transacciones "
+"Peer-to-Peer (P2P) con la moneda Pi. No somos parte de ninguna "
+"transacción, no custodiamos fondos y no somos responsables de disputas, "
+"pérdidas o implicaciones fiscales entre usuarios."
+msgstr ""
+
+#: templates/terms_of_service.html:31
+msgid "7. Limitación de Responsabilidad"
+msgstr ""
+
+#: templates/terms_of_service.html:32
+msgid ""
+"El Servicio se proporciona \"tal cual\", sin garantías. Nuestra "
+"responsabilidad por cualquier daño derivado del uso del servicio es "
+"limitada en la máxima medida permitida por la ley."
+msgstr ""
+
+#: templates/terms_of_service.html:34
+msgid "8. Terminación"
+msgstr ""
+
+#: templates/terms_of_service.html:35
+msgid ""
+"Podemos suspender o cancelar tu cuenta si violas estos Términos. Puedes "
+"solicitar la eliminación de tu cuenta contactándonos."
+msgstr ""
+
+#: templates/terms_of_service.html:37
+msgid "9. Ley Aplicable"
+msgstr ""
+
+#: templates/terms_of_service.html:38
+msgid "Estos Términos se regirán por las leyes de España."
+msgstr ""
+
+#: templates/terms_of_service.html:40
+msgid "10. Contacto"
+msgstr ""
+
+#: templates/terms_of_service.html:41
+msgid ""
+"Si tienes alguna pregunta sobre estos Términos, contáctanos en: "
+"support@piverse.app"
+msgstr ""
+
+#: templates/ver_perfil.html:3
+#, python-format
+msgid "Perfil de @%(username)s"
+msgstr ""
+
+#: templates/ver_perfil.html:46
+msgid "Editar mi perfil"
+msgstr ""
+
+#: templates/ver_perfil.html:50
+msgid "Sin biografía."
+msgstr ""
+
+#: templates/ver_perfil.html:55
+msgid "te ha enviado una solicitud de contacto."
+msgstr ""
+
+#: templates/ver_perfil.html:62
+msgid "Enviar Mensaje"
+msgstr ""
+
+#: templates/ver_perfil.html:63
+msgid "¿Estás seguro de que quieres eliminar este contacto?"
+msgstr ""
+
+#: templates/ver_perfil.html:63
+msgid "Eliminar contacto"
+msgstr ""
+
+#: templates/ver_perfil.html:66
+msgid "Solicitud de contacto enviada y pendiente de respuesta."
+msgstr ""
+
+#: templates/ver_perfil.html:67
+msgid "¿Estás seguro de que quieres cancelar esta solicitud de contacto?"
+msgstr ""
+
+#: templates/ver_perfil.html:67
+msgid "Cancelar Solicitud"
+msgstr ""
+
+#: templates/ver_perfil.html:69
+msgid "Enviar solicitud de contacto"
+msgstr ""
+
+#: templates/ver_perfil.html:73
+msgid "Más acciones"
+msgstr ""
+
+#: templates/ver_perfil.html:81
+msgid "Desbloquear Usuario"
+msgstr ""
+
+#: templates/ver_perfil.html:87
+msgid ""
+"¿Estás seguro de que quieres bloquear a este usuario? No podrás ver su "
+"contenido ni interactuar, y se eliminará de tus contactos si lo es."
+msgstr ""
+
+#: templates/ver_perfil.html:89
+#, fuzzy
+msgid "Bloquear Usuario"
+msgstr "Usuario"
+
+#: templates/ver_perfil.html:101
+#, python-format
+msgid "Actividad de @%(username)s:"
+msgstr ""
+
+#: templates/ver_perfil.html:129 templates/ver_post.html:52
+msgid "Eliminar"
+msgstr ""
+
+#: templates/ver_perfil.html:247
+msgid ""
+"Este usuario aún no tiene actividad (publicaciones o contenido "
+"compartido)."
+msgstr ""
+
+#: templates/ver_post.html:4
+#, fuzzy
+msgid "Publicación de"
+msgstr "Publicación creada."
+
+#: templates/ver_post.html:22
+msgid "Volver"
+msgstr ""
+
+#: templates/ver_post.html:58
+msgid "Reportar"
+msgstr ""
+
+#: templates/view_section.html:4 templates/view_section.html:40
+msgid "Sección:"
+msgstr ""
+
+#: templates/view_section.html:42
+msgid "Ver todas las secciones"
+msgstr ""
+
+#: templates/view_section.html:49
+msgid "Nueva Publicación en esta Sección"
+msgstr ""
+
+#: templates/view_section.html:62
+msgid "Sección"
+msgstr ""
+
+#: templates/view_section.html:77
+msgid "Publicaciones en esta sección"
+msgstr ""
+
+#: templates/view_section.html:89
+msgid "Aún no hay publicaciones en esta sección."
+msgstr ""
+
+#: templates/view_section.html:90
+msgid "¡Sé el primero en publicar algo aquí!"
+msgstr ""
+
+#: templates/view_section.html:132 templates/view_section.html:160
+msgid "Has llegado al final de la sección."
+msgstr ""
+
+#: templates/view_section.html:172
+msgid "nuevas"
+msgstr ""
+
+#: templates/admin/appeals_list.html:7
+msgid "Centro de Apelaciones"
+msgstr ""
+
+#: templates/admin/appeals_list.html:11
+msgid "Apelaciones Pendientes de Decisión Final"
+msgstr ""
+
+#: templates/admin/appeals_list.html:19
+msgid "ID Apelación"
+msgstr ""
+
+#: templates/admin/appeals_list.html:20
+msgid "Usuario que apela"
+msgstr ""
+
+#: templates/admin/appeals_list.html:21
+msgid "Texto de la Apelación"
+msgstr ""
+
+#: templates/admin/appeals_list.html:22
+msgid "Decisión Original"
+msgstr ""
+
+#: templates/admin/appeals_list.html:23
+msgid "Contenido Original"
+msgstr ""
+
+#: templates/admin/appeals_list.html:24 templates/admin/comments_list.html:38
+#: templates/admin/posts_list.html:38 templates/admin/reports_list.html:25
+#: templates/admin/users_list.html:39
+msgid "Acciones"
+msgstr ""
+
+#: templates/admin/appeals_list.html:36
+msgid "Ver adjunto"
+msgstr ""
+
+#: templates/admin/appeals_list.html:42
+#, python-format
+msgid "Reporte #%(report_id)s revisado por %(mod)s"
+msgstr ""
+
+#: templates/admin/appeals_list.html:52 templates/admin/reports_list.html:54
+msgid "Aprobar"
+msgstr ""
+
+#: templates/admin/appeals_list.html:64
+msgid "No hay apelaciones pendientes."
+msgstr ""
+
+#: templates/admin/appeals_list.html:83 templates/admin/reports_list.html:87
+#, fuzzy
+msgid "Respuesta predefinida"
+msgstr "Respuesta de Pi inválida."
+
+#: templates/admin/appeals_list.html:88 templates/admin/reports_list.html:94
+msgid "Mensaje personalizado:"
+msgstr ""
+
+#: templates/admin/appeals_list.html:144 templates/admin/reports_list.html:162
+msgid "Otro motivo (escribir manualmente)..."
+msgstr ""
+
+#: templates/admin/appeals_list.html:147
+msgid "Aprobar Apelación #"
+msgstr ""
+
+#: templates/admin/appeals_list.html:148
+msgid ""
+"La decisión original será revertida. Elige o escribe un mensaje para "
+"notificar a"
+msgstr ""
+
+#: templates/admin/appeals_list.html:150
+msgid "Confirmar Aprobación"
+msgstr ""
+
+#: templates/admin/appeals_list.html:152
+msgid "Rechazar Apelación #"
+msgstr ""
+
+#: templates/admin/appeals_list.html:153
+msgid ""
+"La decisión original será mantenida. Elige o escribe un mensaje para "
+"notificar a"
+msgstr ""
+
+#: templates/admin/appeals_list.html:155
+msgid "Confirmar Rechazo"
+msgstr ""
+
+#: templates/admin/appeals_list.html:170 templates/admin/reports_list.html:189
+#: templates/admin/users_list.html:148
+msgid "Procesando..."
+msgstr ""
+
+#: templates/admin/appeals_list.html:194 templates/admin/reports_list.html:214
+#: templates/admin/users_list.html:174
+msgid "Error de red."
+msgstr ""
+
+#: templates/admin/comments_list.html:3 templates/admin/comments_list.html:9
+msgid "Administración de Comentarios"
+msgstr ""
+
+#: templates/admin/comments_list.html:15 templates/admin/log_list.html:17
+#: templates/admin/posts_list.html:15 templates/admin/users_list.html:12
+#, fuzzy
+msgid "Usuarios"
+msgstr "Usuario"
+
+#: templates/admin/comments_list.html:18 templates/admin/log_list.html:20
+#: templates/admin/posts_list.html:18 templates/admin/users_list.html:15
+#, fuzzy
+msgid "Publicaciones"
+msgstr "Publicación creada."
+
+#: templates/admin/comments_list.html:24 templates/admin/log_list.html:26
+#: templates/admin/posts_list.html:24 templates/admin/users_list.html:21
+msgid "Registro de Acciones"
+msgstr ""
+
+#: templates/admin/comments_list.html:34
+msgid "Autor"
+msgstr ""
+
+#: templates/admin/comments_list.html:35
+msgid "Comentario"
+msgstr ""
+
+#: templates/admin/comments_list.html:36
+msgid "En Respuesta a Post"
+msgstr ""
+
+#: templates/admin/comments_list.html:37 templates/admin/log_list.html:35
+#: templates/admin/posts_list.html:37 templates/admin/reports_list.html:20
+msgid "Fecha"
+msgstr ""
+
+#: templates/admin/comments_list.html:45 templates/admin/posts_list.html:46
+msgid "Oculto"
+msgstr ""
+
+#: templates/admin/comments_list.html:60
+#, fuzzy
+msgid "Publicación eliminada"
+msgstr "Publicación creada."
+
+#: templates/admin/comments_list.html:70
+#, python-format
+msgid "¿Estás seguro de que quieres ocultar este comentario (ID: %(comment_id)s)?"
+msgstr ""
+
+#: templates/admin/comments_list.html:71
+msgid "Ocultar Comentario"
+msgstr ""
+
+#: templates/admin/comments_list.html:81
+msgid "No se encontraron comentarios."
+msgstr ""
+
+#: templates/admin/edit_post.html:3 templates/admin/edit_post.html:9
+msgid "Editar Publicación"
+msgstr ""
+
+#: templates/admin/edit_post.html:10
+msgid "Volver a la lista de publicaciones"
+msgstr ""
+
+#: templates/admin/edit_post.html:18
+msgid "Contenido de la Publicación"
+msgstr ""
+
+#: templates/admin/edit_post.html:24
+msgid "Guardar Cambios"
+msgstr ""
+
+#: templates/admin/log_list.html:3 templates/admin/log_list.html:9
+msgid "Registro de Auditoría"
+msgstr ""
+
+#: templates/admin/log_list.html:10
+msgid "Historial de acciones de moderadores, coordinadores y administradores."
+msgstr ""
+
+#: templates/admin/log_list.html:36
+msgid "Actor"
+msgstr ""
+
+#: templates/admin/log_list.html:37
+msgid "Acción"
+msgstr ""
+
+#: templates/admin/log_list.html:38
+msgid "Detalles"
+msgstr ""
+
+#: templates/admin/log_list.html:55
+msgid "No hay acciones registradas en el log de auditoría."
+msgstr ""
+
+#: templates/admin/posts_list.html:3 templates/admin/posts_list.html:9
+msgid "Administración de Publicaciones"
+msgstr ""
+
+#: templates/admin/posts_list.html:34
+msgid "Autor / Compartido por"
+msgstr ""
+
+#: templates/admin/posts_list.html:35
+msgid "Contenido"
+msgstr ""
+
+#: templates/admin/posts_list.html:36
+msgid "Imagen / Enlace"
+msgstr ""
+
+#: templates/admin/posts_list.html:50
+msgid "Post"
+msgstr ""
+
+#: templates/admin/posts_list.html:52
+msgid "Share"
+msgstr ""
+
+#: templates/admin/posts_list.html:73
+msgid "Cita de post de"
+msgstr ""
+
+#: templates/admin/posts_list.html:80
+msgid "Imagen del post"
+msgstr ""
+
+#: templates/admin/posts_list.html:99
+msgid "Ver Post"
+msgstr ""
+
+#: templates/admin/posts_list.html:100
+msgid "Editar Post"
+msgstr ""
+
+#: templates/admin/posts_list.html:101
+#, python-format
+msgid "¿Estás seguro de que quieres ocultar esta publicación (ID: %(post_id)s)?"
+msgstr ""
+
+#: templates/admin/posts_list.html:102
+msgid "Ocultar Post"
+msgstr ""
+
+#: templates/admin/posts_list.html:105
+msgid "Ver Post Original"
+msgstr ""
+
+#: templates/admin/posts_list.html:117
+msgid "No se encontraron publicaciones."
+msgstr ""
+
+#: templates/admin/reports_list.html:7
+msgid "Centro de Reportes"
+msgstr ""
+
+#: templates/admin/reports_list.html:11
+msgid "Reportes Pendientes de Revisión"
+msgstr ""
+
+#: templates/admin/reports_list.html:19
+msgid "ID"
+msgstr ""
+
+#: templates/admin/reports_list.html:21
+msgid "Reportado por"
+msgstr ""
+
+#: templates/admin/reports_list.html:22
+#, fuzzy
+msgid "Usuario del Contenido"
+msgstr "Usuario no encontrado."
+
+#: templates/admin/reports_list.html:23
+msgid "Motivo"
+msgstr ""
+
+#: templates/admin/reports_list.html:24
+msgid "Ver Contenido"
+msgstr ""
+
+#: templates/admin/reports_list.html:51
+msgid "Desestimar"
+msgstr ""
+
+#: templates/admin/reports_list.html:66
+msgid "¡Excelente! No hay reportes pendientes."
+msgstr ""
+
+#: templates/admin/reports_list.html:78
+msgid "Resolver Reporte"
+msgstr ""
+
+#: templates/admin/reports_list.html:101
+msgid "Eliminar también el contenido reportado (publicación/comentario)"
+msgstr ""
+
+#: templates/admin/reports_list.html:108
+msgid "Confirmar Resolución"
+msgstr ""
+
+#: templates/admin/reports_list.html:165
+msgid "Acción: APROBAR REPORTE. El mensaje se enviará al usuario reportado:"
+msgstr ""
+
+#: templates/admin/reports_list.html:169
+msgid "Acción: DESESTIMAR REPORTE. El mensaje se enviará al usuario que reportó:"
+msgstr ""
+
+#: templates/admin/users_list.html:7
+msgid "Gestión de Usuarios"
+msgstr ""
+
+#: templates/admin/users_list.html:28
+msgid "Lista de Usuarios"
+msgstr ""
+
+#: templates/admin/users_list.html:36
+#, fuzzy
+msgid "Usuario de Login"
+msgstr "Usuario"
+
+#: templates/admin/users_list.html:37
+msgid "Usuario de Perfil"
+msgstr ""
+
+#: templates/admin/users_list.html:38
+msgid "Rol"
+msgstr ""
+
+#: templates/admin/users_list.html:51
+msgid "Sin perfil"
+msgstr ""
+
+#: templates/admin/users_list.html:64
+msgid "Guardar"
+msgstr ""
+
+#: templates/admin/users_list.html:74
+msgid "Sancionar"
+msgstr ""
+
+#: templates/admin/users_list.html:97
+msgid "Tipo y Duración de la Sanción"
+msgstr ""
+
+#: templates/admin/users_list.html:99
+msgid "Silenciar por 7 Días"
+msgstr ""
+
+#: templates/admin/users_list.html:100
+msgid "Silenciar por 30 Días"
+msgstr ""
+
+#: templates/admin/users_list.html:101
+msgid "Suspender por 1 Día"
+msgstr ""
+
+#: templates/admin/users_list.html:102
+msgid "Suspender por 7 Días"
+msgstr ""
+
+#: templates/admin/users_list.html:103
+msgid "Suspender por 30 Días"
+msgstr ""
+
+#: templates/admin/users_list.html:104
+msgid "Suspensión Permanente"
+msgstr ""
+
+#: templates/admin/users_list.html:105
+msgid "Levantar Todas las Sanciones"
+msgstr ""
+
+#: templates/admin/users_list.html:109
+msgid "Motivo de la Sanción (se notificará al usuario)"
+msgstr ""
+
+#: templates/admin/users_list.html:116
+msgid "Aplicar Sanción"
+msgstr ""
+
+#: templates/admin/users_list.html:139
+msgid "Sancionar a"
+msgstr ""
+
+#: venv/Lib/site-packages/click/_termui_impl.py:556
+#, python-brace-format
+msgid "{editor}: Editing failed"
+msgstr ""
+
+#: venv/Lib/site-packages/click/_termui_impl.py:560
+#, python-brace-format
+msgid "{editor}: Editing failed: {e}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:1124
+msgid "Aborted!"
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:1349
+#: venv/Lib/site-packages/click/core.py:1379
+#, python-brace-format
+msgid "(Deprecated) {text}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:1396
+msgid "Options"
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:1422
+#, python-brace-format
+msgid "Got unexpected extra argument ({args})"
+msgid_plural "Got unexpected extra arguments ({args})"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/Lib/site-packages/click/core.py:1438
+#, python-brace-format
+msgid "DeprecationWarning: The command {name!r} is deprecated."
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:1645
+msgid "Commands"
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:1677
+msgid "Missing command."
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:1755
+#, python-brace-format
+msgid "No such command {name!r}."
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:2313
+msgid "Value must be an iterable."
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:2334
+#, python-brace-format
+msgid "Takes {nargs} values but 1 was given."
+msgid_plural "Takes {nargs} values but {len} were given."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/Lib/site-packages/click/core.py:2783
+#, python-brace-format
+msgid "env var: {var}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:2813
+msgid "(dynamic)"
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:2828
+#, python-brace-format
+msgid "default: {default}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/core.py:2841
+msgid "required"
+msgstr ""
+
+#: venv/Lib/site-packages/click/decorators.py:457
+#, python-format
+msgid "%(prog)s, version %(version)s"
+msgstr ""
+
+#: venv/Lib/site-packages/click/decorators.py:520
+msgid "Show the version and exit."
+msgstr ""
+
+#: venv/Lib/site-packages/click/decorators.py:541
+msgid "Show this message and exit."
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:49
+#: venv/Lib/site-packages/click/exceptions.py:88
+#, python-brace-format
+msgid "Error: {message}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:80
+#, python-brace-format
+msgid "Try '{command} {option}' for help."
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:129
+#, python-brace-format
+msgid "Invalid value: {message}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:131
+#, python-brace-format
+msgid "Invalid value for {param_hint}: {message}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:187
+msgid "Missing argument"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:189
+msgid "Missing option"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:191
+msgid "Missing parameter"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:193
+#, python-brace-format
+msgid "Missing {param_type}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:200
+#, python-brace-format
+msgid "Missing parameter: {param_name}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:220
+#, python-brace-format
+msgid "No such option: {name}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:232
+#, python-brace-format
+msgid "Did you mean {possibility}?"
+msgid_plural "(Possible options: {possibilities})"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/Lib/site-packages/click/exceptions.py:270
+msgid "unknown error"
+msgstr ""
+
+#: venv/Lib/site-packages/click/exceptions.py:277
+#, python-brace-format
+msgid "Could not open file {filename!r}: {message}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/parser.py:233
+#, python-brace-format
+msgid "Argument {name!r} takes {nargs} values."
+msgstr ""
+
+#: venv/Lib/site-packages/click/parser.py:415
+#, python-brace-format
+msgid "Option {name!r} does not take a value."
+msgstr ""
+
+#: venv/Lib/site-packages/click/parser.py:476
+#, python-brace-format
+msgid "Option {name!r} requires an argument."
+msgid_plural "Option {name!r} requires {nargs} arguments."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/Lib/site-packages/click/shell_completion.py:326
+msgid "Shell completion is not supported for Bash versions older than 4.4."
+msgstr ""
+
+#: venv/Lib/site-packages/click/shell_completion.py:333
+msgid "Couldn't detect Bash version, shell completion is not supported."
+msgstr ""
+
+#: venv/Lib/site-packages/click/termui.py:158
+msgid "Repeat for confirmation"
+msgstr ""
+
+#: venv/Lib/site-packages/click/termui.py:174
+msgid "Error: The value you entered was invalid."
+msgstr ""
+
+#: venv/Lib/site-packages/click/termui.py:176
+#, python-brace-format
+msgid "Error: {e.message}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/termui.py:187
+msgid "Error: The two entered values do not match."
+msgstr ""
+
+#: venv/Lib/site-packages/click/termui.py:243
+msgid "Error: invalid input"
+msgstr ""
+
+#: venv/Lib/site-packages/click/termui.py:773
+msgid "Press any key to continue..."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:267
+#, python-brace-format
+msgid ""
+"Choose from:\n"
+"\t{choices}"
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:299
+#, python-brace-format
+msgid "{value!r} is not {choice}."
+msgid_plural "{value!r} is not one of {choices}."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/Lib/site-packages/click/types.py:393
+#, python-brace-format
+msgid "{value!r} does not match the format {format}."
+msgid_plural "{value!r} does not match the formats {formats}."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/Lib/site-packages/click/types.py:415
+#, python-brace-format
+msgid "{value!r} is not a valid {number_type}."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:471
+#, python-brace-format
+msgid "{value} is not in the range {range}."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:612
+#, python-brace-format
+msgid "{value!r} is not a valid boolean."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:636
+#, python-brace-format
+msgid "{value!r} is not a valid UUID."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:826
+msgid "file"
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:828
+msgid "directory"
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:830
+msgid "path"
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:881
+#, python-brace-format
+msgid "{name} {filename!r} does not exist."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:890
+#, python-brace-format
+msgid "{name} {filename!r} is a file."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:898
+#, python-brace-format
+msgid "{name} {filename!r} is a directory."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:907
+#, python-brace-format
+msgid "{name} {filename!r} is not readable."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:916
+#, python-brace-format
+msgid "{name} {filename!r} is not writable."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:925
+#, python-brace-format
+msgid "{name} {filename!r} is not executable."
+msgstr ""
+
+#: venv/Lib/site-packages/click/types.py:992
+#, python-brace-format
+msgid "{len_type} values are required, but {len_value} was given."
+msgid_plural "{len_type} values are required, but {len_value} were given."
+msgstr[0] ""
+msgstr[1] ""
+
+#~ msgid "%(commenter_lin"
+#~ msgstr ""
+

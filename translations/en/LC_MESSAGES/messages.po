@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PiVerse 1.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-09 14:03+0200\n"
+"POT-Creation-Date: 2025-06-09 20:45+0200\n"
 "PO-Revision-Date: 2025-06-08 14:00+0200\n"
 "Last-Translator: Gemini Assistant\n"
 "Language: en\n"
@@ -17,15 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
-
-msgid "Política de Privacidad"
-msgstr "Privacy Policy"
-
-msgid "Términos de Servicio"
-msgstr "Terms of Service"
-
-msgid "Fecha de entrada en vigor:"
-msgstr "Effective Date:"
 
 #: app.py:314
 msgid "Autenticación requerida. Por favor, inicia sesión."
@@ -124,7 +115,7 @@ msgstr "This username is already in use. Please contact support."
 
 #: app.py:748
 msgid "Ocurrió un error al crear tu cuenta."
-msgstr An error occurred while creating your account."
+msgstr "An error occurred while creating your account."
 
 #: app.py:754
 msgid "¡Bienvenido! Por favor, completa tu perfil público para continuar."
@@ -197,7 +188,6 @@ msgid "Publicación creada."
 msgstr "Post created."
 
 #: app.py:911
-#, python-format
 msgid "Ocurrió un error al crear la publicación."
 msgstr "An error occurred while creating the post."
 
@@ -244,7 +234,6 @@ msgid "Comentario añadido."
 msgstr "Comment added."
 
 #: app.py:1044
-#, python-format
 msgid "Ocurrió un error al añadir el comentario."
 msgstr "An error occurred while adding the comment."
 
@@ -295,7 +284,6 @@ msgid "Ya has compartido esta publicación anteriormente."
 msgstr "You have already shared this post."
 
 #: app.py:1176
-#, python-format
 msgid "Ha ocurrido un error al intentar compartir la publicación."
 msgstr "An error occurred while trying to share the post."
 
@@ -378,7 +366,6 @@ msgid "Este usuario ya está en tu lista de bloqueados."
 msgstr "This user is already on your blocked list."
 
 #: app.py:1338
-#, python-format
 msgid "Ha ocurrido un error al intentar bloquear al usuario."
 msgstr "An error occurred while trying to block the user."
 
@@ -420,9 +407,7 @@ msgstr ""
 
 #: app.py:1510
 msgid "Ocurrió un error en el servidor al procesar tu reporte."
-msgstr ""
-"A server error occurred while processing your report."
-"later."
+msgstr "A server error occurred while processing your report.later."
 
 #: app.py:1533
 msgid "Faltan datos."
@@ -471,7 +456,7 @@ msgid "Eliminar Comentario"
 msgstr "Delete Comment"
 
 #: templates/_macros.html:69 templates/_post_card.html:53
-#: templates/_post_card.html:122 templates/base.html:563
+#: templates/_post_card.html:122 templates/base.html:568
 #: templates/feed_contacts.html:70 templates/feed_contacts.html:111
 #: templates/search_results.html:108 templates/ver_perfil.html:149
 #: templates/ver_perfil.html:224 templates/ver_post.html:101
@@ -610,7 +595,7 @@ msgstr "Submit Appeal"
 
 #: templates/admin/appeals_list.html:95 templates/admin/reports_list.html:107
 #: templates/admin/users_list.html:115 templates/appeal_form.html:28
-#: templates/base.html:352 templates/base.html:396
+#: templates/base.html:357 templates/base.html:401
 msgid "Cancelar"
 msgstr "Cancel"
 
@@ -711,39 +696,45 @@ msgstr "Logout"
 msgid "Iniciar sesión"
 msgstr "Login"
 
-#: templates/base.html:320 templates/base.html:342 templates/base.html:366
+#: templates/base.html:320 templates/base.html:347 templates/base.html:371
 msgid "Cerrar"
 msgstr "Close"
-
-#: templates/base.html:332
-msgid "Año actual"
-msgstr "Current year"
 
 #: templates/base.html:332
 msgid "Conectando Pioneros."
 msgstr "Connecting Pioneers."
 
-#: templates/base.html:341
+#: templates/base.html:334 templates/privacy_policy.html:3
+#: templates/privacy_policy.html:10
+msgid "Política de Privacidad"
+msgstr "Privacy Policy"
+
+#: templates/base.html:336 templates/terms_of_service.html:3
+#: templates/terms_of_service.html:10
+msgid "Términos de Servicio"
+msgstr "Terms of Service"
+
+#: templates/base.html:346
 msgid "Citar Publicación"
 msgstr "Quote Post"
 
-#: templates/base.html:347
+#: templates/base.html:352
 msgid "Añade un comentario (opcional):"
 msgstr "Add a comment (optional):"
 
-#: templates/base.html:348
+#: templates/base.html:353
 msgid "¿Qué estás pensando sobre esto?"
 msgstr "What are you thinking about this?"
 
-#: templates/base.html:353
+#: templates/base.html:358
 msgid "Compartir ahora"
 msgstr "Share now"
 
-#: templates/base.html:365
+#: templates/base.html:370
 msgid "Reportar Contenido"
 msgstr "Report Content"
 
-#: templates/base.html:373
+#: templates/base.html:378
 msgid ""
 "Gracias por ayudar a mantener segura la comunidad de PiVerse. Por favor, "
 "dinos por qué estás reportando este contenido."
@@ -751,63 +742,63 @@ msgstr ""
 "Thank you for helping keep the PiVerse community safe. Please tell us why"
 " you are reporting this content."
 
-#: templates/base.html:376
+#: templates/base.html:381
 msgid "Motivo del reporte"
 msgstr "Reason for reporting"
 
-#: templates/base.html:378
+#: templates/base.html:383
 msgid "Elige un motivo..."
 msgstr "Choose a reason..."
 
-#: templates/base.html:379
+#: templates/base.html:384
 msgid "Spam o publicidad no deseada"
 msgstr "Spam or unwanted advertising"
 
-#: templates/base.html:380
+#: templates/base.html:385
 msgid "Lenguaje o símbolos que incitan al odio"
 msgstr "Hate speech or symbols"
 
-#: templates/base.html:381
+#: templates/base.html:386
 msgid "Acoso o bullying"
 msgstr "Harassment or bullying"
 
-#: templates/base.html:382
+#: templates/base.html:387
 msgid "Información falsa o engañosa"
 msgstr "False or misleading information"
 
-#: templates/base.html:383
+#: templates/base.html:388
 msgid "Suplantación de identidad"
 msgstr "Impersonation"
 
-#: templates/base.html:384
+#: templates/base.html:389
 msgid "Contenido explícito o inapropiado"
 msgstr "Explicit or inappropriate content"
 
-#: templates/base.html:385
+#: templates/base.html:390
 msgid "Otro motivo"
 msgstr "Other reason"
 
-#: templates/base.html:390
+#: templates/base.html:395
 msgid "Detalles adicionales (opcional)"
 msgstr "Additional details (optional)"
 
-#: templates/base.html:391
+#: templates/base.html:396
 msgid "Proporciona más información si es necesario."
 msgstr "Provide more information if necessary."
 
-#: templates/base.html:397
+#: templates/base.html:402
 msgid "Enviar Reporte"
 msgstr "Send Report"
 
-#: templates/base.html:454
+#: templates/base.html:459
 msgid "Enviando..."
 msgstr "Sending..."
 
-#: templates/base.html:483
+#: templates/base.html:488
 msgid "Error de conexión. Inténtalo de nuevo."
 msgstr "Connection error. Please try again."
 
-#: templates/base.html:595 templates/feed_contacts.html:169
+#: templates/base.html:600 templates/feed_contacts.html:169
 msgid "Respondiendo a"
 msgstr "Replying to"
 
@@ -1011,16 +1002,17 @@ msgid "Explorar el Feed"
 msgstr "Explore Feed"
 
 #: templates/index.html:17
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "\n"
-"                                Por favor, %(profile_link_start)scompleta tu perfil "
+"                    Por favor, %(profile_link_start)scompleta tu perfil "
 "público%(profile_link_end)s para acceder al feed y todas las funciones.\n"
-"                                 "
+"                    "
 msgstr ""
 "\n"
-"                                Please, %(profile_link_start)scomplete your public "
-"profile%(profile_link_end)s to access the feed and all features.\n"
+"                                Please, %(profile_link_start)scomplete "
+"your public profile%(profile_link_end)s to access the feed and all "
+"features.\n"
 "                                 "
 
 #: templates/index.html:24
@@ -1088,26 +1080,11 @@ msgstr "Verifying with the server..."
 
 #: templates/login.html:63
 msgid "¡Éxito! Redirigiendo..."
-"Success! Redirecting..."
+msgstr "Success! Redirecting..."
 
 #: templates/login.html:73
 msgid "Error de conexión con el servidor."
 msgstr "Server connection error."
-
-msgid "Usa tu cuenta de Pi Network para continuar."
-msgstr "Use your Pi Network account to continue."
-
-msgid "Iniciar Sesión con Pi"
-msgstr "Login with Pi"
-
-msgid "Esperando autorización de Pi..."
-msgstr "Waiting for Pi authorization..."
-
-msgid "Verificando con el servidor..."
-msgstr "Verifying with the server..."
-
-msgid "¡Éxito! Redirigiendo..."
-msgstr "Success! Redirecting..."
 
 #: templates/login.html:81
 msgid "La autorización con Pi fue cancelada o falló."
@@ -1149,6 +1126,147 @@ msgstr "Reject"
 #: templates/notificaciones.html:40
 msgid "No tienes notificaciones."
 msgstr "You have no notifications."
+
+#: templates/privacy_policy.html:11 templates/terms_of_service.html:11
+msgid "Fecha de entrada en vigor:"
+msgstr "Effective Date:"
+
+#: templates/privacy_policy.html:13
+msgid "1. Introducción"
+msgstr ""
+
+#: templates/privacy_policy.html:14
+msgid ""
+"Bienvenido a PiVerse. Tu privacidad es fundamental para nosotros. Esta "
+"Política de Privacidad explica qué información recopilamos de ti, cómo la"
+" usamos y las medidas que tomamos para protegerla cuando utilizas nuestra"
+" plataforma (el \"Servicio\"). Al usar PiVerse, aceptas las prácticas "
+"aquí descritas."
+msgstr ""
+
+#: templates/privacy_policy.html:16
+msgid "2. Información que Recopilamos"
+msgstr ""
+
+#: templates/privacy_policy.html:18
+#, fuzzy
+msgid "Información de tu Cuenta de Pi:"
+msgstr "Comment Management"
+
+#: templates/privacy_policy.html:18
+msgid ""
+"Para crear tu cuenta, nos conectamos a la red de Pi a través del SDK "
+"oficial, del cual recibimos tu nombre de usuario de Pi y tu Identificador"
+" de Usuario único (UID de Pi). No recibimos ni almacenamos tu contraseña "
+"de Pi ni información de tu wallet."
+msgstr ""
+
+#: templates/privacy_policy.html:19
+#, fuzzy
+msgid "Información de tu Perfil:"
+msgstr "Profile picture"
+
+#: templates/privacy_policy.html:19
+msgid ""
+"Tienes la opción de proporcionar información adicional para tu perfil "
+"público, que incluye: un nombre de usuario público único (slug), una "
+"biografía y una foto de perfil. Esta información será visible para otros "
+"usuarios."
+msgstr ""
+
+#: templates/privacy_policy.html:20
+msgid "Contenido Generado por el Usuario:"
+msgstr ""
+
+#: templates/privacy_policy.html:20
+msgid ""
+"Recopilamos el contenido que creas en la plataforma, incluyendo: "
+"publicaciones, comentarios, reacciones, mensajes privados y reportes de "
+"contenido."
+msgstr ""
+
+#: templates/privacy_policy.html:21
+msgid "Información Técnica Recopilada Automáticamente:"
+msgstr ""
+
+#: templates/privacy_policy.html:21
+msgid ""
+"Usamos cookies de sesión estrictamente necesarias para mantener tu sesión"
+" iniciada y registramos datos técnicos estándar (como dirección IP) para "
+"seguridad y diagnóstico de errores."
+msgstr ""
+
+#: templates/privacy_policy.html:24
+msgid "3. Cómo Usamos tu Información"
+msgstr ""
+
+#: templates/privacy_policy.html:25
+msgid ""
+"Utilizamos la información recopilada para operar y mantener el servicio, "
+"autenticarte, permitir la interacción con otros usuarios, aplicar "
+"nuestras normas y comunicarnos contigo."
+msgstr ""
+
+#: templates/privacy_policy.html:27
+msgid "4. Cómo Compartimos tu Información"
+msgstr ""
+
+#: templates/privacy_policy.html:28
+msgid ""
+"Tu perfil y contenido público son visibles para otros. Los mensajes "
+"privados son confidenciales. Nunca venderemos ni alquilaremos tu "
+"información personal a terceros para fines de marketing."
+msgstr ""
+
+#: templates/privacy_policy.html:30
+msgid "5. Tus Derechos y Control"
+msgstr ""
+
+#: templates/privacy_policy.html:31
+msgid ""
+"Puedes acceder y modificar la información de tu perfil, así como eliminar"
+" tus publicaciones y comentarios. Para eliminar tu cuenta, por favor, "
+"contacta con nosotros."
+msgstr ""
+
+#: templates/privacy_policy.html:33
+msgid "6. Seguridad de los Datos"
+msgstr ""
+
+#: templates/privacy_policy.html:34
+msgid ""
+"Implementamos medidas de seguridad razonables para proteger tus datos, "
+"incluyendo conexiones seguras (HTTPS) y técnicas de hasheo."
+msgstr ""
+
+#: templates/privacy_policy.html:36
+msgid "7. Privacidad de los Menores"
+msgstr ""
+
+#: templates/privacy_policy.html:37
+msgid "Nuestro servicio no está dirigido a personas menores de 16 años."
+msgstr ""
+
+#: templates/privacy_policy.html:39
+msgid "8. Cambios en esta Política"
+msgstr ""
+
+#: templates/privacy_policy.html:40
+msgid ""
+"Te notificaremos de los cambios materiales en esta política publicando la"
+" nueva versión en esta página."
+msgstr ""
+
+#: templates/privacy_policy.html:42
+#, fuzzy
+msgid "9. Contacto"
+msgstr "Contacts"
+
+#: templates/privacy_policy.html:43
+msgid ""
+"Si tienes alguna pregunta sobre esta Política de Privacidad, contáctanos "
+"en: support@piverse.app"
+msgstr ""
 
 #: templates/profile.html:3
 msgid "Mi perfil"
@@ -1240,6 +1358,114 @@ msgstr "View posts"
 #: templates/sections_list.html:41
 msgid "Aún no hay secciones definidas."
 msgstr "No sections defined yet."
+
+#: templates/terms_of_service.html:13
+msgid "1. Aceptación de los Términos"
+msgstr ""
+
+#: templates/terms_of_service.html:14
+msgid ""
+"Bienvenido a PiVerse (el \"Servicio\"). Estos Términos de Servicio "
+"(\"Términos\") rigen tu acceso y uso de nuestra plataforma. Al acceder o "
+"utilizar el Servicio, aceptas estar sujeto a estos Términos."
+msgstr ""
+
+#: templates/terms_of_service.html:16
+msgid "2. Cuentas de Usuario y Elegibilidad"
+msgstr ""
+
+#: templates/terms_of_service.html:17
+msgid ""
+"Debes tener una cuenta de Pi Network y ser mayor de 16 años para usar "
+"PiVerse. Eres responsable de la seguridad de tu cuenta."
+msgstr ""
+
+#: templates/terms_of_service.html:19
+#, fuzzy
+msgid "3. Contenido del Usuario"
+msgstr "Username:"
+
+#: templates/terms_of_service.html:20
+msgid ""
+"Tú retienes la propiedad de todo el contenido que publicas. Sin embargo, "
+"al publicarlo, nos otorgas una licencia para mostrarlo y distribuirlo "
+"dentro de la plataforma PiVerse. No puedes publicar contenido ilegal, que"
+" incite al odio, spam o que infrinja los derechos de otros."
+msgstr ""
+
+#: templates/terms_of_service.html:22
+#, fuzzy
+msgid "4. Conducta del Usuario"
+msgstr "User List"
+
+#: templates/terms_of_service.html:23
+msgid ""
+"Te comprometes a no acosar a otros usuarios, no suplantar identidades ni "
+"intentar dañar la integridad de la plataforma."
+msgstr ""
+
+#: templates/terms_of_service.html:25
+msgid "5. Moderación y Aplicación de Normas"
+msgstr ""
+
+#: templates/terms_of_service.html:26
+msgid ""
+"Nos reservamos el derecho de moderar contenido y aplicar sanciones (como "
+"la suspensión de cuentas) a quienes violen estos Términos, ofreciendo un "
+"proceso de apelación."
+msgstr ""
+
+#: templates/terms_of_service.html:28
+msgid "6. Propinas (Tipping) y Transacciones P2P"
+msgstr ""
+
+#: templates/terms_of_service.html:29
+msgid ""
+"PiVerse actúa únicamente como un facilitador técnico para transacciones "
+"Peer-to-Peer (P2P) con la moneda Pi. No somos parte de ninguna "
+"transacción, no custodiamos fondos y no somos responsables de disputas, "
+"pérdidas o implicaciones fiscales entre usuarios."
+msgstr ""
+
+#: templates/terms_of_service.html:31
+msgid "7. Limitación de Responsabilidad"
+msgstr ""
+
+#: templates/terms_of_service.html:32
+msgid ""
+"El Servicio se proporciona \"tal cual\", sin garantías. Nuestra "
+"responsabilidad por cualquier daño derivado del uso del servicio es "
+"limitada en la máxima medida permitida por la ley."
+msgstr ""
+
+#: templates/terms_of_service.html:34
+msgid "8. Terminación"
+msgstr ""
+
+#: templates/terms_of_service.html:35
+msgid ""
+"Podemos suspender o cancelar tu cuenta si violas estos Términos. Puedes "
+"solicitar la eliminación de tu cuenta contactándonos."
+msgstr ""
+
+#: templates/terms_of_service.html:37
+msgid "9. Ley Aplicable"
+msgstr ""
+
+#: templates/terms_of_service.html:38
+msgid "Estos Términos se regirán por las leyes de España."
+msgstr ""
+
+#: templates/terms_of_service.html:40
+#, fuzzy
+msgid "10. Contacto"
+msgstr "Contacts"
+
+#: templates/terms_of_service.html:41
+msgid ""
+"Si tienes alguna pregunta sobre estos Términos, contáctanos en: "
+"support@piverse.app"
+msgstr ""
 
 #: templates/ver_perfil.html:3
 #, python-format
@@ -2449,4 +2675,10 @@ msgstr[1] "{len_type} values are required, but {len_value} were given."
 
 #~ msgid "Sección: %(section_name)s"
 #~ msgstr "Section: %(section_name)s"
+
+#~ msgid "Año actual"
+#~ msgstr "Current year"
+
+#~ msgid "¡Éxito! Redirigiendo...Success! Redirecting..."
+#~ msgstr ""
 
