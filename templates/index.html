@@ -20,7 +20,8 @@
                 </div>
             {% endif %}
         {% else %}
-            <a href="{{ url_for('register') }}" class="btn btn-warning btn-lg px-4 gap-3 me-2"><i class="bi bi-person-plus-fill"></i> {{ _('Únete a PiVerse') }}</a>
+            {# --- CORRECCIÓN AQUÍ --- #}
+            <a href="{{ url_for('login') }}" class="btn btn-warning btn-lg px-4 gap-3 me-2"><i class="bi bi-person-plus-fill"></i> {{ _('Únete a PiVerse') }}</a>
             <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg px-4">{{ _('Iniciar Sesión') }}</a>
         {% endif %}
     </div>
@@ -29,7 +30,7 @@
 <div class="container mt-5">
     {% if 'user_id' in session and perfil_completo %}
         <div class="text-center">
-             <p class="fs-5">{% trans username=(username or _('Pionero')) %}Hola de nuevo, <strong>{{ username }}</strong>. ¿Listo para interactuar?{% endtrans %}</p>
+             <p class="fs-5">{% trans username=(display_username_session or _('Pionero')) %}Hola de nuevo, <strong>{{ username }}</strong>. ¿Listo para interactuar?{% endtrans %}</p>
         </div>
     {% endif %}
 
