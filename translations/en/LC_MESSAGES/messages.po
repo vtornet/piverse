@@ -1410,7 +1410,7 @@ msgstr "2. User Accounts and Eligibility"
 
 #: templates/terms_of_service.html:17
 msgid ""
-"Debes tener una cuenta de Pi Network y ser mayor de 16 años para usar "
+"Debes tener una cuenta de Pi Network y ser mayor de 18 años para usar "
 "PiVerse. Eres responsable de la seguridad de tu cuenta."
 msgstr ""
 "You must have a valid Pi Network account and be over 16 years old to use "
@@ -1519,7 +1519,7 @@ msgstr "Contact"
 #, fuzzy
 msgid ""
 "Si tienes alguna pregunta sobre estos Términos, contáctanos en: "
-"support@piverse.app"
+"contact@piverse.app"
 msgstr ""
 "If you have any questions about this Privacy Policy, please contact us "
 "at: contact@piverse.app"
