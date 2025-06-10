@@ -648,22 +648,25 @@ def moderator_or_higher_required(f):
     return decorated_function
 
 # --- PROCESADOR DE CONTEXTO ---
+# EN app.py
+
 @app.context_processor
 def inject_global_vars():
+    # Variables base disponibles para todos (usuarios invitados y autenticados)
+    base_context = {
+        'available_languages': app.config['LANGUAGES'],
+        'current_locale': str(get_babel_locale()),
+        'is_debug_mode': app.debug  # <- AÑADIMOS EL ESTADO DE DEBUG AQUÍ
+    }
+
     user_id = session.get('user_id')
     if not user_id:
-        return {
-            'available_languages': app.config['LANGUAGES'],
-            'current_locale': str(get_babel_locale())
-        }
-    
+        return base_context  # Devolver solo el contexto base para invitados
+
     user = db.session.query(User).options(joinedload(User.profile)).get(user_id)
     if not user:
         session.clear()
-        return {
-            'available_languages': app.config['LANGUAGES'],
-            'current_locale': str(get_babel_locale())
-        }
+        return base_context
 
     num_notificaciones_no_leidas = db.session.query(Notification).filter_by(user_id=user_id, leida=False).count()
     
@@ -680,16 +683,17 @@ def inject_global_vars():
     
     num_mensajes_no_leidos = unread_messages_query.scalar() or 0
 
-    return dict(
+    # Añadir las variables específicas del usuario al diccionario base
+    base_context.update(
         foto_usuario_actual=user.profile.photo if user.profile else None,
         notificaciones_no_leidas_count=num_notificaciones_no_leidas,
         unread_messages_count=num_mensajes_no_leidos,
         display_username_session=user.profile.username if user.profile and user.profile.username else user.username,
         now=datetime.utcnow,
-        available_languages=app.config['LANGUAGES'],
-        current_locale=str(get_babel_locale()),
         current_user_role=user.role
     )
+    
+    return base_context
 
 # --- RUTAS ---
 @app.route('/language/<lang>')
