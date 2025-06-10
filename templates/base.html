@@ -191,6 +191,52 @@
 </head>
 <body>
 
+<div id="mobile-debug-console" style="position: fixed; bottom: 0; left: 0; width: 100%; max-height: 30%; overflow-y: scroll; background: rgba(0,0,0,0.85); color: #00ff00; font-family: monospace; font-size: 10px; z-index: 9999; padding: 5px; box-sizing: border-box; pointer-events: none;"></div>
+    <script>
+        (function() {
+            const consoleDiv = document.getElementById('mobile-debug-console');
+            if (!consoleDiv) return;
+
+            function logToScreen(args, type = 'log') {
+                const p = document.createElement('p');
+                let message = '';
+                for (let i = 0; i < args.length; i++) {
+                    try {
+                        message += JSON.stringify(args[i]) + ' ';
+                    } catch (e) {
+                        message += '[Unserializable Object] ';
+                    }
+                }
+                p.textContent = `[${type}] ${message}`;
+                p.style.margin = '2px 5px';
+                p.style.borderBottom = '1px solid #333';
+                p.style.color = type === 'error' ? '#ff8a8a' : '#00ff00';
+                consoleDiv.appendChild(p);
+                consoleDiv.scrollTop = consoleDiv.scrollHeight;
+            }
+
+            const oldError = console.error;
+            const oldLog = console.log;
+
+            console.error = function(...args) {
+                logToScreen(args, 'error');
+                oldError.apply(console, args);
+            };
+
+            console.log = function(...args) {
+                logToScreen(args, 'log');
+                oldLog.apply(console, args);
+            };
+
+            window.onerror = function(message, source, lineno, colno, error) {
+                const formattedMsg = `Uncaught: "${message}" at <span class="math-inline">\{source\.split\('/'\)\.pop\(\)\}\:</span>{lineno}`;
+                logToScreen([formattedMsg], 'error');
+                return false;
+            };
+        })();
+    </script>
+    <div class="content-wrapper">
+
 <div class="content-wrapper">
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top px-3">
         <div class="container-fluid">
