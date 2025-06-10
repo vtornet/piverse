@@ -1081,7 +1081,6 @@ msgid "Usa tu cuenta de Pi Network para continuar."
 msgstr "Use your Pi Network account to continue."
 
 #: templates/login.html:20
-#, fuzzy
 msgid "Acceder con Pi Network"
 msgstr "Login with Pi Network"
 
