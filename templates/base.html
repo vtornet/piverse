@@ -408,7 +408,9 @@
 
 
 {% block scripts %}
+{{ super() if super }} {# Añadimos 'if super' por si una plantilla hija no tiene super() #}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
     // Script de auto-cierre de alertas
     window.setTimeout(function() {
@@ -669,9 +671,70 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
-</script>
-{# === FIN: SCRIPT GLOBAL === #}
-{% endblock %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const authButton = document.getElementById('pi-auth-button');
+    const feedbackDiv = document.getElementById('login-feedback');
 
+    // Comprobamos si el botón de autenticación existe en la página actual
+    if (authButton) {
+        // 1. Inicializar el SDK de Pi
+        const isProduction = window.location.hostname === 'www.piverse.app';
+        Pi.init({ version: "2.0", sandbox: !isProduction });
+
+        // 2. Añadir el evento de clic al botón
+        authButton.addEventListener('click', function() {
+            if (feedbackDiv) {
+                feedbackDiv.innerHTML = `<div class="spinner-border spinner-border-sm" role="status"></div><span class="ms-2">{{ _('Esperando autorización de Pi...') }}</span>`;
+            }
+            authButton.disabled = true;
+
+            const scopes = ['username'];
+
+            // 3. Llamada al SDK
+            Pi.authenticate(scopes)
+                .then(function(authResult) {
+                    if (feedbackDiv) {
+                        feedbackDiv.innerHTML = `<div class="spinner-border spinner-border-sm" role="status"></div><span class="ms-2">{{ _('Verificando con el servidor...') }}</span>`;
+                    }
+                    return fetch("{{ url_for('pi_auth_complete') }}", {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(authResult)
+                    });
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (feedbackDiv) {
+                            feedbackDiv.innerHTML = `<div class="alert alert-success p-2 mt-3">{{ _('¡Éxito! Redirigiendo...') }}</div>`;
+                        }
+                        window.location.href = data.redirect_url;
+                    } else {
+                        if (feedbackDiv) {
+                            feedbackDiv.innerHTML = `<div class="alert alert-danger p-2 mt-3">${data.error}</div>`;
+                        }
+                        authButton.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Fallo en el proceso de autenticación:', error);
+                    let errorMessage;
+                    if (error && error.type === 'Authentication_Failed') {
+                        errorMessage = `{{ _('La autorización con Pi fue cancelada o falló.') }}`;
+                    } else {
+                        errorMessage = `{{ _('Error de conexión con el servidor.') }}`;
+                    }
+                    if (feedbackDiv) {
+                        feedbackDiv.innerHTML = `<div class="alert alert-danger p-2 mt-3">${errorMessage}</div>`;
+                    }
+                    authButton.disabled = false;
+                });
+        });
+    }
+});
+</script>
+
+{% endblock %}
 </body>
 </html>

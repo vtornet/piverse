@@ -20,10 +20,11 @@
                 </div>
             {% endif %}
         {% else %}
-            {# --- CORRECCIÓN AQUÍ --- #}
-            <a href="{{ url_for('login') }}" class="btn btn-warning btn-lg px-4 gap-3">
-            <i class="bi bi-shield-check"></i> {{ _('Continuar con Pi Network') }}
-            </a>
+            {# --- BOTÓN UNIFICADO Y FUNCIONAL --- #}
+            <button id="pi-auth-button" class="btn btn-lg btn-warning px-4 gap-3">
+                <i class="bi bi-shield-check"></i> {{ _('Continuar con Pi Network') }}
+            </button>
+            <div id="login-feedback" class="mt-3 text-center text-white"></div>
         {% endif %}
     </div>
 </div>
