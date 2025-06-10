@@ -55,6 +55,7 @@ class User(db.Model):
     banned_until = db.Column(db.DateTime(timezone=True), nullable=True)
     ban_reason = db.Column(db.Text, nullable=True)
     muted_until = db.Column(db.DateTime(timezone=True), nullable=True)
+    accepted_policies = db.Column(db.Boolean, default=False, nullable=False)
     
     profile = db.relationship('Profile', backref='user', uselist=False, cascade="all, delete-orphan")
     posts = db.relationship('Post', backref='author', lazy='dynamic', cascade="all, delete-orphan")
@@ -279,12 +280,14 @@ app.config['LANGUAGES'] = {
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
 
 def select_current_locale():
+    # 1. Prioridad: La sesión del usuario. Si ya eligió un idioma, lo respetamos.
     user_lang = session.get('language')
     if user_lang and user_lang in app.config['LANGUAGES'].keys():
         return user_lang
-    if request:
-        return request.accept_languages.best_match(app.config['LANGUAGES'].keys())
-    return app.config['BABEL_DEFAULT_LOCALE']
+    
+    # 2. Si no hay idioma en la sesión (es un nuevo visitante), el idioma por defecto es inglés.
+    # Se ignora la cabecera 'Accept-Language' del navegador para asegurar consistencia.
+    return app.config['BABEL_DEFAULT_LOCALE'] # Asegúrate que 'en' sea el valor en la config.
 
 babel = Babel(app, locale_selector=select_current_locale)
 
@@ -538,6 +541,25 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def check_policy_acceptance(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        # Primero, asegúrate de que el usuario ha iniciado sesión.
+        if 'user_id' not in session:
+            return redirect(url_for('login', next=request.url))
+
+        # Evitar bucles de redirección. Permitir el acceso a la página de aceptación y al logout.
+        if request.endpoint in ['accept_policies', 'logout', 'static']:
+            return f(*args, **kwargs)
+
+        user = db.session.query(User).get(session['user_id'])
+        if user and not user.accepted_policies:
+            flash(_('Antes de continuar, debes aceptar nuestra Política de Privacidad y Términos de Servicio.'), 'info')
+            return redirect(url_for('accept_policies'))
+        
+        return f(*args, **kwargs)
+    return decorated_function
+
 def check_sanctions_and_block(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -763,6 +785,7 @@ def logout():
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
+@check_policy_acceptance
 def profile():
     user_id_actual = session['user_id']
     profile = db.session.query(Profile).filter_by(user_id=user_id_actual).one_or_none()
@@ -832,6 +855,7 @@ def profile():
 
 @app.route('/feed')
 @login_required
+@check_policy_acceptance
 def feed():
     user_id_actual = session['user_id']
     if not check_profile_completion(user_id_actual):
@@ -852,6 +876,7 @@ def feed():
 @app.route('/post', methods=['POST'])
 @login_required
 @check_sanctions_and_block
+@check_policy_acceptance
 def post():
     user_id_actual = session['user_id']
     if not check_profile_completion(user_id_actual):
@@ -915,6 +940,7 @@ def post():
 
 @app.route('/post/<int:post_id>/delete', methods=['POST'])
 @login_required
+@check_policy_acceptance
 def delete_post(post_id):
     user_id_actual = session['user_id']
     post = db.session.query(Post).get(post_id)
@@ -984,6 +1010,7 @@ def react_to_post(post_id):
 @app.route('/comment/<int:post_id>', methods=['POST'])
 @login_required
 @check_sanctions_and_block
+@check_policy_acceptance
 def comment(post_id):
     user_id_actual = session['user_id']
     if not check_profile_completion(user_id_actual):
@@ -1124,6 +1151,7 @@ def react_to_comment(comment_id):
 @app.route('/post/<int:post_id>/share', methods=['POST'])
 @login_required
 @check_sanctions_and_block
+@check_policy_acceptance
 def share_post(post_id):
     user_id_actual = session['user_id']
     if not check_profile_completion(user_id_actual):
@@ -1622,6 +1650,26 @@ def dev_login(username):
             return redirect(url_for('feed'))
     # Si no estamos en modo debug (como en Railway), esta ruta no hará nada.
     return "Acceso denegado. Esta ruta solo está disponible en modo de depuración.", 403
+
+@app.route('/accept-policies', methods=['GET', 'POST'])
+@login_required
+def accept_policies():
+    user = db.session.query(User).get(session['user_id'])
+    # Si ya las aceptó, redirigir al feed.
+    if user.accepted_policies:
+        return redirect(url_for('feed'))
+
+    if request.method == 'POST':
+        # Verificar que ambos checkboxes fueron marcados
+        if 'privacy' in request.form and 'terms' in request.form:
+            user.accepted_policies = True
+            db.session.commit()
+            flash(_('¡Gracias por aceptar nuestras políticas! Ya puedes disfrutar de PiVerse.'), 'success')
+            return redirect(url_for('feed'))
+        else:
+            flash(_('Debes aceptar ambas políticas para poder continuar.'), 'danger')
+
+    return render_template('accept_policies.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

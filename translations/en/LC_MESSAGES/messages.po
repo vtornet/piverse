@@ -1413,7 +1413,7 @@ msgid ""
 "Debes tener una cuenta de Pi Network y ser mayor de 18 años para usar "
 "PiVerse. Eres responsable de la seguridad de tu cuenta."
 msgstr ""
-"You must have a valid Pi Network account and be over 16 years old to use "
+"You must have a valid Pi Network account and be over 18 years old to use "
 "PiVerse. You are responsible for the security of your account."
 
 #: templates/terms_of_service.html:19

@@ -13,14 +13,23 @@
                     <p class="text-muted">{{ _('Usa tu cuenta de Pi Network para continuar.') }}</p>
                 </div>
 
-                {# --- BOTÓN DE LOGIN CON PI --- #}
+                {# --- BOTÓN DE LOGIN CON PI (TEXTO CORREGIDO) --- #}
                 <div class="d-grid">
-                    <button id="pi-login-button" class="btn btn-lg btn-primary" style="background-color: #593A88; border-color: #593A88;">
-                        <i class="bi bi-box-arrow-in-right me-2"></i> {{ _('Iniciar Sesión con Pi') }}
+                    <button id="pi-auth-button" class="btn btn-lg btn-warning">
+                        <i class="bi bi-shield-check me-2"></i>
+                        {{ _('Acceder con Pi Network') }}
                     </button>
                 </div>
                 
                 <div id="login-feedback" class="mt-3 text-center"></div>
+
+                {# --- BLOQUE DE LOGIN PARA DESARROLLO LOCAL --- #}
+                {% if app.debug %}
+                <div class="mt-4 border-top pt-3">
+                    <p class="text-muted small mb-1"><strong>{{ _('Solo para desarrollo:') }}</strong></p>
+                    <a href="{{ url_for('dev_login', username='tester') }}" class="btn btn-sm btn-outline-secondary">{{ _('Entrar como "tester" (Admin)') }}</a>
+                </div>
+                {% endif %}
 
             </div>
         </div>
@@ -32,62 +41,54 @@
 {{ super() }}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const loginButton = document.getElementById('pi-login-button');
+    const authButton = document.getElementById('pi-auth-button');
     const feedbackDiv = document.getElementById('login-feedback');
 
-    // 1. Inicializar el SDK de Pi
-    Pi.init({ version: "2.0", sandbox: true });
+    // 1. Inicializar el SDK de Pi con lógica para producción/desarrollo
+    // Detecta si la app está en el dominio de producción para desactivar el sandbox.
+    const isProduction = window.location.hostname === 'www.piverse.app';
+    Pi.init({ version: "2.0", sandbox: !isProduction });
 
-    // 2. Lógica para el botón de login
-    loginButton.addEventListener('click', function() {
+    authButton.addEventListener('click', function() {
         feedbackDiv.innerHTML = `<div class="spinner-border spinner-border-sm" role="status"></div><span class="ms-2">{{ _('Esperando autorización de Pi...') }}</span>`;
-        loginButton.disabled = true;
+        authButton.disabled = true;
 
-        // 3. Alcances que solicitamos al usuario
-        const scopes = ['username', 'payments']; // 'payments' lo usaremos en el futuro para propinas
+        const scopes = ['username']; // 'payments' se puede añadir después cuando se implemente.
 
-        // 4. Función que se ejecutará si el login con Pi es exitoso
-        function onLoginSuccess(authResult) {
-            feedbackDiv.innerHTML = `<div class="spinner-border spinner-border-sm" role="status"></div><span class="ms-2">{{ _('Verificando con el servidor...') }}</span>`;
-            
-            fetch("{{ url_for('pi_auth_complete') }}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(authResult)
+        // 2. Llamada al SDK con la sintaxis moderna de Promesas (.then/.catch)
+        Pi.authenticate(scopes)
+            .then(function(authResult) {
+                feedbackDiv.innerHTML = `<div class="spinner-border spinner-border-sm" role="status"></div><span class="ms-2">{{ _('Verificando con el servidor...') }}</span>`;
+                
+                return fetch("{{ url_for('pi_auth_complete') }}", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(authResult)
+                });
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     feedbackDiv.innerHTML = `<div class="alert alert-success p-2 mt-3">{{ _('¡Éxito! Redirigiendo...') }}</div>`;
-                    // Redirigir al usuario a la página que indica el backend
                     window.location.href = data.redirect_url;
                 } else {
                     feedbackDiv.innerHTML = `<div class="alert alert-danger p-2 mt-3">${data.error}</div>`;
-                    loginButton.disabled = false;
+                    authButton.disabled = false;
                 }
             })
             .catch(error => {
-                console.error('Error en el fetch:', error);
-                feedbackDiv.innerHTML = `<div class="alert alert-danger p-2 mt-3">{{ _('Error de conexión con el servidor.') }}</div>`;
-                loginButton.disabled = false;
+                // Este bloque captura tanto errores de la autenticación de Pi como errores de red.
+                console.error('Fallo en el proceso de autenticación:', error);
+                
+                // Si el error es de la autenticación de Pi, tendrá una propiedad 'type'
+                if (error && error.type === 'Authentication_Failed') {
+                    feedbackDiv.innerHTML = `<div class="alert alert-warning p-2 mt-3">{{ _('La autorización con Pi fue cancelada o falló.') }}</div>`;
+                } else {
+                    feedbackDiv.innerHTML = `<div class="alert alert-danger p-2 mt-3">{{ _('Error de conexión con el servidor.') }}</div>`;
+                }
+                authButton.disabled = false;
             });
-        }
-
-        // 5. Función que se ejecutará si el usuario cancela o hay un error
-        function onLoginFailure(error) {
-            console.error('Fallo en la autenticación de Pi:', error);
-            feedbackDiv.innerHTML = `<div class="alert alert-warning p-2 mt-3">{{ _('La autorización con Pi fue cancelada o falló.') }}</div>`;
-            loginButton.disabled = false;
-        }
-
-        // 6. Llamada principal al SDK para autenticar
-        Pi.authenticate(scopes, onLoginSuccess, onLoginFailure);
     });
 });
 </script>
 {% endblock %}
-
-
-
