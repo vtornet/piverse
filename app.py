@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, session, url_for, flash, jsonify, Response
+from flask import (Flask, render_template, request, redirect, session, 
+                   url_for, flash, jsonify, Response, send_from_directory)
 from flask_babel import Babel, gettext as _, lazy_gettext as _l, get_locale as get_babel_locale, \
                         format_datetime, format_date, format_time, format_timedelta, format_number
 from functools import wraps
@@ -1674,6 +1675,11 @@ def accept_policies():
             flash(_('Debes aceptar ambas políticas para poder continuar.'), 'danger')
 
     return render_template('accept_policies.html')
+
+# Ruta para servir el archivo de validación de dominio de Pi
+@app.route('/validation-key.txt')
+def serve_validation_key():
+    return send_from_directory(app.static_folder, 'validation-key.txt')
 
 if __name__ == '__main__':
     app.run(debug=True)
