@@ -21,8 +21,9 @@
             {% endif %}
         {% else %}
             {# --- CORRECCIÓN AQUÍ --- #}
-            <a href="{{ url_for('login') }}" class="btn btn-warning btn-lg px-4 gap-3 me-2"><i class="bi bi-person-plus-fill"></i> {{ _('Únete a PiVerse') }}</a>
-            <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg px-4">{{ _('Iniciar Sesión') }}</a>
+            <a href="{{ url_for('login') }}" class="btn btn-warning btn-lg px-4 gap-3">
+            <i class="bi bi-shield-check"></i> {{ _('Continuar con Pi Network') }}
+            </a>
         {% endif %}
     </div>
 </div>
