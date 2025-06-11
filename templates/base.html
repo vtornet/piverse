@@ -85,29 +85,22 @@
 {{ super() if super }}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-{# ... Tus otros scripts ... #}
-
-{# === INICIO: SCRIPT DE AUTENTICACIÓN CON SONDEO (POLLING) === #}
+{# === INICIO: SCRIPT DE AUTENTICACIÓN CON INICIALIZACIÓN SIMPLIFICADA === #}
 <script>
 function startPiAuthentication() {
     const userIsLoggedIn = {{ 'true' if session.get('user_id') else 'false' }};
     if (userIsLoggedIn) {
-        console.log("El usuario ya está conectado. No se necesita autenticación de Pi.");
         return;
     }
 
     let attempts = 0;
-    const maxAttempts = 50; // 50 intentos * 100ms = 5 segundos
+    const maxAttempts = 50; 
     const intervalId = setInterval(() => {
         attempts++;
-        console.log(`Intento ${attempts}/${maxAttempts}: Buscando window.Pi...`);
-
         if (window.Pi) {
-            console.log("¡SDK de Pi encontrado!");
-            clearInterval(intervalId); // Detenemos el sondeo
-            runPiAuth(); // Ejecutamos la lógica de autenticación
+            clearInterval(intervalId); 
+            runPiAuth(); 
         } else if (attempts >= maxAttempts) {
-            console.error("No se pudo encontrar el SDK de Pi después de 5 segundos. Rindiéndose.");
             clearInterval(intervalId);
             const authFeedback = document.getElementById('login-feedback');
             if (authFeedback) {
@@ -118,16 +111,13 @@ function startPiAuthentication() {
 }
 
 function runPiAuth() {
-    console.log("Ejecutando runPiAuth()...");
     const authFeedback = document.getElementById('login-feedback');
     
-    console.log("Inicializando Pi SDK. Forzando modo Sandbox: true");
-    Pi.init({ version: "2.0", sandbox: true });
+    // --- CAMBIO CLAVE: Usamos la inicialización simplificada sin el parámetro 'sandbox' ---
+    Pi.init({ version: "2.0" });
 
-    console.log("Llamando a Pi.authenticate...");
     Pi.authenticate(['username'], 
         function(authResult) { // Success callback
-            console.log("ÉXITO en Pi.authenticate. Resultado:", authResult);
             if(authFeedback) authFeedback.innerHTML = `{{ _('Verificando con el servidor...') }}`;
             
             fetch("{{ url_for('pi_auth_complete') }}", {
@@ -137,7 +127,6 @@ function runPiAuth() {
             })
             .then(response => response.json())
             .then(data => {
-                console.log("Respuesta del servidor:", data);
                 if (data.success && data.redirect_url) {
                     window.location.href = data.redirect_url;
                 } else {
@@ -145,12 +134,10 @@ function runPiAuth() {
                 }
             })
             .catch(error => {
-                console.error("Error en FETCH:", error);
                 if(authFeedback) authFeedback.innerHTML = `<div class="alert alert-danger p-2 mt-2">{{ _('Error de conexión.') }}</div>`;
             });
         }, 
         function(error) { // Failure callback
-            console.error("FALLO en Pi.authenticate. Error:", error);
             if(authFeedback) authFeedback.innerHTML = `<div class="alert alert-warning p-2 mt-2">{{ _('Autenticación cancelada o fallida.') }}</div>`;
         }
     );
@@ -159,6 +146,7 @@ function runPiAuth() {
 // Iniciar el proceso cuando la ventana esté completamente cargada
 window.addEventListener('load', startPiAuthentication);
 </script>
+{# === FIN: SCRIPT DE AUTENTICACIÓN CON INICIALIZACIÓN SIMPLIFICADA === #}
 {# === FIN: SCRIPT DE AUTENTICACIÓN CON SONDEO (POLLING) === #}
 
 {% endblock %}
