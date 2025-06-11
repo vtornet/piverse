@@ -19,59 +19,9 @@
 </head>
 <body>
 
-{# --- CONSOLA DE DEPURACIÓN MÓVIL (LA MANTENEMOS PARA VERIFICAR) --- #}
-<div id="mobile-debug-console" style="position: fixed; bottom: 0; left: 0; width: 100%; max-height: 25%; overflow-y: scroll; background: rgba(0,0,0,0.85); color: #00ff00; font-family: monospace; font-size: 10px; z-index: 9999; padding: 5px; box-sizing: border-box; pointer-events: none;"></div>
-<script>
-    (function() {
-        const consoleDiv = document.getElementById('mobile-debug-console');
-        if (!consoleDiv) return;
-
-        function logToScreen(args, type = 'log') {
-            const p = document.createElement('p');
-            let message = '';
-            for (let i = 0; i < args.length; i++) {
-                try {
-                    let item = args[i];
-                    if (typeof item === 'object') {
-                       message += JSON.stringify(item) + ' ';
-                    } else {
-                       message += item + ' ';
-                    }
-                } catch (e) {
-                    message += '[Unserializable Object] ';
-                }
-            }
-            p.textContent = `[${new Date().toLocaleTimeString()}] [${type.toUpperCase()}] ${message}`;
-            p.style.margin = '2px 5px';
-            p.style.borderBottom = '1px solid #333';
-            if (type === 'error') p.style.color = '#ff8a8a';
-            consoleDiv.appendChild(p);
-            consoleDiv.scrollTop = consoleDiv.scrollHeight;
-        }
-
-        const oldError = console.error;
-        const oldLog = console.log;
-
-        console.error = function(...args) {
-            logToScreen(args, 'error');
-            oldError.apply(console, args);
-        };
-        console.log = function(...args) {
-            logToScreen(args, 'log');
-            oldLog.apply(console, args);
-        };
-
-        window.onerror = function(message, source, lineno, colno, error) {
-            const formattedMsg = `${message} at ${source}:${lineno}:${colno}`;
-            logToScreen([formattedMsg, error], 'error');
-            return false;
-        };
-    })();
-</script>
-{# --- FIN: CONSOLA DE DEPURACIÓN MÓVIL --- #}
+{# --- Se ha eliminado la consola de depuración para la versión final --- #}
 
 <div class="content-wrapper">
-    {# ... Tu navbar y contenido principal ... #}
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top px-3">
         {# ... Tu código de navbar ... #}
     </nav>
@@ -96,8 +46,7 @@
     {# ... Tu código de footer ... #}
 </footer>
 
-{# ... Tus modales (Share, Report) ... #}
-
+{# ... Tus modales ... #}
 
 {% block scripts %}
 {{ super() if super }}
@@ -105,87 +54,67 @@
 
 {# ... Tus otros scripts ... #}
 
-{# === INICIO: SCRIPT DE AUTENTICACIÓN CORREGIDO === #}
+{# === INICIO: SCRIPT DE AUTENTICACIÓN FINAL === #}
 <script>
-// --- ÚNICO CAMBIO: USAMOS 'load' EN LUGAR DE 'DOMContentLoaded' ---
-window.addEventListener("load", function() {
+function startPiAuthentication() {
     const userIsLoggedIn = {{ 'true' if session.get('user_id') else 'false' }};
-    console.log("Evento 'load' disparado. Estado de sesión:", userIsLoggedIn ? "CONECTADO" : "DESCONECTADO");
+    if (userIsLoggedIn) {
+        return;
+    }
 
-    if (!userIsLoggedIn) {
+    let attempts = 0;
+    const maxAttempts = 50; 
+    const intervalId = setInterval(() => {
+        attempts++;
         if (window.Pi) {
-            console.log("SDK de Pi encontrado (window.Pi existe).");
-            
+            clearInterval(intervalId); 
+            runPiAuth(); 
+        } else if (attempts >= maxAttempts) {
+            clearInterval(intervalId);
             const authFeedback = document.getElementById('login-feedback');
             if (authFeedback) {
-                authFeedback.innerHTML = `{{ _('Iniciando autenticación...') }}`;
-            }
-
-            const isProduction = window.location.hostname === 'www.piverse.app';
-            console.log("Inicializando Pi SDK. Modo Sandbox:", !isProduction);
-            Pi.init({ version: "2.0", sandbox: !isProduction });
-
-            console.log("Llamando a Pi.authenticate con scopes: ['username']");
-            Pi.authenticate(
-                ['username'],
-                function(authResult) { // ÉXITO
-                    console.log("ÉXITO en Pi.authenticate. Resultado recibido.");
-                    console.log("authResult:", authResult);
-                    if(authFeedback) {
-                        authFeedback.innerHTML = `{{ _('Verificando con el servidor...') }}`;
-                    }
-                    
-                    console.log("Enviando token al backend en /api/pi/auth/complete");
-                    fetch("{{ url_for('pi_auth_complete') }}", {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(authResult)
-                    })
-                    .then(response => {
-                        console.log("Respuesta del servidor recibida. Status:", response.status);
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log("Datos JSON del servidor:", data);
-                        if (data.success && data.redirect_url) {
-                            console.log("Redirigiendo a:", data.redirect_url);
-                            if(authFeedback) {
-                                authFeedback.innerHTML = `<div class="alert alert-success p-2 mt-2">{{ _('¡Éxito! Redirigiendo...') }}</div>`;
-                            }
-                            window.location.href = data.redirect_url;
-                        } else {
-                            console.error("El servidor devolvió un error:", data.error);
-                            if(authFeedback) {
-                                authFeedback.innerHTML = `<div class="alert alert-danger p-2 mt-2">${data.error || "{{ _('Error desconocido del servidor.') }}"}</div>`;
-                            }
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error en el FETCH a /api/pi/auth/complete:", error);
-                        if(authFeedback) {
-                            authFeedback.innerHTML = `<div class="alert alert-danger p-2 mt-2">{{ _('Error de conexión. No se pudo verificar la sesión.') }}</div>`;
-                        }
-                    });
-                },
-                function(error) { // FALLO
-                    console.error("FALLO en Pi.authenticate. Error recibido.");
-                    console.error("Detalles del error de Pi.authenticate:", error);
-                    if(authFeedback) {
-                       authFeedback.innerHTML = `<div class="alert alert-warning p-2 mt-2">{{ _('La autenticación con Pi fue cancelada o ha fallado. Por favor, recarga la aplicación.') }}</div>`;
-                    }
-                }
-            );
-        } else {
-            console.error("SDK de Pi NO encontrado (window.Pi es undefined). ¿Estás fuera del Pi Browser?");
-            const authFeedback = document.getElementById('login-feedback');
-            if (authFeedback) {
-                authFeedback.textContent = "{{ _('Error: No se pudo conectar con la aplicación de Pi. Asegúrate de abrir PiVerse desde el Pi Browser.') }}";
+                authFeedback.innerHTML = `<div class="alert alert-danger p-2 mt-2">{{ _('Error crítico: No se puede comunicar con la app de Pi.') }}</div>`;
             }
         }
-    }
-});
+    }, 100);
+}
+
+function runPiAuth() {
+    const authFeedback = document.getElementById('login-feedback');
+    
+    // --- CAMBIO CLAVE: Forzamos el modo Sandbox a 'true' para el desarrollo ---
+    Pi.init({ version: "2.0", sandbox: true });
+
+    Pi.authenticate(['username'], 
+        function(authResult) { // Success callback
+            if(authFeedback) authFeedback.innerHTML = `{{ _('Verificando con el servidor...') }}`;
+            
+            fetch("{{ url_for('pi_auth_complete') }}", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(authResult)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.redirect_url) {
+                    window.location.href = data.redirect_url;
+                } else {
+                    if(authFeedback) authFeedback.innerHTML = `<div class="alert alert-danger p-2 mt-2">${data.error}</div>`;
+                }
+            })
+            .catch(error => {
+                if(authFeedback) authFeedback.innerHTML = `<div class="alert alert-danger p-2 mt-2">{{ _('Error de conexión.') }}</div>`;
+            });
+        }, 
+        function(error) { // Failure callback
+            if(authFeedback) authFeedback.innerHTML = `<div class="alert alert-warning p-2 mt-2">{{ _('Autenticación cancelada o fallida.') }}</div>`;
+        }
+    );
+}
+
+window.addEventListener('load', startPiAuthentication);
 </script>
-{# === FIN: SCRIPT DE AUTENTICACIÓN CORREGIDO === #}
+{# === FIN: SCRIPT DE AUTENTICACIÓN FINAL === #}
 
 {% endblock %}
 </body>
