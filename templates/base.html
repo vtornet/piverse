@@ -229,7 +229,6 @@
             };
 
             window.onerror = function(message, source, lineno, colno, error) {
-                const formattedMsg = `Uncaught: "${message}" at <span class="math-inline">\{source\.split\('/'\)\.pop\(\)\}\:</span>{lineno}`;
                 logToScreen([formattedMsg], 'error');
                 return false;
             };
