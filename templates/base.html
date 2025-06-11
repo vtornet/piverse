@@ -2,7 +2,6 @@
 <html lang="{{ current_locale.language if current_locale else 'es' }}">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}PiVerse{% endblock %}</title>
     <meta name="description" content="Bienvenido a PiVerse, la red social para la comunidad Pi Network. Conéctate, comparte y explora el universo Pi.">
     <meta name="keywords" content="PiVerse, Pi Network, red social, criptomonedas, comunidad Pi, pioneros Pi">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -190,10 +189,6 @@
     {% block head_extra %}{% endblock %}
 </head>
 <body>
-{% if session['user_id'] %}
-  <div style="color:lime;background:black;padding:5px;">Usuario autenticado: {{ session['user_id'] }}</div>
-{% endif %}
-
 <div id="mobile-debug-console" style="position: fixed; bottom: 0; left: 0; width: 100%; max-height: 30%; overflow-y: scroll; background: rgba(0,0,0,0.85); color: #00ff00; font-family: monospace; font-size: 10px; z-index: 9999; padding: 5px; box-sizing: border-box; pointer-events: none;"></div>
     <script>
         (function() {
@@ -720,7 +715,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const authButton = document.getElementById('pi-auth-button');
     const feedbackDiv = document.getElementById('login-feedback');
 
     // Comprobamos si el botón de autenticación existe en la página actual
@@ -782,7 +776,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    if (!{{ 'true' if session.get('user_id') else 'false' }}) {
         if (window.Pi) {
             window.Pi.authenticate(
                 ['username'],
@@ -809,6 +802,73 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 </script>
+
+{# EN base.html, al final del bloque de scripts #}
+
+{# === INICIO: NUEVO SCRIPT DE AUTENTICACIÓN AUTOMÁTICA === #}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. Verificar si el usuario NO está en sesión y si estamos dentro del Pi Browser.
+    const userIsLoggedIn = {{ 'true' if session.get('user_id') else 'false' }};
+    if (!userIsLoggedIn && window.Pi) {
+        
+        // Muestra un mensaje en la consola de la app para depuración
+        console.log("Usuario no autenticado. Iniciando Pi.authenticate...");
+        const authFeedback = document.getElementById('login-feedback'); // Usaremos un div en index.html para dar feedback
+        if(authFeedback) {
+            authFeedback.innerHTML = `{{ _('Autenticando con Pi Network...') }}`;
+        }
+
+        // 2. Iniciar el SDK de Pi
+        // La inicialización ya la tenías, solo nos aseguramos de que se usa
+        const isProduction = window.location.hostname === 'www.piverse.app';
+        Pi.init({ version: "2.0", sandbox: !isProduction });
+
+        // 3. Llamar a la autenticación
+        Pi.authenticate(
+            ['username'], // Los permisos que solicitamos
+            function(authResult) { // Callback en caso de éxito
+                if(authFeedback) {
+                    authFeedback.innerHTML = `{{ _('Verificando con el servidor...') }}`;
+                }
+                // 4. Enviar el accessToken al backend
+                fetch("{{ url_for('pi_auth_complete') }}", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(authResult)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // 5. Redirigir si el backend da el visto bueno
+                    if (data.success && data.redirect_url) {
+                        if(authFeedback) {
+                             authFeedback.innerHTML = `<div class="alert alert-success p-2 mt-2">{{ _('¡Éxito! Redirigiendo...') }}</div>`;
+                        }
+                        window.location.href = data.redirect_url;
+                    } else {
+                        if(authFeedback) {
+                            authFeedback.innerHTML = `<div class="alert alert-danger p-2 mt-2">${data.error || "{{ _('Error desconocido del servidor.') }}"}</div>`;
+                        }
+                    }
+                })
+                .catch(error => {
+                     console.error("Error en fetch a pi_auth_complete:", error);
+                     if(authFeedback) {
+                        authFeedback.innerHTML = `<div class="alert alert-danger p-2 mt-2">{{ _('Error de conexión. No se pudo verificar la sesión.') }}</div>`;
+                     }
+                });
+            },
+            function(error) { // Callback en caso de fallo o cancelación del usuario
+                console.error("Pi.authenticate falló:", error);
+                if(authFeedback) {
+                   authFeedback.innerHTML = `<div class="alert alert-warning p-2 mt-2">{{ _('La autenticación con Pi fue cancelada o ha fallado. Por favor, recarga la aplicación.') }}</div>`;
+                }
+            }
+        );
+    }
+});
+</script>
+{# === FIN: NUEVO SCRIPT DE AUTENTICACIÓN AUTOMÁTICA === #}
 
 {% endblock %}
 </body>

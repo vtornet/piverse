@@ -709,6 +709,8 @@ def index():
     perfil_completo = check_profile_completion(user_id) if user_id else False
     return render_template('index.html', perfil_completo=perfil_completo)
 
+# EN app.py
+
 @app.route('/api/pi/auth/complete', methods=['POST'])
 def pi_auth_complete():
     auth_result = request.json
@@ -735,18 +737,26 @@ def pi_auth_complete():
     if not pi_uid:
         return jsonify(success=False, error=_('Respuesta de Pi inválida.'))
 
-    # Busca el usuario, si no existe lo crea
     user = User.query.filter_by(pi_uid=pi_uid).first()
     if not user:
-        # Aquí puedes ajustar para poner datos por defecto
-        user = User(username=pi_username, password='no-password', pi_uid=pi_uid)
+        # Creamos el usuario y su perfil asociado
+        user = User(username=pi_username, password='no-password', pi_uid=pi_uid, accepted_policies=False) # Inicia sin aceptar políticas
         db.session.add(user)
+        db.session.flush() # Para obtener el user.id para el perfil
+        
+        profile = Profile(user_id=user.id)
+        db.session.add(profile)
         db.session.commit()
 
     # Inicia sesión
     session['user_id'] = user.id
     session['pi_uid'] = pi_uid
-    return jsonify(success=True)
+
+    # --- CAMBIO IMPORTANTE ---
+    # En lugar de un simple success, devolvemos la URL a la que redirigir.
+    # El feed es un buen destino después de iniciar sesión.
+    redirect_url = url_for('feed')
+    return jsonify(success=True, redirect_url=redirect_url)
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required

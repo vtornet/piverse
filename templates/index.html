@@ -1,16 +1,51 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container text-center py-5" style="background-color: #2d0650; min-height: 100vh;">
-    <img src="{{ url_for('static', filename='images/piverse.png') }}" alt="PiVerse" class="mb-4" style="max-width: 200px;">
-    <h1 class="mb-3" style="color: #fff;">PiVerse</h1>
-    <p class="lead mb-4" style="color: #fff;">
-        Your social universe within the Pi Network ecosystem.<br>
-        Connect, share, and grow with other pioneers.
-    </p>
+<div class="container text-center py-5">
+    
+    <div class="piverse-hero" style="background-color: #2c184b; color: white; padding: 2rem 1rem; border-radius: .3rem;">
+        <img src="{{ url_for('static', filename='images/piverse.png') }}" alt="PiVerse Logo" class="logo-hero" style="max-width: 150px; margin-bottom: 1rem;">
+        <h1 class="display-4" style="color: #FFA000;">Bienvenido a PiVerse</h1>
+        <p class="lead-piverse">
+            Tu universo social dentro del ecosistema Pi Network.<br>
+            Conecta, comparte y crece con otros Pioneros.
+        </p>
+    </div>
 
-    <!-- TUS ICONOS Y FRASES ORIGINALES -->
-    <div class="row mt-5 mb-5 text-center">
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-8 col-lg-7">
+            
+            {% if 'user_id' in session %}
+                {# --- SECCIÓN PARA USUARIOS YA AUTENTICADOS --- #}
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ _('¡Hola de nuevo, %(username)s!', username=(display_username_session or _('Pionero'))) }}</h5>
+                        <p class="card-text">{{ _('Tu sesión está activa. ¿Listo para explorar?') }}</p>
+                        <a href="{{ url_for('feed') }}" class="btn btn-primary btn-lg">
+                            <i class="bi bi-arrow-right-circle-fill"></i> {{ _('Continuar al Feed') }}
+                        </a>
+                    </div>
+                </div>
+
+            {% else %}
+                {# --- SECCIÓN PARA USUARIOS NUEVOS / NO AUTENTICADOS --- #}
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div id="login-feedback" class="d-flex align-items-center justify-content-center p-3">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <span class="ms-3">{{ _('Autenticando con Pi Network...') }}</span>
+                        </div>
+                        <p class="text-muted small mt-2">{% trans %}Por favor, aprueba la solicitud en la ventana de Pi para continuar.{% endtrans %}</p>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <div class="row mt-5">
         <div class="col-md-4 mb-3">
             <div class="card h-100 shadow-sm">
                 <div class="card-body">
@@ -39,17 +74,5 @@
             </div>
         </div>
     </div>
-
-    {% if session['user_id'] %}
-        <a href="{{ url_for('profile') }}" class="btn btn-success btn-lg mt-4">
-            Continuar
-        </a>
-        <script>
-            // Redirige automáticamente si quieres (descomenta la siguiente línea si prefieres redirección)
-            // window.location.href = "{{ url_for('profile') }}";
-        </script>
-    {% else %}
-        <p class="mt-4" style="color: #fff;">Autenticando con Pi Network...</p>
-    {% endif %}
 </div>
 {% endblock %}
