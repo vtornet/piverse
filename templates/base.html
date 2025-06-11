@@ -16,6 +16,11 @@
         /* ... (tus estilos CSS) ... */
     </style>
     {% block head_extra %}{% endblock %}
+<meta property="og:title" content="PiVerse - La Red Social para Pioneros de Pi">
+<meta property="og:description" content="Conecta, comparte y crece con otros miembros de la comunidad Pi Network en PiVerse.">
+<meta property="og:image" content="{{ url_for('static', filename='images/piverse.png', _external=True) }}">
+<meta property="og:url" content="{{ url_for('index', _external=True) }}">
+<meta property="og:type" content="website">
 </head>
 <body>
 
