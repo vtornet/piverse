@@ -648,6 +648,16 @@ def moderator_or_higher_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+@app.after_request
+def add_security_headers(response):
+    """Añade cabeceras de seguridad a cada respuesta, incluyendo la CSP."""
+    # Permite scripts de nuestro propio dominio ('self'), de Bootstrap ('https://cdn.jsdelivr.net') 
+    # y del SDK de Pi ('https://sdk.pi-network.com'). 'unsafe-inline' es necesario
+    # para los pequeños scripts que tenemos directamente en las plantillas HTML.
+    csp = "script-src 'self' https://cdn.jsdelivr.net https://sdk.pi-network.com 'unsafe-inline';"
+    response.headers['Content-Security-Policy'] = csp
+    return response
+
 # --- PROCESADOR DE CONTEXTO ---
 # EN app.py
 
