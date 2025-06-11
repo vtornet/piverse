@@ -1,69 +1,22 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ _('Bienvenido a PiVerse') }}{% endblock %}
-
 {% block content %}
-<div class="piverse-hero text-center">
-    <div class="container">
-        <img src="{{ url_for('static', filename='images/piverse.png') }}" alt="{{ _('Logo de PiVerse') }}" class="logo-hero">
-        <p class="lead lead-piverse">{% trans %}Tu universo social dentro del ecosistema Pi Network. Conéctate, comparte y crece con otros pioneros.{% endtrans %}</p>
-        
-        {% if 'user_id' in session %}
-            {% if perfil_completo %}
-                <a href="{{ url_for('feed') }}" class="btn btn-warning btn-lg px-4 gap-3">{{ _('Explorar el Feed') }}</a>
-            {% else %}
-                 <div class="alert alert-info d-inline-block" role="alert">
-                    {% set profile_url = url_for('profile') %}
-                    {% trans profile_link_start='<a href="' ~ profile_url ~ '" class="alert-link">', profile_link_end='</a>' %}
-                    Por favor, {{ profile_link_start }}completa tu perfil público{{ profile_link_end }} para acceder al feed y todas las funciones.
-                    {% endtrans %}
-                </div>
-            {% endif %}
-        {% else %}
-            {# --- BOTÓN UNIFICADO Y FUNCIONAL --- #}
-            <button id="pi-auth-button" class="btn btn-lg btn-warning px-4 gap-3">
-                <i class="bi bi-shield-check"></i> {{ _('Continuar con Pi Network') }}
-            </button>
-            <div id="login-feedback" class="mt-3 text-center text-white"></div>
-        {% endif %}
-    </div>
-</div>
+<div class="container text-center py-5">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="PiVerse" class="mb-4" style="max-width: 200px;">
+    <h1 class="mb-3">PiVerse</h1>
+    <p class="lead mb-4">
+        Your social universe within the Pi Network ecosystem.<br>
+        Connect, share, and grow with other pioneers.
+    </p>
 
-<div class="container mt-5">
-    {% if 'user_id' in session and perfil_completo %}
-        <div class="text-center">
-             <p class="fs-5">{% trans username=(display_username_session or _('Pionero')) %}Hola de nuevo, <strong>{{ username }}</strong>. ¿Listo para interactuar?{% endtrans %}</p>
-        </div>
+    {% if session['user_id'] %}
+        <!-- El usuario ya está autenticado, muestra el botón para ir al perfil -->
+        <a href="{{ url_for('profile') }}" class="btn btn-success btn-lg">
+            Continuar
+        </a>
+    {% else %}
+        <!-- Puedes dejar un mensaje opcional para quienes no estén autenticados -->
+        <p class="text-muted">Autenticando con Pi Network...</p>
     {% endif %}
-
-    <div class="row mt-5 mb-5 text-center">
-        <div class="col-md-4 mb-3">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <i class="bi bi-people-fill text-primary" style="font-size: 2.5rem;"></i>
-                    <h4 class="card-title mt-2">{{ _('Conecta') }}</h4>
-                    <p class="card-text">{% trans %}Encuentra y establece lazos con otros pioneros de la red Pi de todo el mundo.{% endtrans %}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <i class="bi bi-share-fill text-primary" style="font-size: 2.5rem;"></i>
-                    <h4 class="card-title mt-2">{{ _('Comparte') }}</h4>
-                    <p class="card-text">{% trans %}Publica tus ideas innovadoras, proyectos y las últimas noticias sobre Pi Network.{% endtrans %}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <i class="bi bi-graph-up-arrow text-primary" style="font-size: 2.5rem;"></i>
-                    <h4 class="card-title mt-2">{{ _('Crece') }}</h4>
-                    <p class="card-text">{% trans %}Participa en discusiones, aprende y haz crecer el valor del ecosistema Pi.{% endtrans %}</p>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 {% endblock %}

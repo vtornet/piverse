@@ -1,35 +1,34 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ _('Mi perfil') }} - PiVerse{% endblock %}
-
 {% block content %}
-<h2 class="mb-4">{{ _('Editar perfil') }}</h2>
-
-<form method="post" enctype="multipart/form-data" class="card p-4 shadow-sm">
-    <div class="mb-3">
-        <label for="username" class="form-label">{{ _('Nombre de usuario público') }}</label>
-        <input type="text" class="form-control" id="username" name="username" required minlength="3"
-               value="{{ profile[0] if profile else '' }}">
-    </div>
-
-    <div class="mb-3">
-        <label for="bio" class="form-label">{{ _('Biografía') }}</label>
-        <textarea class="form-control" id="bio" name="bio" rows="4">{{ profile[1] if profile else '' }}</textarea>
-    </div>
-
-    <div class="mb-3">
-        <label for="photo" class="form-label">{{ _('Imagen de perfil') }}</label>
-        <input class="form-control" type="file" id="photo" name="photo" accept="image/*">
-    </div>
-
-    {% if profile and profile[2] %}
+<div class="container py-4">
+    <h2 class="mb-4">Tu Perfil</h2>
+    <form method="post" enctype="multipart/form-data">
+        <!-- Nombre de usuario solo lectura -->
         <div class="mb-3">
-            <label class="form-label">{{ _('Vista previa actual:') }}</label><br>
-            <img src="{{ url_for('static', filename='uploads/' + profile[2]) }}" alt="{{ _('Imagen de perfil') }}" class="img-thumbnail" style="max-width: 200px;">
+            <label for="username" class="form-label">Usuario Pi Network</label>
+            <input type="text" class="form-control" id="username" name="username"
+                   value="{{ user.username }}" readonly>
+            <div class="form-text">Este es tu nombre en Pi Network. No puede modificarse.</div>
         </div>
-    {% endif %}
-
-    <button type="submit" class="btn btn-primary">{{ _('Guardar cambios') }}</button>
-    
-</form>
+        <!-- Biografía -->
+        <div class="mb-3">
+            <label for="bio" class="form-label">Biografía (opcional)</label>
+            <textarea class="form-control" id="bio" name="bio" rows="3"
+                      placeholder="Cuéntanos algo sobre ti...">{{ user.profile.bio if user.profile else "" }}</textarea>
+        </div>
+        <!-- Foto de perfil -->
+        <div class="mb-3">
+            <label for="profile_picture" class="form-label">Foto de perfil (opcional)</label>
+            {% if user.profile and user.profile.photo %}
+                <div class="mb-2">
+                    <img src="{{ url_for('static', filename='uploads/' ~ user.profile.photo) }}"
+                         alt="Foto de perfil" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                </div>
+            {% endif %}
+            <input class="form-control" type="file" id="profile_picture" name="profile_picture" accept="image/*">
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    </form>
+</div>
 {% endblock %}
