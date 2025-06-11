@@ -709,28 +709,15 @@ def index():
     perfil_completo = check_profile_completion(user_id) if user_id else False
     return render_template('index.html', perfil_completo=perfil_completo)
 
-@app.route('/login', methods=['GET'])
-def login():
-    if 'user_id' in session:
-        return redirect(url_for('feed'))
-    return render_template('login.html')
-
 @app.route('/api/pi/auth/complete', methods=['POST'])
 def pi_auth_complete():
-    print("--- [DEBUG] Iniciando /api/pi/auth/complete ---") # LOG 1
     auth_result = request.json
     if not auth_result or 'accessToken' not in auth_result:
-        print("--- [DEBUG] ERROR: Petición inválida, no se recibió accessToken.") # LOG 2
         return jsonify(success=False, error=_('Autorización de Pi inválida.'))
-
-    print(f"--- [DEBUG] AccessToken recibido. Verificando API Key...") # LOG 3
 
     PI_API_KEY = os.environ.get('PI_API_KEY')
     if not PI_API_KEY:
-        print("--- [DEBUG] ERROR: La variable de entorno PI_API_KEY no está configurada en Railway.") # LOG 4
         return jsonify(success=False, error=_('Clave API de Pi no configurada en el servidor.'))
-
-    print("--- [DEBUG] PI_API_KEY encontrada. Enviando petición a los servidores de Pi para verificar...") # LOG 5
 
     try:
         response = requests.post(
@@ -738,29 +725,28 @@ def pi_auth_complete():
             json={'accessToken': auth_result['accessToken']},
             headers={'Authorization': f'Key {PI_API_KEY}'}
         )
-        response.raise_for_status() # Lanza un error si la respuesta es 4xx o 5xx
+        response.raise_for_status()
         pi_user_data = response.json()
-        print(f"--- [DEBUG] Respuesta de Pi recibida con éxito: {pi_user_data}") # LOG 6
     except requests.RequestException as e:
-        print(f"--- [DEBUG] ERROR al contactar con los servidores de Pi: {e}") # LOG 7
         return jsonify(success=False, error=_('No se pudo verificar la sesión con Pi.'))
 
     pi_uid = pi_user_data.get('uid')
     pi_username = pi_user_data.get('username')
     if not pi_uid:
-        print(f"--- [DEBUG] ERROR: Respuesta de Pi inválida, no contiene 'uid'. Respuesta: {pi_user_data}") # LOG 8
         return jsonify(success=False, error=_('Respuesta de Pi inválida.'))
 
-    # ... (el resto de la lógica para crear/loguear al usuario sigue igual) ...
+    # Busca el usuario, si no existe lo crea
+    user = User.query.filter_by(pi_uid=pi_uid).first()
+    if not user:
+        # Aquí puedes ajustar para poner datos por defecto
+        user = User(username=pi_username, password='no-password', pi_uid=pi_uid)
+        db.session.add(user)
+        db.session.commit()
 
-    print(f"--- [DEBUG] Proceso finalizado para el usuario {pi_username}. Redirigiendo...") # LOG 9
-    # ... (el resto del código hasta el return final) ...
-
-@app.route('/logout')
-def logout():
-    session.clear()
-    flash(_('Has cerrado sesión.'), 'info')
-    return redirect(url_for('login'))
+    # Inicia sesión
+    session['user_id'] = user.id
+    session['pi_uid'] = pi_uid
+    return jsonify(success=True)
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required

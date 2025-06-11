@@ -779,6 +779,32 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function() {
+  if (window.Pi) {
+    window.Pi.authenticate(
+      ['username'],
+      function(auth) {
+        fetch('/api/pi/auth/complete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            accessToken: auth.accessToken
+          }),
+          credentials: 'same-origin'
+        }).then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              window.location.reload();
+            }
+          });
+      },
+      function(error) {
+        console.error('Pi authentication failed', error);
+      }
+    );
+  }
+});
 </script>
 
 {% endblock %}
