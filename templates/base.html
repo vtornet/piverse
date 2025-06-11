@@ -1,3 +1,7 @@
+{% if session['user_id'] %}
+  <div style="color:lime;background:black;padding:5px;">Usuario autenticado: {{ session['user_id'] }}</div>
+{% endif %}
+
 <!DOCTYPE html>
 <html lang="{{ current_locale.language if current_locale else 'es' }}">
 <head>
@@ -777,31 +781,33 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-<script type="text/javascript">
+<script>
 document.addEventListener("DOMContentLoaded", function() {
-  if (window.Pi) {
-    window.Pi.authenticate(
-      ['username'],
-      function(auth) {
-        fetch('/api/pi/auth/complete', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            accessToken: auth.accessToken
-          }),
-          credentials: 'same-origin'
-        }).then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              window.location.reload();
-            }
-          });
-      },
-      function(error) {
-        console.error('Pi authentication failed', error);
-      }
-    );
-  }
+    if (!{{ 'true' if session.get('user_id') else 'false' }}) {
+        if (window.Pi) {
+            window.Pi.authenticate(
+                ['username'],
+                function(auth) {
+                    fetch('/api/pi/auth/complete', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ accessToken: auth.accessToken }),
+                        credentials: 'same-origin'
+                    }).then(response => response.json())
+                      .then(data => {
+                          if (data.success) {
+                              window.location.reload();
+                          } else {
+                              alert(data.error || "Error de autenticación Pi.");
+                          }
+                      });
+                },
+                function(error) {
+                    alert('Pi authentication failed: ' + error);
+                }
+            );
+        }
+    }
 });
 </script>
 
