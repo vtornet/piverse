@@ -48,7 +48,7 @@
 </head>
 <body>
 
-<div class="content-wrapper">
+<div class<div class="content-wrapper">
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top px-3">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
@@ -61,22 +61,40 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
                     {% if 'user_id' in session %}
-                        <li class="nav-item"><form class="d-flex" method="GET" action="{{ url_for('search') }}" role="search"><input class="form-control form-control-sm me-2" type="search" name="q" placeholder="{{ _('Buscar...') }}" aria-label="Buscar"><button class="btn btn-sm btn-outline-light" type="submit"><i class="bi bi-search"></i></button></form></li>
+                        <li class="nav-item">
+                            <form class="d-flex" method="GET" action="{{ url_for('search') }}" role="search">
+                                <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="{{ _('Buscar...') }}" aria-label="Buscar">
+                                <button class="btn btn-sm btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+                            </form>
+                        </li>
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('feed') }}">{{ _('Inicio') }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('sections_list') }}">{{ _('Secciones') }}</a></li>
-                        <li class="nav-item"><a class="nav-link position-relative" href="{{ url_for('notificaciones') }}">{{ _('Notificaciones') }}<span class="badge rounded-pill bg-danger notification-badge {% if notificaciones_no_leidas_count == 0 %}d-none{% endif %}">{{ notificaciones_no_leidas_count }}</span></a></li>
+                        <li class="nav-item">
+                            <a class="nav-link position-relative" href="{{ url_for('notificaciones') }}">
+                                {{ _('Notificaciones') }}
+                                <span class="badge rounded-pill bg-danger notification-badge {% if notificaciones_no_leidas_count == 0 %}d-none{% endif %}">
+                                    {{ notificaciones_no_leidas_count }}
+                                </span>
+                            </a>
+                        </li>
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('mensajes') }}">{{ _('Mensajes') }}</a></li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-translate"></i></a>
+                            <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-translate"></i>
+                            </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
                                 {% for lang_code, lang_name in available_languages.items() %}
-                                <li><a class="dropdown-item" href="{{ url_for('set_language', lang=lang_code, next=request.path) }}">{{ lang_name }}</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('set_language', lang=lang_code, next=request.path) }}">{{ lang_name }}</a></li>
                                 {% endfor %}
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                {% if foto_usuario_actual %}<img src="{{ url_for('static', filename='uploads/' + foto_usuario_actual) }}" class="rounded-circle" style="width: 32px; height: 32px; object-fit: cover;">{% else %}<i class="bi bi-person-circle fs-4"></i>{% endif %}
+                                {% if foto_usuario_actual %}
+                                    <img src="{{ url_for('static', filename='uploads/' + foto_usuario_actual) }}" class="rounded-circle" style="width: 32px; height: 32px; object-fit: cover;">
+                                {% else %}
+                                    <i class="bi bi-person-circle fs-4"></i>
+                                {% endif %}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="{{ url_for('profile') }}">{{ _('Mi Perfil') }}</a></li>
@@ -90,10 +108,15 @@
                             </ul>
                         </li>
                     {% else %}
-                        {% endif %}
+                        <!-- Enlaces para usuarios no autenticados, si lo deseas -->
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">{{ _('Inicio') }}</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('privacy_policy') }}">{{ _('Privacidad') }}</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('terms_of_service') }}">{{ _('Términos') }}</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
+    </nav>
     </nav>
     <div class="container">
         {% with messages = get_flashed_messages(with_categories=true) %}
