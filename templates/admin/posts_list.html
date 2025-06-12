@@ -96,13 +96,13 @@
                     <td>
                         <div class="d-flex align-items-center">
                             {% if post.item_type == 'original_post' %}
-                                <a href="{{ url_for('ver_publicacion_individual', post_id_vista=post.id) }}" class="btn btn-sm btn-outline-primary" title="{{ _('Ver Post') }}"><i class="bi bi-eye-fill"></i></a>
+                                <a href="{{ url_for('ver_publicacion_individual', post_id=post.id) }}" class="btn btn-sm btn-outline-primary" title="{{ _('Ver Post') }}"><i class="bi bi-eye-fill"></i></a>
                                 <a href="{{ url_for('admin_edit_post', post_id=post.id) }}" class="btn btn-sm btn-outline-warning ms-1" title="{{ _('Editar Post') }}"><i class="bi bi-pencil-fill"></i></a>
                                 <form method="POST" action="{{ url_for('delete_post', post_id=post.id) }}" class="ms-1" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres ocultar esta publicación (ID: %(post_id)s)?', post_id=post.id) }}');">
                                     <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Ocultar Post') }}"><i class="bi bi-trash-fill"></i></button>
                                 </form>
                             {% else %}
-                                 <a href="{{ url_for('ver_publicacion_individual', post_id_vista=post.original_post_id) }}" class="btn btn-sm btn-outline-primary" title="{{ _('Ver Post Original') }}"><i class="bi bi-eye-fill"></i></a>
+                                 <a href="{{ url_for('ver_publicacion_individual', post_id=post.original_post_id) }}" class="btn btn-sm btn-outline-primary" title="{{ _('Ver Post Original') }}"><i class="bi bi-eye-fill"></i></a>
                                  {# Aquí podríamos añadir una acción para eliminar el 'share' en el futuro #}
                             {% endif %}
                         </div>

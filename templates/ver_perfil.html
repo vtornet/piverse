@@ -116,7 +116,7 @@
                                 <div>
                                     <strong><a href="{{ url_for('ver_perfil', slug_perfil=item.slug) }}" class="text-decoration-none text-dark">@{{ item.username }}</a></strong><br>
                                     <small class="text-muted">
-                                        <a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.id) }}" class="text-decoration-none text-muted">{{ format_datetime(item.timestamp, 'medium') if item.timestamp else '' }}</a>
+                                        <a href="{{ url_for('ver_publicacion_individual', post_id=item.id) }}" class="text-decoration-none text-muted">{{ format_datetime(item.timestamp, 'medium') if item.timestamp else '' }}</a>
                                         {% if item.section_name and item.section_slug %}
                                             <span class="post-section-link">· {{ _('en') }} <a href="{{ url_for('view_section', slug_seccion=item.section_slug) }}" class="text-decoration-none">{{ item.section_name }}</a></span>
                                         {% endif %}
@@ -131,10 +131,10 @@
                             {% endif %}
                         </div>
                         {% if item.image_filename %}
-                        <div class="my-2 text-center"><a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.id) }}"><img src="{{ url_for('static', filename='uploads/post_images/' + item.image_filename) }}" class="img-fluid rounded" alt="{{ _('Imagen de la publicación') }}" style="max-height: 400px; object-fit: contain;"></a></div>
+                        <div class="my-2 text-center"><a href="{{ url_for('ver_publicacion_individual', post_id=item.id) }}"><img src="{{ url_for('static', filename='uploads/post_images/' + item.image_filename) }}" class="img-fluid rounded" alt="{{ _('Imagen de la publicación') }}" style="max-height: 400px; object-fit: contain;"></a></div>
                         {% endif %}
                         {% if item.content and item.content.strip() %}
-                            <p class="mb-1 mt-2" style="white-space: pre-wrap;"><a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.id) }}" class="text-decoration-none text-dark">{{ item.content | safe }}</a></p>
+                            <p class="mb-1 mt-2" style="white-space: pre-wrap;"><a href="{{ url_for('ver_publicacion_individual', post_id=item.id) }}" class="text-decoration-none text-dark">{{ item.content | safe }}</a></p>
                         {% endif %}
                         <div class="mt-3 d-flex align-items-center">
                              <div class="reactions-container d-inline-block position-relative me-2">
@@ -154,7 +154,7 @@
                                     {% for type, icon in reaction_types.items() %}<form method="POST" action="{{ url_for('react_to_post', post_id=item.id) }}" class="d-inline-block reaction-form"><input type="hidden" name="reaction_type" value="{{ type }}"><button type="submit" class="btn btn-link p-1 reaction-icon-btn" title="{{ _(type.capitalize()) }}">{{ icon }}</button></form>{% endfor %}
                                 </div>
                             </div>
-                            <a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.id) }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-chat-dots"></i> {{ _('Comentarios') }}</a>
+                            <a href="{{ url_for('ver_publicacion_individual', post_id=item.id) }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-chat-dots"></i> {{ _('Comentarios') }}</a>
                             <button type="button" class="btn btn-sm btn-outline-secondary share-trigger-btn ms-2"
                                     data-bs-toggle="modal"
                                     data-bs-target="#shareModal"
@@ -196,7 +196,7 @@
                                     <div>
                                         <strong><a href="{{ url_for('ver_perfil', slug_perfil=item.original_post.slug) }}" class="text-decoration-none text-dark">@{{ item.original_post.username }}</a></strong><br>
                                         <small class="text-muted">
-                                            <a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.original_post.id) }}" class="text-decoration-none text-muted">{{ format_datetime(item.original_post.timestamp, 'medium') if item.original_post.timestamp else '' }}</a>
+                                            <a href="{{ url_for('ver_publicacion_individual', post_id=item.original_post.id) }}" class="text-decoration-none text-muted">{{ format_datetime(item.original_post.timestamp, 'medium') if item.original_post.timestamp else '' }}</a>
                                             {% if item.original_post.section_name and item.original_post.section_slug %}
                                                 <span class="post-section-link">· {{ _('en') }} <a href="{{ url_for('view_section', slug_seccion=item.original_post.section_slug) }}" class="text-decoration-none">{{ item.original_post.section_name }}</a></span>
                                             {% endif %}
@@ -206,10 +206,10 @@
                                 </div>
                             </div>
                             {% if item.original_post.image_filename %}
-                            <div class="my-2 text-center"><a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.original_post.id) }}"><img src="{{ url_for('static', filename='uploads/post_images/' + item.original_post.image_filename) }}" class="img-fluid rounded" alt="{{ _('Imagen de la publicación') }}" style="max-height: 400px; object-fit: contain;"></a></div>
+                            <div class="my-2 text-center"><a href="{{ url_for('ver_publicacion_individual', post_id=item.original_post.id) }}"><img src="{{ url_for('static', filename='uploads/post_images/' + item.original_post.image_filename) }}" class="img-fluid rounded" alt="{{ _('Imagen de la publicación') }}" style="max-height: 400px; object-fit: contain;"></a></div>
                             {% endif %}
                             {% if item.original_post.content and item.original_post.content.strip() %}
-                                <p class="mb-1 mt-2" style="white-space: pre-wrap;"><a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.original_post.id) }}" class="text-decoration-none text-dark">{{ item.original_post.content | safe }}</a></p>
+                                <p class="mb-1 mt-2" style="white-space: pre-wrap;"><a href="{{ url_for('ver_publicacion_individual', post_id=item.original_post.id) }}" class="text-decoration-none text-dark">{{ item.original_post.content | safe }}</a></p>
                             {% endif %}
                             <div class="mt-3 d-flex align-items-center">
                                 <div class="reactions-container d-inline-block position-relative me-2">
@@ -229,7 +229,7 @@
                                         {% for type, icon in reaction_types.items() %}<form method="POST" action="{{ url_for('react_to_post', post_id=item.original_post.id) }}" class="d-inline-block reaction-form"><input type="hidden" name="reaction_type" value="{{ type }}"><button type="submit" class="btn btn-link p-1 reaction-icon-btn" title="{{ _(type.capitalize()) }}">{{ icon }}</button></form>{% endfor %}
                                     </div>
                                 </div>
-                                <a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.original_post.id) }}#comments-{{item.original_post.id}}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-chat-dots"></i> {{ _('Comentarios') }}</a>
+                                <a href="{{ url_for('ver_publicacion_individual', post_id=item.original_post.id) }}#comments-{{item.original_post.id}}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-chat-dots"></i> {{ _('Comentarios') }}</a>
                                 <button type="button" class="btn btn-sm btn-outline-secondary share-trigger-btn ms-2"
                                         data-bs-toggle="modal"
                                         data-bs-target="#shareModal"

@@ -56,7 +56,7 @@
                                 <div>
                                     <strong><a href="{{ url_for('ver_perfil', slug_perfil=item.slug) }}" class="text-decoration-none text-dark">@{{ item.username }}</a></strong><br>
                                     <small class="text-muted">
-                                        <a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.id) }}" class="text-decoration-none text-muted">{{ format_datetime(item.timestamp, 'medium') if item.timestamp else '' }}</a>
+                                        <a href="{{ url_for('ver_publicacion_individual', post_id=item.id) }}" class="text-decoration-none text-muted">{{ format_datetime(item.timestamp, 'medium') if item.timestamp else '' }}</a>
                                         {% if item.section_name and item.section_slug %}
                                             <span class="post-section-link">· {{ _('en') }} <a href="{{ url_for('view_section', slug_seccion=item.section_slug) }}" class="text-decoration-none">{{ item.section_name }}</a></span>
                                         {% endif %}

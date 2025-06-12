@@ -53,7 +53,7 @@
                     </td>
                     <td>
                         {% if comment.post_id %}
-                            <a href="{{ url_for('ver_publicacion_individual', post_id_vista=comment.post_id) }}" title="{{ comment.post_snippet }}">
+                            <a href="{{ url_for('ver_publicacion_individual', post_id=comment.post_id) }}" title="{{ comment.post_snippet }}">
                                #{{ comment.post_id }}
                             </a>
                         {% else %}

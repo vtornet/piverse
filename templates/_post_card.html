@@ -1,141 +1,139 @@
-{# templates/_post_card.html (CORREGIDO) #}
+{# templates/_post_card.html #}
 {% from '_macros.html' import render_comment_thread %}
 
-{# Este archivo espera una variable 'item' que es un diccionario: {'item_type': '...', 'data': <OBJETO>} #}
-
+{# Este archivo espera que se le pase una variable llamada 'item' #}
 {% if item.item_type == 'original_post' %}
-    {% set post = item.data %}
-    <div class="card shadow-sm mb-4" id="post-{{ post.id }}">
-        <div class="card-body">
+<div class="card shadow-sm mb-4" id="post-{{ item.id }}">
+    <div class="card-body">
+        <div class="d-flex align-items-start mb-3">
+            <div class="flex-grow-1 d-flex align-items-center">
+                {% if item.photo %}<img src="{{ url_for('static', filename='uploads/' + item.photo) }}" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;" alt="{{ _('Foto de %(username)s', username=item.username) }}">
+                {% else %}<div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center me-2" style="width: 40px; height: 40px;"><i class="bi bi-person-fill text-white fs-5"></i></div>{% endif %}
+                <div>
+                    <strong><a href="{{ url_for('ver_perfil', slug_perfil=item.slug) }}" class="text-decoration-none text-dark">@{{ item.username }}</a></strong><br>
+                    <small class="text-muted"><a href="{{ url_for('ver_publicacion_individual', post_id=item.id) }}" class="text-decoration-none text-muted">{{ format_datetime(item.timestamp, 'medium') if item.timestamp else '' }}</a>
+                        {% if item.section_name and item.section_slug %}· {{ _('en') }} <a href="{{ url_for('view_section', slug_seccion=item.section_slug) }}" class="text-decoration-none">{{ _(item.section_name) }}</a>{% endif %}
+                    </small>
+                </div>
+            </div>
+            
+            {# --- MENÚ DE ACCIONES (ELIMINAR Y REPORTAR) PARA POSTS ORIGINALES --- #}
+            <div class="dropdown ms-auto">
+                <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="{{ _('Más opciones') }}">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item report-trigger-btn" href="#" data-bs-toggle="modal" data-bs-target="#reportModal" data-content-type="post" data-content-id="{{ item.id }}">
+                            <i class="bi bi-flag-fill me-2"></i>{{ _('Reportar Publicación') }}
+                        </a>
+                    </li>
+                    {% if session.user_id == item.autor_id_post or current_user_role in ['moderator', 'coordinator', 'admin'] %}
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <form method="POST" action="{{ url_for('delete_post', post_id=item.id) }}" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar esta publicación?') }}');" class="d-inline">
+                             <button type="submit" class="dropdown-item text-danger">
+                                <i class="bi bi-trash-fill me-2"></i>{{ _('Eliminar Publicación') }}
+                            </button>
+                        </form>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        {% if item.content and item.content.strip() %}<p class="card-text mt-2" style="white-space: pre-wrap;">{{ item.content | safe }}</p>{% endif %}
+        {% if item.image_filename %}<div class="mb-2 text-center"><img src="{{ url_for('static', filename='uploads/post_images/' + item.image_filename) }}" class="img-fluid rounded" alt="{{ _('Imagen de la publicación') }}" style="max-height: 450px; object-fit: contain; width: 100%;"></div>{% endif %}
+        {% if item.preview_url %}<a href="{{ item.preview_url }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none"><div class="link-preview-card my-2">{% if item.preview_image_url %}<img src="{{ item.preview_image_url }}" class="link-preview-image" alt="{{ _('Imagen de previsualización') }}">{% endif %}<div class="link-preview-info"><h6 class="link-preview-title mb-1">{{ item.preview_title or item.preview_url }}</h6><p class="link-preview-description text-muted small mb-1">{{ item.preview_description }}</p><small class="link-preview-url">{{ item.preview_url | replace('https://', '') | replace('http://', '') | truncate(40) }}</small></div></div></a>{% endif %}
+        <div class="mt-2 d-flex align-items-center">
+            <div class="reactions-container d-inline-block position-relative me-2">
+                <button class="btn btn-sm {% if item.user_reaction %}btn-primary{% else %}btn-outline-primary{% endif %} reaction-trigger-btn">
+                    {% if item.user_reaction and item.user_reaction.reaction_type == 'love' %} ❤️ {% elif item.user_reaction and item.user_reaction.reaction_type == 'haha' %} 😂 {% elif item.user_reaction and item.user_reaction.reaction_type == 'wow' %} 😮 {% elif item.user_reaction and item.user_reaction.reaction_type == 'sad' %} 😢 {% elif item.user_reaction and item.user_reaction.reaction_type == 'angry' %} 😠 {% elif item.user_reaction and item.user_reaction.reaction_type == 'like' %} 👍 {% else %}<i class="bi bi-hand-thumbs-up"></i>{% endif %}
+                    {% if item.user_reaction %}{{ _(item.user_reaction.reaction_type.capitalize()) }}{% else %}{{ _('Reaccionar') }}{% endif %} ({{ item.total_reactions }})
+                </button>
+                <div class="reactions-palette bg-white border rounded shadow-sm p-1">
+                    {% set reaction_types = {'like': '👍', 'love': '❤️', 'haha': '😂', 'wow': '😮', 'sad': '😢', 'angry': '😠'} %}
+                    {% for type, icon in reaction_types.items() %}<form method="POST" action="{{ url_for('react_to_post', post_id=item.id) }}" class="d-inline-block reaction-form"><input type="hidden" name="reaction_type" value="{{ type }}"><button type="submit" class="btn btn-link p-1 reaction-icon-btn" title="{{ _(type.capitalize()) }}">{{ icon }}</button></form>{% endfor %}
+                </div>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#comments-{{ item.id }}" aria-expanded="false" aria-controls="comments-{{ item.id }}"><i class="bi bi-chat-dots"></i> {{ _('Comentarios') }} ({{ item.comments|length }})</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary share-trigger-btn ms-2" data-bs-toggle="modal" data-bs-target="#shareModal" data-post-id="{{ item.id }}" title="{{ _('Citar o compartir') }}"><i class="bi bi-arrow-repeat"></i> {% if item.share_count > 0 %}{{ item.share_count }}{% endif %}</button>
+        </div>
+        <div class="collapse mt-3 ps-3 border-start" id="comments-{{ item.id }}">{% if item.comments %}{{ render_comment_thread(item.comments, item.id) }}{% else %}<p class="small text-muted">{{ _('No hay comentarios aún. ¡Sé el primero!') }}</p>{% endif %}</div>
+        <form method="post" action="{{ url_for('comment', post_id=item.id) }}" class="mt-3" id="comment-form-{{ item.id }}-toplevel">
+            <div class="input-group position-relative"><input type="text" name="content" class="form-control form-control-sm mentionable-input" placeholder="{{ _('Escribe un comentario...') }}" required><div class="mention-suggestions-list" style="display: none;"></div><button type="submit" class="btn btn-sm btn-outline-secondary">{{ _('Comentar') }}</button></div>
+        </form>
+    </div>
+</div>
+{% elif item.item_type == 'shared_post' %}
+<div class="card shadow-sm mb-4" id="share-{{ item.share_id }}">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+            <div class="shared-by-line flex-grow-1">
+                <i class="bi bi-arrow-repeat"></i> <a href="{{ url_for('ver_perfil', slug_perfil=item.sharer_slug) }}" class="text-decoration-none fw-bold">@{{ item.sharer_username }}</a> {{ _('compartió esto') }} {% if item.quote_content and item.quote_content.strip() %} {{ _('con el siguiente comentario:') }} {% endif %} <small class="text-muted">({{ format_datetime(item.share_timestamp, 'medium') if item.share_timestamp else '' }})</small>
+            </div>
+            {% if item.quote_content and item.quote_content.strip() %}
+            <div class="dropdown ms-2">
+                <button class="btn btn-sm btn-light py-0 px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="{{ _('Más opciones para esta cita') }}">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item report-trigger-btn" href="#" data-bs-toggle="modal" data-bs-target="#reportModal" data-content-type="shared_post" data-content-id="{{ item.share_id }}">
+                            <i class="bi bi-flag-fill me-2"></i>{{ _('Reportar Cita') }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+        {% if item.quote_content and item.quote_content.strip() %}<div class="quote-content-box">{{ item.quote_content | safe }}</div>{% endif %}
+        <div class="original-post-embed">
             <div class="d-flex align-items-start mb-3">
                 <div class="flex-grow-1 d-flex align-items-center">
-                    {% if post.author.profile.photo %}
-                        <img src="{{ url_for('static', filename='uploads/' + post.author.profile.photo) }}" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;" alt="{{ _('Foto de %(username)s', username=post.author.profile.username) }}">
-                    {% else %}
-                        <div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center me-2" style="width: 40px; height: 40px;"><i class="bi bi-person-fill text-white fs-5"></i></div>
-                    {% endif %}
+                    {% if item.original_post.photo %}<img src="{{ url_for('static', filename='uploads/' + item.original_post.photo) }}" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;" alt="{{ _('Foto de %(username)s', username=item.original_post.username) }}">
+                    {% else %}<div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center me-2" style="width: 40px; height: 40px;"><i class="bi bi-person-fill text-white fs-5"></i></div>{% endif %}
                     <div>
-                        <strong><a href="{{ url_for('ver_perfil', slug_perfil=post.author.profile.slug) }}" class="text-decoration-none text-dark">@{{ post.author.profile.username or post.author.username }}</a></strong><br>
-                        <small class="text-muted">
-                            <a href="{{ url_for('ver_publicacion_individual', post_id_vista=post.id) }}" class="text-decoration-none text-muted">{{ format_datetime(post.timestamp, 'medium') if post.timestamp else '' }}</a>
-                            {% if post.section %}· {{ _('en') }} <a href="{{ url_for('view_section', slug_seccion=post.section.slug) }}" class="text-decoration-none">{{ _(post.section.name) }}</a>{% endif %}
+                        <strong><a href="{{ url_for('ver_perfil', slug_perfil=item.original_post.slug) }}" class="text-decoration-none text-dark">@{{ item.original_post.username }}</a></strong><br>
+                        <small class="text-muted"><a href="{{ url_for('ver_publicacion_individual', post_id=item.original_post.id) }}" class="text-decoration-none text-muted">{{ format_datetime(item.original_post.timestamp, 'medium') if item.original_post.timestamp else '' }}</a>
+                            {% if item.original_post.section_name and item.original_post.section_slug %}· {{ _('en') }} <a href="{{ url_for('view_section', slug_seccion=item.original_post.section_slug) }}" class="text-decoration-none">{{ _(item.original_post.section_name) }}</a>{% endif %}
                         </small>
                     </div>
                 </div>
-                
                 <div class="dropdown ms-auto">
                     <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="{{ _('Más opciones') }}">
                         <i class="bi bi-three-dots-vertical"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item report-trigger-btn" href="#" data-bs-toggle="modal" data-bs-target="#reportModal" data-content-type="post" data-content-id="{{ post.id }}"><i class="bi bi-flag-fill me-2"></i>{{ _('Reportar Publicación') }}</a></li>
-                        {% if session.user_id == post.user_id or current_user_role in ['moderator', 'coordinator', 'admin'] %}
-                        <li><hr class="dropdown-divider"></li>
                         <li>
-                            <form method="POST" action="{{ url_for('delete_post', post_id=post.id) }}" onsubmit="return confirm('{{ _('¿Estás seguro de que quieres eliminar esta publicación?') }}');" class="d-inline">
-                                <button type="submit" class="dropdown-item text-danger"><i class="bi bi-trash-fill me-2"></i>{{ _('Eliminar Publicación') }}</button>
-                            </form>
+                            <a class="dropdown-item report-trigger-btn" href="#" data-bs-toggle="modal" data-bs-target="#reportModal" data-content-type="post" data-content-id="{{ item.original_post.id }}">
+                                <i class="bi bi-flag-fill me-2"></i>{{ _('Reportar Publicación Original') }}
+                            </a>
                         </li>
-                        {% endif %}
                     </ul>
                 </div>
             </div>
-
-            {% if post.content and post.content.strip() %}<p class="card-text mt-2" style="white-space: pre-wrap;">{{ procesar_menciones_para_mostrar(post.content) | safe }}</p>{% endif %}
-            {% if post.image_filename %}<div class="mb-2 text-center"><img src="{{ url_for('static', filename='uploads/post_images/' + post.image_filename) }}" class="img-fluid rounded" alt="{{ _('Imagen de la publicación') }}" style="max-height: 450px; object-fit: contain; width: 100%;"></div>{% endif %}
-            {% if post.preview_url %}<a href="{{ post.preview_url }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none"><div class="link-preview-card my-2">{% if post.preview_image_url %}<img src="{{ post.preview_image_url }}" class="link-preview-image" alt="{{ _('Imagen de previsualización') }}">{% endif %}<div class="link-preview-info"><h6 class="link-preview-title mb-1">{{ post.preview_title or post.preview_url }}</h6><p class="link-preview-description text-muted small mb-1">{{ post.preview_description }}</p><small class="link-preview-url">{{ post.preview_url | replace('https://', '') | replace('http://', '') | truncate(40) }}</small></div></div></a>{% endif %}
-            
+            {% if item.original_post.content and item.original_post.content.strip() %}<p class="card-text mt-2" style="white-space: pre-wrap;">{{ item.original_post.content | safe }}</p>{% endif %}
+            {% if item.original_post.image_filename %}<div class="mb-2 text-center"><img src="{{ url_for('static', filename='uploads/post_images/' + item.original_post.image_filename) }}" class="img-fluid rounded" alt="{{ _('Imagen de la publicación') }}" style="max-height: 450px; object-fit: contain; width: 100%;"></div>{% endif %}
+            {% if item.original_post.preview_url %}<a href="{{ item.original_post.preview_url }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none"><div class="link-preview-card my-2">{% if item.original_post.preview_image_url %}<img src="{{ item.original_post.preview_image_url }}" class="link-preview-image" alt="{{ _('Imagen de previsualización') }}">{% endif %}<div class="link-preview-info"><h6 class="link-preview-title mb-1">{{ item.original_post.preview_title or item.original_post.preview_url }}</h6><p class="link-preview-description text-muted small mb-1">{{ item.original_post.preview_description }}</p><small class="link-preview-url">{{ item.original_post.preview_url | replace('https://', '') | replace('http://', '') | truncate(40) }}</small></div></div></a>{% endif %}
             <div class="mt-2 d-flex align-items-center">
-                {% set u_reaction = (post.reactions|selectattr('user_id', 'equalto', session.user_id)|first) %}
                 <div class="reactions-container d-inline-block position-relative me-2">
-                    <button class="btn btn-sm {% if u_reaction %}btn-primary{% else %}btn-outline-primary{% endif %} reaction-trigger-btn">
-                        {% if u_reaction and u_reaction.reaction_type == 'love' %} ❤️ {% elif u_reaction and u_reaction.reaction_type == 'haha' %} 😂 {% elif u_reaction and u_reaction.reaction_type == 'wow' %} 😮 {% elif u_reaction and u_reaction.reaction_type == 'sad' %} 😢 {% elif u_reaction and u_reaction.reaction_type == 'angry' %} 😠 {% elif u_reaction and u_reaction.reaction_type == 'like' %} 👍 {% else %}<i class="bi bi-hand-thumbs-up"></i>{% endif %}
-                        {% if u_reaction %}{{ _(u_reaction.reaction_type.capitalize()) }}{% else %}{{ _('Reaccionar') }}{% endif %} ({{ post.reactions.count() }})
+                    <button class="btn btn-sm {% if item.original_post.user_reaction %}btn-primary{% else %}btn-outline-primary{% endif %} reaction-trigger-btn">
+                        {% if item.original_post.user_reaction and item.original_post.user_reaction.reaction_type == 'love' %} ❤️ {% elif item.original_post.user_reaction and item.original_post.user_reaction.reaction_type == 'haha' %} 😂 {% elif item.original_post.user_reaction and item.original_post.user_reaction.reaction_type == 'wow' %} 😮 {% elif item.original_post.user_reaction and item.original_post.user_reaction.reaction_type == 'sad' %} 😢 {% elif item.original_post.user_reaction and item.original_post.user_reaction.reaction_type == 'angry' %} 😠 {% elif item.original_post.user_reaction and item.original_post.user_reaction.reaction_type == 'like' %} 👍 {% else %}<i class="bi bi-hand-thumbs-up"></i>{% endif %}
+                        {% if item.original_post.user_reaction %}{{ _(item.original_post.user_reaction.reaction_type.capitalize()) }}{% else %}{{ _('Reaccionar') }}{% endif %} ({{ item.original_post.total_reactions }})
                     </button>
                     <div class="reactions-palette bg-white border rounded shadow-sm p-1">
                         {% set reaction_types = {'like': '👍', 'love': '❤️', 'haha': '😂', 'wow': '😮', 'sad': '😢', 'angry': '😠'} %}
-                        {% for type, icon in reaction_types.items() %}<form method="POST" action="{{ url_for('react_to_post', post_id=post.id) }}" class="d-inline-block reaction-form"><input type="hidden" name="reaction_type" value="{{ type }}"><button type="submit" class="btn btn-link p-1 reaction-icon-btn" title="{{ _(type.capitalize()) }}">{{ icon }}</button></form>{% endfor %}
+                        {% for type, icon in reaction_types.items() %}<form method="POST" action="{{ url_for('react_to_post', post_id=item.original_post.id) }}" class="d-inline-block reaction-form"><input type="hidden" name="reaction_type" value="{{ type }}"><button type="submit" class="btn btn-link p-1 reaction-icon-btn" title="{{ _(type.capitalize()) }}">{{ icon }}</button></form>{% endfor %}
                     </div>
                 </div>
-                <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#comments-{{ post.id }}" aria-expanded="false" aria-controls="comments-{{ post.id }}"><i class="bi bi-chat-dots"></i> {{ _('Comentarios') }} ({{ post.comments.count() }})</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary share-trigger-btn ms-2" data-bs-toggle="modal" data-bs-target="#shareModal" data-post-id="{{ post.id }}" title="{{ _('Citar o compartir') }}"><i class="bi bi-arrow-repeat"></i> {% if post.shared.count() > 0 %}{{ post.shared.count() }}{% endif %}</button>
+                <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#comments-original-{{ item.original_post.id }}-in-share-{{ item.share_id }}" aria-expanded="false" aria-controls="comments-original-{{ item.original_post.id }}-in-share-{{ item.share_id }}"><i class="bi bi-chat-dots"></i> {{ _('Comentarios') }} ({{ item.original_post.comments|length }})</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary share-trigger-btn ms-2" data-bs-toggle="modal" data-bs-target="#shareModal" data-post-id="{{ item.original_post.id }}" title="{{ _('Citar o compartir') }}"><i class="bi bi-arrow-repeat"></i> {% if item.original_post.share_count > 0 %}{{ item.original_post.share_count }}{% endif %}</button>
             </div>
-            <div class="collapse mt-3 ps-3 border-start" id="comments-{{ post.id }}">
-                {{ render_comment_thread(post.comments.order_by('timestamp'), post.id) }}
-            </div>
-            <form method="post" action="{{ url_for('comment', post_id=post.id) }}" class="mt-3" id="comment-form-{{ post.id }}-toplevel">
-                <div class="input-group position-relative"><input type="text" name="content" class="form-control form-control-sm mentionable-input" placeholder="{{ _('Escribe un comentario...') }}" required><div class="mention-suggestions-list" style="display: none;"></div><button type="submit" class="btn btn-sm btn-outline-secondary">{{ _('Comentar') }}</button></div>
+            <div class="collapse mt-3 ps-3 border-start" id="comments-original-{{ item.original_post.id }}-in-share-{{ item.share_id }}">{% if item.original_post.comments %}{{ render_comment_thread(item.original_post.comments, item.original_post.id) }}{% else %}<p class="small text-muted">{{ _('No hay comentarios aún.') }}</p>{% endif %}</div>
+            <form method="post" action="{{ url_for('comment', post_id=item.original_post.id) }}" class="mt-3" id="comment-form-original-{{ item.original_post.id }}-in-share-{{ item.share_id }}">
+                <div class="input-group position-relative"><input type="text" name="content" class="form-control form-control-sm mentionable-input" placeholder="{{ _('Escribe un comentario sobre la publicación original...') }}" required><div class="mention-suggestions-list" style="display: none;"></div><button type="submit" class="btn btn-sm btn-outline-secondary">{{ _('Comentar') }}</button></div>
             </form>
         </div>
     </div>
-
-{% elif item.item_type == 'shared_post' %}
-    {% set shared_post = item.data %}
-    {% set original_post = shared_post.original_post %}
-    <div class="card shadow-sm mb-4" id="share-{{ shared_post.id }}">
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start">
-                <div class="shared-by-line flex-grow-1">
-                    <i class="bi bi-arrow-repeat"></i> <a href="{{ url_for('ver_perfil', slug_perfil=shared_post.user.profile.slug) }}" class="text-decoration-none fw-bold">@{{ shared_post.user.profile.username or shared_post.user.username }}</a> {{ _('compartió esto') }} {% if shared_post.quote_content and shared_post.quote_content.strip() %} {{ _('con el siguiente comentario:') }} {% endif %} <small class="text-muted">({{ format_datetime(shared_post.timestamp, 'medium') if shared_post.timestamp else '' }})</small>
-                </div>
-                {% if shared_post.quote_content and shared_post.quote_content.strip() %}
-                <div class="dropdown ms-2">
-                    <button class="btn btn-sm btn-light py-0 px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="{{ _('Más opciones para esta cita') }}">
-                        <i class="bi bi-three-dots-vertical"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item report-trigger-btn" href="#" data-bs-toggle="modal" data-bs-target="#reportModal" data-content-type="shared_post" data-content-id="{{ shared_post.id }}"><i class="bi bi-flag-fill me-2"></i>{{ _('Reportar Cita') }}</a></li>
-                    </ul>
-                </div>
-                {% endif %}
-            </div>
-            {% if shared_post.quote_content and shared_post.quote_content.strip() %}<div class="quote-content-box">{{ procesar_menciones_para_mostrar(shared_post.quote_content) | safe }}</div>{% endif %}
-            
-            <div class="original-post-embed">
-                <div class="d-flex align-items-start mb-3">
-                    <div class="flex-grow-1 d-flex align-items-center">
-                        {% if original_post.author.profile.photo %}<img src="{{ url_for('static', filename='uploads/' + original_post.author.profile.photo) }}" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;" alt="{{ _('Foto de %(username)s', username=original_post.author.profile.username) }}">
-                        {% else %}<div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center me-2" style="width: 40px; height: 40px;"><i class="bi bi-person-fill text-white fs-5"></i></div>{% endif %}
-                        <div>
-                            <strong><a href="{{ url_for('ver_perfil', slug_perfil=original_post.author.profile.slug) }}" class="text-decoration-none text-dark">@{{ original_post.author.profile.username or original_post.author.username }}</a></strong><br>
-                            <small class="text-muted"><a href="{{ url_for('ver_publicacion_individual', post_id_vista=original_post.id) }}" class="text-decoration-none text-muted">{{ format_datetime(original_post.timestamp, 'medium') if original_post.timestamp else '' }}</a>
-                                {% if original_post.section %}· {{ _('en') }} <a href="{{ url_for('view_section', slug_seccion=original_post.section.slug) }}" class="text-decoration-none">{{ _(original_post.section.name) }}</a>{% endif %}
-                            </small>
-                        </div>
-                    </div>
-                    <div class="dropdown ms-auto">
-                        <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="{{ _('Más opciones') }}"><i class="bi bi-three-dots-vertical"></i></button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item report-trigger-btn" href="#" data-bs-toggle="modal" data-bs-target="#reportModal" data-content-type="post" data-content-id="{{ original_post.id }}"><i class="bi bi-flag-fill me-2"></i>{{ _('Reportar Publicación Original') }}</a></li>
-                        </ul>
-                    </div>
-                </div>
-                {% if original_post.content and original_post.content.strip() %}<p class="card-text mt-2" style="white-space: pre-wrap;">{{ procesar_menciones_para_mostrar(original_post.content) | safe }}</p>{% endif %}
-                {% if original_post.image_filename %}<div class="mb-2 text-center"><img src="{{ url_for('static', filename='uploads/post_images/' + original_post.image_filename) }}" class="img-fluid rounded" alt="{{ _('Imagen de la publicación') }}" style="max-height: 450px; object-fit: contain; width: 100%;"></div>{% endif %}
-                {% if original_post.preview_url %}<a href="{{ original_post.preview_url }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none"><div class="link-preview-card my-2">{% if original_post.preview_image_url %}<img src="{{ original_post.preview_image_url }}" class="link-preview-image">{% endif %}<div class="link-preview-info"><h6 class="link-preview-title mb-1">{{ original_post.preview_title or original_post.preview_url }}</h6><p class="link-preview-description text-muted small mb-1">{{ original_post.preview_description }}</p><small class="link-preview-url">{{ original_post.preview_url | replace('https://', '') | replace('http://', '') | truncate(40) }}</small></div></div></a>{% endif %}
-                
-                <div class="mt-2 d-flex align-items-center">
-                    {% set u_reaction = (original_post.reactions|selectattr('user_id', 'equalto', session.user_id)|first) %}
-                    <div class="reactions-container d-inline-block position-relative me-2">
-                        <button class="btn btn-sm {% if u_reaction %}btn-primary{% else %}btn-outline-primary{% endif %} reaction-trigger-btn">
-                            {% if u_reaction and u_reaction.reaction_type == 'love' %} ❤️ {% elif u_reaction and u_reaction.reaction_type == 'haha' %} 😂 {% elif u_reaction and u_reaction.reaction_type == 'wow' %} 😮 {% elif u_reaction and u_reaction.reaction_type == 'sad' %} 😢 {% elif u_reaction and u_reaction.reaction_type == 'angry' %} 😠 {% elif u_reaction and u_reaction.reaction_type == 'like' %} 👍 {% else %}<i class="bi bi-hand-thumbs-up"></i>{% endif %}
-                            {% if u_reaction %}{{ _(u_reaction.reaction_type.capitalize()) }}{% else %}{{ _('Reaccionar') }}{% endif %} ({{ original_post.reactions.count() }})
-                        </button>
-                        <div class="reactions-palette bg-white border rounded shadow-sm p-1">
-                            {% set reaction_types = {'like': '👍', 'love': '❤️', 'haha': '😂', 'wow': '😮', 'sad': '😢', 'angry': '😠'} %}
-                            {% for type, icon in reaction_types.items() %}<form method="POST" action="{{ url_for('react_to_post', post_id=original_post.id) }}" class="d-inline-block reaction-form"><input type="hidden" name="reaction_type" value="{{ type }}"><button type="submit" class="btn btn-link p-1 reaction-icon-btn" title="{{ _(type.capitalize()) }}">{{ icon }}</button></form>{% endfor %}
-                        </div>
-                    </div>
-                    <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#comments-original-{{ original_post.id }}-in-share-{{ shared_post.id }}" aria-expanded="false"><i class="bi bi-chat-dots"></i> {{ _('Comentarios') }} ({{ original_post.comments.count() }})</button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary share-trigger-btn ms-2" data-bs-toggle="modal" data-bs-target="#shareModal" data-post-id="{{ original_post.id }}" title="{{ _('Citar o compartir') }}"><i class="bi bi-arrow-repeat"></i> {% if original_post.shared.count() > 0 %}{{ original_post.shared.count() }}{% endif %}</button>
-                </div>
-                <div class="collapse mt-3 ps-3 border-start" id="comments-original-{{ original_post.id }}-in-share-{{ shared_post.id }}">
-                    {{ render_comment_thread(original_post.comments.order_by('timestamp'), original_post.id) }}
-                </div>
-                <form method="post" action="{{ url_for('comment', post_id=original_post.id) }}" class="mt-3" id="comment-form-original-{{ original_post.id }}-in-share-{{ shared_post.id }}">
-                    <div class="input-group position-relative"><input type="text" name="content" class="form-control form-control-sm mentionable-input" placeholder="{{ _('Escribe un comentario...') }}" required><div class="mention-suggestions-list" style="display: none;"></div><button type="submit" class="btn btn-sm btn-outline-secondary">{{ _('Comentar') }}</button></div>
-                </form>
-            </div>
-        </div>
-    </div>
+</div>
 {% endif %}

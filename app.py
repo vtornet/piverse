@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime, timezone, timedelta
+from werkzeug.security import generate_password_hash
 
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, event, text, or_, and_, desc, asc, func, union_all
@@ -280,15 +281,21 @@ app.config['LANGUAGES'] = {
 }
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
 
+# Reemplaza la función select_current_locale en app.py por esta:
+
 def select_current_locale():
-    # 1. Prioridad: La sesión del usuario. Si ya eligió un idioma, lo respetamos.
-    user_lang = session.get('language')
-    if user_lang and user_lang in app.config['LANGUAGES'].keys():
-        return user_lang
+    # 1. Si el usuario ha elegido un idioma en el menú, se usa ese.
+    lang = session.get('language')
+    if lang:
+        # LÍNEA DE DEPURACIÓN 1:
+        print(f"DEBUG: Idioma encontrado en la sesión: '{lang}'")
+        return lang
     
-    # 2. Si no hay idioma en la sesión (es un nuevo visitante), el idioma por defecto es inglés.
-    # Se ignora la cabecera 'Accept-Language' del navegador para asegurar consistencia.
-    return app.config['BABEL_DEFAULT_LOCALE'] # Asegúrate que 'en' sea el valor en la config.
+    # 2. Si no, se intenta usar el mejor idioma según el navegador del visitante.
+    lang = request.accept_languages.best_match(app.config['LANGUAGES'].keys())
+    # LÍNEA DE DEPURACIÓN 2:
+    print(f"DEBUG: Idioma seleccionado por el navegador/defecto: '{lang}'")
+    return lang
 
 babel = Babel(app, locale_selector=select_current_locale)
 
@@ -392,7 +399,7 @@ def procesar_menciones_y_notificar(texto, autor_id, id_referencia, tipo_contenid
         mencionado = db.session.query(Profile).filter(Profile.slug.ilike(slug_mencionado)).first()
         if mencionado and mencionado.user_id != autor_id and mencionado.user_id not in excluded_ids:
             try:
-                enlace_post_url = url_for("ver_publicacion_individual", post_id_vista=int(id_referencia))
+                enlace_post_url = url_for("ver_publicacion_individual", post_id=int(id_referencia))
             except (ValueError, TypeError):
                 enlace_post_url = "#"
             
@@ -903,7 +910,130 @@ def feed():
                            posts=[], # Los posts se cargarán dinámicamente
                            sections=all_sections,
                            POSTS_PER_PAGE=POSTS_PER_PAGE)
+    
+# Inserta este bloque después de la ruta /feed en app.py
 
+def highlight_term(text_content, query):
+    """Resalta el término de búsqueda en el texto, ignorando mayúsculas/minúsculas."""
+    if not query or not text_content:
+        return text_content
+    try:
+        # Escapa el query para tratar caracteres especiales de regex como texto normal
+        escaped_query = re.escape(query)
+        # re.sub para reemplazar el término encontrado por el mismo término envuelto en un <span>
+        highlighted_text = re.sub(
+            f'({escaped_query})',
+            r'<mark class="p-0">\g<0></mark>', # Usamos la etiqueta <mark> de Bootstrap
+            text_content,
+            flags=re.IGNORECASE
+        )
+        return highlighted_text
+    except Exception as e:
+        print(f"Error durante el resaltado del término de búsqueda: {e}")
+        return text_content
+
+@app.route('/search')
+@login_required
+@check_policy_acceptance
+def search():
+    query = request.args.get('q', '').strip()
+    if not query:
+        # Si la búsqueda está vacía, simplemente muestra una página sin resultados.
+        return render_template('search_results.html', posts=[], query=query)
+
+    user_id_actual = session['user_id']
+    excluded_ids = get_blocked_and_blocking_ids(user_id_actual)
+
+    # Búsqueda en el contenido de publicaciones originales
+    posts_found = Post.query.filter(
+        Post.content.ilike(f'%{query}%'),
+        Post.is_visible == True,
+        Post.user_id.notin_(excluded_ids)
+    ).order_by(Post.timestamp.desc()).all()
+
+    # Búsqueda en el contenido de las citas de publicaciones compartidas
+    shares_found = SharedPost.query.join(Post, Post.id == SharedPost.original_post_id).filter(
+        SharedPost.quote_content.ilike(f'%{query}%'),
+        Post.is_visible == True, # Asegurarse de que el post original no esté oculto
+        SharedPost.user_id.notin_(excluded_ids),
+        Post.user_id.notin_(excluded_ids)
+    ).order_by(SharedPost.timestamp.desc()).all()
+
+    # Combinar y procesar resultados
+    search_results = []
+    for post in posts_found:
+        # Crea una copia del contenido para no modificar el objeto original de la BBDD
+        display_content = highlight_term(post.content, query)
+        search_results.append({'item_type': 'original_post', 'data': post, 'display_content': display_content})
+
+    for share in shares_found:
+        display_content = highlight_term(share.quote_content, query)
+        search_results.append({'item_type': 'shared_post', 'data': share, 'display_content': display_content})
+
+    # Ordenar resultados combinados por fecha de actividad (más recientes primero)
+    search_results.sort(key=lambda x: x['data'].timestamp, reverse=True)
+
+    # Renderizar la plantilla con los resultados
+    return render_template('search_results.html', posts=search_results, query=query)
+
+# Inserta este bloque después de la ruta /search en app.py
+
+# --- RUTAS FALTANTES DE LA BARRA DE NAVEGACIÓN ---
+
+@app.route('/notificaciones')
+@login_required
+@check_policy_acceptance
+def notificaciones():
+    user_id_actual = session['user_id']
+    
+    # Lógica con SQLAlchemy para obtener notificaciones y marcar como leídas las que se vean
+    notificaciones_list = Notification.query.filter_by(user_id=user_id_actual)\
+        .order_by(Notification.leida.asc(), Notification.timestamp.desc())\
+        .all()
+    
+    # Marcar como leídas solo al cargar la página (se puede refinar con JS como lo tenías)
+    # for notif in notificaciones_list:
+    #     if not notif.leida:
+    #         notif.leida = True
+    # db.session.commit()
+
+    return render_template('notificaciones.html', notificaciones=notificaciones_list)
+
+@app.route('/sections')
+@login_required
+@check_policy_acceptance
+def sections_list():
+    all_sections = Section.query.order_by(Section.name.asc()).all()
+    return render_template('sections_list.html', sections=all_sections)
+
+@app.route('/section/<slug_seccion>')
+@login_required
+@check_policy_acceptance
+def view_section(slug_seccion):
+    user_id_actual = session['user_id']
+
+    section = Section.query.filter_by(slug=slug_seccion).first_or_404()
+    
+    excluded_ids = get_blocked_and_blocking_ids(user_id_actual)
+    
+    # Query para posts en la sección, excluyendo usuarios bloqueados
+    posts_in_section = Post.query.filter(
+        Post.section_id == section.id,
+        Post.is_visible == True,
+        Post.user_id.notin_(excluded_ids)
+    ).order_by(Post.timestamp.desc()).limit(50).all()
+
+    # Se necesita pasar el item como diccionario para que _post_card.html funcione
+    feed_items = [{'item_type': 'original_post', 'data': post} for post in posts_in_section]
+
+    # También obtener todas las secciones para el formulario de publicación
+    all_sections = Section.query.order_by(Section.name.asc()).all()
+
+    return render_template('view_section.html', 
+                           posts=feed_items, 
+                           section_name=section.name,
+                           section_slug=section.slug,
+                           sections=all_sections)
 
 @app.route('/post', methods=['POST'])
 @login_required
@@ -1081,7 +1211,7 @@ def comment(post_id):
         commenter_slug = commenter_profile.slug if commenter_profile else "#"
         commenter_name = commenter_profile.username if commenter_profile else _("Usuario")
         commenter_link_html = f'<a href="{url_for("ver_perfil", slug_perfil=commenter_slug)}">@{commenter_name}</a>'
-        post_link_html = f'<a href="{url_for("ver_publicacion_individual", post_id_vista=post_id)}#comment-{new_comment.id}">{_("publicación")}</a>'
+        post_link_html = f'<a href="{url_for("ver_publicacion_individual", post_id=post_id)}#comment-{new_comment.id}">{_("publicación")}</a>'
 
         if parent_comment_id:
             parent_comment = db.session.query(Comment).get(parent_comment_id)
@@ -1104,7 +1234,7 @@ def comment(post_id):
         print(f"Error al añadir comentario: {e}")
     
     if request.referrer and f'/post/{post_id}' in request.referrer:
-        return redirect(url_for('ver_publicacion_individual', post_id_vista=post_id, _anchor=f'comment-{new_comment.id}'))
+        return redirect(url_for('ver_publicacion_individual', post_id=post_id, _anchor=f'comment-{new_comment.id}'))
     return redirect(request.referrer or url_for('feed'))
 
 @app.route('/comment/<int:comment_id>/delete', methods=['POST'])
@@ -1137,7 +1267,7 @@ def delete_comment(comment_id):
     if request.referrer and '/admin/comments' in request.referrer:
          return redirect(url_for('admin_list_comments'))
     elif post_id_original:
-        return redirect(url_for('ver_publicacion_individual', post_id_vista=post_id_original))
+        return redirect(url_for('ver_publicacion_individual', post_id=post_id_original))
     else:
         return redirect(url_for('feed'))
 
@@ -1215,7 +1345,7 @@ def share_post(post_id):
             sharer_username = sharer_profile.username if sharer_profile else _("Alguien")
             sharer_slug = sharer_profile.slug if sharer_profile else "#"
             sharer_link = f'<a href="{url_for("ver_perfil", slug_perfil=sharer_slug)}">@{sharer_username}</a>'
-            post_link = f'<a href="{url_for("ver_publicacion_individual", post_id_vista=post_id)}">{_("publicación")}</a>'
+            post_link = f'<a href="{url_for("ver_publicacion_individual", post_id=post_id)}">{_("publicación")}</a>'
             
             if quote_content:
                 mensaje = _('%(sharer_link)s ha citado tu %(post_link)s.') % {'sharer_link': sharer_link, 'post_link': post_link}
@@ -1274,116 +1404,6 @@ def contactos():
                            bloqueados=lista_de_bloqueados,
                            search_term=search_term)
     
-# Inserta este bloque después de las rutas de Contactos
-
-# --- RUTAS DE MENSAJERÍA ---
-
-@app.route('/mensajes')
-@login_required
-@check_policy_acceptance
-def mensajes():
-    user_id_actual = session['user_id']
-    if not check_profile_completion(user_id_actual):
-        flash(_('Por favor, completa tu perfil para usar la mensajería.'), 'warning')
-        return redirect(url_for('profile'))
-
-    excluded_ids = get_blocked_and_blocking_ids(user_id_actual)
-
-    # Subconsulta para encontrar el último mensaje de cada conversación
-    last_message_subquery = db.session.query(
-        Message.conversation_id,
-        func.max(Message.timestamp).label('last_message_time')
-    ).group_by(Message.conversation_id).subquery()
-
-    # Consulta principal para obtener las conversaciones del usuario actual
-    user_conversations = db.session.query(
-        Conversation.id.label('conversation_id'),
-        User.id.label('other_user_id'),
-        Profile.username.label('other_username'),
-        Profile.photo.label('other_photo'),
-        Profile.slug.label('other_slug'),
-        last_message_subquery.c.last_message_time
-    ).join(
-        Conversation.participants
-    ).join(
-        User, User.id == ConversationParticipant.user_id
-    ).filter(
-        ConversationParticipant.conversation_id.in_(
-            db.session.query(ConversationParticipant.conversation_id).filter_by(user_id=user_id_actual)
-        ),
-        User.id != user_id_actual, # El otro participante
-        User.id.notin_(excluded_ids) # No bloqueado
-    ).join(
-        last_message_subquery, last_message_subquery.c.conversation_id == Conversation.id
-    ).order_by(desc(last_message_subquery.c.last_message_time)).all()
-
-    # Procesar resultados para la plantilla
-    conversations_list = []
-    for conv_data in user_conversations:
-        last_msg = Message.query.filter(
-            Message.conversation_id == conv_data.conversation_id,
-            Message.timestamp == conv_data.last_message_time
-        ).first()
-
-        unread_count = db.session.query(func.count(Message.id)).filter(
-            Message.conversation_id == conv_data.conversation_id,
-            Message.sender_id != user_id_actual,
-            Message.is_read == False
-        ).scalar()
-
-        conversations_list.append({
-            'conversation_id': conv_data.conversation_id,
-            'other_user': {
-                'id': conv_data.other_user_id,
-                'username': conv_data.other_username or 'Usuario',
-                'photo': conv_data.other_photo,
-                'slug': conv_data.other_slug or '#'
-            },
-            'last_message': last_msg,
-            'unread_count': unread_count
-        })
-
-    return render_template('mensajes.html', conversations=conversations_list)
-
-
-@app.route('/mensajes/<int:conversation_id>')
-@login_required
-@check_policy_acceptance
-def ver_conversacion(conversation_id):
-    user_id_actual = session['user_id']
-    
-    participant = ConversationParticipant.query.filter_by(conversation_id=conversation_id, user_id=user_id_actual).first_or_404()
-
-    other_participant = ConversationParticipant.query.filter(
-        ConversationParticipant.conversation_id == conversation_id,
-        ConversationParticipant.user_id != user_id_actual
-    ).first()
-
-    other_user_data = {'username': _('Usuario'), 'photo': None, 'slug': '#'}
-    if other_participant:
-        excluded_ids = get_blocked_and_blocking_ids(user_id_actual)
-        if other_participant.user_id in excluded_ids:
-            flash(_('No puedes ver esta conversación debido a la configuración de bloqueo.'), 'danger')
-            return redirect(url_for('mensajes'))
-        
-        other_profile = Profile.query.filter_by(user_id=other_participant.user_id).first()
-        other_user_data['username'] = other_profile.username if other_profile else other_participant.user.username
-        other_user_data['photo'] = other_profile.photo if other_profile else None
-        other_user_data['slug'] = other_profile.slug if other_profile else '#'
-        
-    Message.query.filter(
-        Message.conversation_id == conversation_id,
-        Message.sender_id != user_id_actual
-    ).update({'is_read': True})
-    db.session.commit()
-
-    messages = Message.query.filter_by(conversation_id=conversation_id).order_by(Message.timestamp.asc()).all()
-
-    return render_template('conversacion.html',
-                           conversation_id=conversation_id,
-                           messages=messages,
-                           other_user=other_user_data,
-                           current_user_id=user_id_actual)
 
 @app.route('/mensajes/iniciar/<int:receptor_id>', methods=['POST'])
 @login_required
@@ -1424,108 +1444,6 @@ def iniciar_conversacion(receptor_id):
         
         db.session.commit()
         return redirect(url_for('ver_conversacion', conversation_id=new_conv.id))
-
-@app.route('/enviar_solicitud/<int:id_receptor>', methods=['POST'])
-@login_required
-@check_policy_acceptance
-def enviar_solicitud(id_receptor):
-    id_solicitante = session['user_id']
-    if not check_profile_completion(id_solicitante):
-        flash(_('Por favor, completa tu perfil para enviar solicitudes.'), 'warning')
-        return redirect(url_for('profile'))
-
-    if id_solicitante == id_receptor:
-        flash(_('No puedes enviarte una solicitud a ti mismo.'), 'warning')
-        return redirect(request.referrer or url_for('feed'))
-
-    excluded_ids = get_blocked_and_blocking_ids(id_solicitante)
-    if id_receptor in excluded_ids:
-        flash(_('No puedes interactuar con este usuario.'), 'danger')
-        return redirect(request.referrer or url_for('feed'))
-
-    existing_contact = Contact.query.filter(
-        or_(
-            and_(Contact.solicitante_id == id_solicitante, Contact.receptor_id == id_receptor),
-            and_(Contact.solicitante_id == id_receptor, Contact.receptor_id == id_solicitante)
-        )
-    ).first()
-    
-    if existing_contact:
-        flash(_('Ya existe una solicitud o conexión con este usuario.'), 'info')
-    else:
-        new_contact = Contact(solicitante_id=id_solicitante, receptor_id=id_receptor, estado='pendiente')
-        db.session.add(new_contact)
-
-        solicitante_perfil = Profile.query.filter_by(user_id=id_solicitante).first()
-        if solicitante_perfil and solicitante_perfil.slug:
-            solicitante_nombre = solicitante_perfil.username or _("Usuario")
-            solicitante_link_html = f'<a href="{url_for("ver_perfil", slug_perfil=solicitante_perfil.slug)}">@{solicitante_nombre}</a>'
-            mensaje_notif = _('%(solicitante_link)s te ha enviado una solicitud de contacto.') % {'solicitante_link': solicitante_link_html}
-            create_system_notification(id_receptor, mensaje_notif, 'solicitud_contacto', id_solicitante)
-        
-        db.session.commit()
-        flash(_('Solicitud de contacto enviada.'), 'success')
-        
-    return redirect(request.referrer or url_for('feed'))
-
-@app.route('/aceptar_solicitud/<int:id_solicitante>', methods=['POST'])
-@login_required
-def aceptar_solicitud(id_solicitante):
-    id_receptor = session['user_id']
-    
-    contact_request = Contact.query.filter_by(solicitante_id=id_solicitante, receptor_id=id_receptor, estado='pendiente').first()
-
-    if contact_request:
-        contact_request.estado = 'aceptado'
-        
-        receptor_perfil = Profile.query.filter_by(user_id=id_receptor).first()
-        if receptor_perfil and receptor_perfil.slug:
-            receptor_nombre = receptor_perfil.username or _("Usuario")
-            receptor_link_html = f'<a href="{url_for("ver_perfil", slug_perfil=receptor_perfil.slug)}">@{receptor_nombre}</a>'
-            mensaje_notif = _('%(receptor_link)s aceptó tu solicitud de contacto.') % {'receptor_link': receptor_link_html}
-            create_system_notification(id_solicitante, mensaje_notif, 'solicitud_aceptada', id_receptor)
-
-        db.session.commit()
-        flash(_('Solicitud de contacto aceptada.'), 'success')
-    else:
-        flash(_('No se pudo aceptar la solicitud. Quizás ya no estaba pendiente.'), 'warning')
-        
-    return redirect(url_for('notificaciones'))
-
-@app.route('/rechazar_solicitud/<int:id_solicitante>', methods=['POST'])
-@login_required
-def rechazar_solicitud(id_solicitante):
-    id_receptor = session['user_id']
-    contact_request = Contact.query.filter_by(solicitante_id=id_solicitante, receptor_id=id_receptor, estado='pendiente').first()
-
-    if contact_request:
-        db.session.delete(contact_request)
-        db.session.commit()
-        flash(_('Solicitud de contacto rechazada.'), 'info')
-    else:
-        flash(_('No se pudo rechazar la solicitud.'), 'warning')
-        
-    return redirect(url_for('notificaciones'))
-
-@app.route('/eliminar_contacto/<int:id_otro_usuario>', methods=['POST'])
-@login_required
-def eliminar_contacto(id_otro_usuario):
-    user_id_actual = session['user_id']
-    contact = Contact.query.filter(
-        or_(
-            and_(Contact.solicitante_id == user_id_actual, Contact.receptor_id == id_otro_usuario),
-            and_(Contact.solicitante_id == id_otro_usuario, Contact.receptor_id == user_id_actual)
-        )
-    ).first()
-    
-    if contact:
-        db.session.delete(contact)
-        db.session.commit()
-        flash(_('Contacto eliminado.'), 'success')
-    else:
-        flash(_('No se encontró una relación de contacto para eliminar.'), 'info')
-        
-    return redirect(request.referrer or url_for('contactos'))
 
 # --- RUTAS DE MENSAJERÍA ---
 
@@ -1635,109 +1553,6 @@ def ver_conversacion(conversation_id):
                            conversation_id=conversation_id,
                            messages=messages,
                            other_user=other_user_data)
-
-@app.route('/enviar_solicitud/<int:id_receptor>', methods=['POST'])
-@login_required
-@check_policy_acceptance
-def enviar_solicitud(id_receptor):
-    id_solicitante = session['user_id']
-    if not check_profile_completion(id_solicitante):
-        flash(_('Por favor, completa tu perfil antes de enviar solicitudes.'), 'warning')
-        return redirect(url_for('profile'))
-
-    if id_solicitante == id_receptor:
-        flash(_('No puedes enviarte una solicitud a ti mismo.'), 'warning')
-        return redirect(request.referrer or url_for('feed'))
-
-    excluded_ids = get_blocked_and_blocking_ids(id_solicitante)
-    if id_receptor in excluded_ids:
-        flash(_('No puedes interactuar con este usuario.'), 'danger')
-        return redirect(request.referrer or url_for('feed'))
-
-    existing_contact = Contact.query.filter(
-        or_(
-            and_(Contact.solicitante_id == id_solicitante, Contact.receptor_id == id_receptor),
-            and_(Contact.solicitante_id == id_receptor, Contact.receptor_id == id_solicitante)
-        )
-    ).first()
-    
-    if existing_contact:
-        flash(_('Ya existe una solicitud o conexión con este usuario.'), 'info')
-    else:
-        new_contact = Contact(solicitante_id=id_solicitante, receptor_id=id_receptor, estado='pendiente')
-        db.session.add(new_contact)
-
-        solicitante_perfil = Profile.query.filter_by(user_id=id_solicitante).first()
-        if solicitante_perfil:
-            solicitante_nombre = solicitante_perfil.username or _("Usuario")
-            solicitante_link_html = f'<a href="{url_for("ver_perfil", slug_perfil=solicitante_perfil.slug)}">@{solicitante_nombre}</a>'
-            mensaje_notif = _('%(solicitante_link)s te ha enviado una solicitud de contacto.') % {'solicitante_link': solicitante_link_html}
-            create_system_notification(id_receptor, mensaje_notif, 'solicitud_contacto', id_solicitante)
-        
-        db.session.commit()
-        flash(_('Solicitud de contacto enviada.'), 'success')
-        
-    return redirect(request.referrer or url_for('feed'))
-
-@app.route('/aceptar_solicitud/<int:id_solicitante>', methods=['POST'])
-@login_required
-def aceptar_solicitud(id_solicitante):
-    id_receptor = session['user_id']
-    
-    contact_request = Contact.query.filter_by(solicitante_id=id_solicitante, receptor_id=id_receptor, estado='pendiente').first()
-
-    if contact_request:
-        contact_request.estado = 'aceptado'
-        
-        receptor_perfil = Profile.query.filter_by(user_id=id_receptor).first()
-        if receptor_perfil:
-            receptor_nombre = receptor_perfil.username or _("Usuario")
-            receptor_link_html = f'<a href="{url_for("ver_perfil", slug_perfil=receptor_perfil.slug)}">@{receptor_nombre}</a>'
-            mensaje_notif = _('%(receptor_link)s aceptó tu solicitud de contacto.') % {'receptor_link': receptor_link_html}
-            create_system_notification(id_solicitante, mensaje_notif, 'solicitud_aceptada', id_receptor)
-
-        db.session.commit()
-        flash(_('Solicitud de contacto aceptada.'), 'success')
-    else:
-        flash(_('No se pudo aceptar la solicitud.'), 'warning')
-        
-    return redirect(url_for('notificaciones'))
-
-@app.route('/rechazar_solicitud/<int:id_solicitante>', methods=['POST'])
-@login_required
-def rechazar_solicitud(id_solicitante):
-    id_receptor = session['user_id']
-    contact_request = Contact.query.filter_by(solicitante_id=id_solicitante, receptor_id=id_receptor, estado='pendiente').first()
-
-    if contact_request:
-        db.session.delete(contact_request)
-        db.session.commit()
-        flash(_('Solicitud de contacto rechazada.'), 'info')
-    else:
-        flash(_('No se pudo rechazar la solicitud.'), 'warning')
-        
-    return redirect(url_for('notificaciones'))
-
-
-@app.route('/eliminar_contacto/<int:id_otro_usuario>', methods=['POST'])
-@login_required
-def eliminar_contacto(id_otro_usuario):
-    user_id_actual = session['user_id']
-    contact = Contact.query.filter(
-        or_(
-            and_(Contact.solicitante_id == user_id_actual, Contact.receptor_id == id_otro_usuario),
-            and_(Contact.solicitante_id == id_otro_usuario, Contact.receptor_id == user_id_actual)
-        )
-    ).first()
-    
-    if contact:
-        db.session.delete(contact)
-        db.session.commit()
-        flash(_('Contacto eliminado.'), 'success')
-    else:
-        flash(_('No se encontró una relación de contacto para eliminar.'), 'info')
-        
-    return redirect(request.referrer or url_for('contactos'))
 
 @app.route('/enviar_solicitud/<int:id_receptor_solicitud>', methods=['POST'])
 @login_required
@@ -2171,19 +1986,6 @@ def terms_of_service():
     """Renderiza la página de los Términos de Servicio."""
     return render_template('terms_of_service.html')
 
-@app.route('/dev-login/<username>')
-def dev_login(username):
-    # --- IMPORTANTE: Esta ruta es solo para desarrollo local ---
-    if app.debug: # Solo funciona si la app se inicia con debug=True
-        user = User.query.filter_by(username=username).first()
-        if user:
-            session['user_id'] = user.id
-            session['username_login'] = user.username
-            flash(f'Has iniciado sesión como {username} en modo desarrollador.', 'success')
-            return redirect(url_for('feed'))
-    # Si no estamos en modo debug (como en Railway), esta ruta no hará nada.
-    return "Acceso denegado. Esta ruta solo está disponible en modo de depuración.", 403
-
 @app.route('/accept-policies', methods=['GET', 'POST'])
 @login_required
 def accept_policies():
@@ -2215,153 +2017,6 @@ def serve_validation_key():
 
 # --- RUTAS DE ADMINISTRACIÓN Y MODERACIÓN ---
 
-@app.route('/admin/users')
-@coordinator_or_admin_required
-def admin_users_list():
-    users = User.query.options(joinedload(User.profile)).order_by(User.id.asc()).all()
-    current_user = User.query.get(session['user_id'])
-    return render_template('admin/users_list.html', users_list=users, current_user_role=current_user.role)
-
-@app.route('/admin/user/<int:user_id>/set_role', methods=['POST'])
-@coordinator_or_admin_required
-def admin_set_user_role(user_id):
-    if user_id == session.get('user_id'):
-        flash(_('No puedes cambiar tu propio rol.'), 'danger')
-        return redirect(url_for('admin_users_list'))
-
-    actor = User.query.get(session['user_id'])
-    target_user = User.query.get(user_id)
-    if not target_user:
-        flash(_("El usuario que intentas modificar no existe."), 'danger')
-        return redirect(url_for('admin_users_list'))
-
-    new_role = request.form.get('role')
-    target_user_current_role = target_user.role
-
-    allowed_new_roles = []
-    if actor.role == 'admin':
-        allowed_new_roles = ['user', 'moderator', 'coordinator', 'admin']
-    elif actor.role == 'coordinator':
-        allowed_new_roles = ['user', 'moderator']
-        if target_user_current_role in ['admin', 'coordinator']:
-            flash(_('No tienes permiso para modificar a este usuario.'), 'danger')
-            return redirect(url_for('admin_users_list'))
-
-    if new_role and new_role in allowed_new_roles:
-        target_user.role = new_role
-        log_details = f"Cambió el rol de '{target_user_current_role}' a '{new_role}'."
-        log_admin_action(actor.id, 'ROLE_CHANGE', target_user_id=user_id, details=log_details)
-        db.session.commit()
-        flash(_('El rol del usuario ha sido actualizado.'), 'success')
-    else:
-        flash(_('Rol no válido o sin permiso para asignarlo.'), 'danger')
-
-    return redirect(url_for('admin_users_list'))
-
-@app.route('/admin/user/<int:user_id>/sanction', methods=['POST'])
-@coordinator_or_admin_required
-def admin_sanction_user(user_id):
-    admin_id = session['user_id']
-    data = request.get_json()
-    duration = data.get('duration')
-    reason = data.get('reason', '').strip()
-
-    if not reason and duration != 'lift_sanctions':
-        return jsonify(success=False, error=_("El motivo de la sanción es obligatorio.")), 400
-
-    if user_id == admin_id:
-        return jsonify(success=False, error=_("No te puedes sancionar a ti mismo.")), 403
-    
-    target_user = User.query.get(user_id)
-    if not target_user:
-        return jsonify(success=False, error=_("Usuario no encontrado.")), 404
-
-    banned_until, muted_until = None, None
-    log_action = "USER_SANCTION"
-    flash_message = ""
-
-    if duration == 'lift_sanctions':
-        target_user.banned_until = None
-        target_user.muted_until = None
-        target_user.ban_reason = None
-        notification_message = _("Se han levantado todas las sanciones de tu cuenta.")
-        log_details = f"Levantó todas las sanciones del usuario ID {user_id}."
-        flash_message = _("Sanciones levantadas correctamente.")
-    elif duration == 'permanent_ban':
-        target_user.banned_until = datetime(9999, 12, 31)
-        target_user.muted_until = None
-        target_user.ban_reason = reason
-        notification_message = _('Tu cuenta ha sido suspendida de forma permanente. Motivo: "%(reason)s"', reason=reason)
-        log_details = f"Suspendió permanentemente al usuario ID {user_id}. Motivo: {reason}"
-        flash_message = _("Usuario suspendido permanentemente.")
-    else:
-        try:
-            days = int(duration.split('_')[0])
-            end_date = datetime.now(timezone.utc) + timedelta(days=days)
-            fecha_fin_sancion = format_datetime(end_date, 'long', locale=get_babel_locale())
-            
-            if 'mute' in duration:
-                target_user.muted_until = end_date
-                notification_message = _('Tu cuenta ha sido silenciada hasta el %(date)s. Motivo: "%(reason)s"', date=fecha_fin_sancion, reason=reason)
-                log_details = f"Silenció al usuario ID {user_id} hasta {fecha_fin_sancion}. Motivo: {reason}"
-                flash_message = _("Usuario silenciado correctamente.")
-            else: # Baneo temporal
-                target_user.banned_until = end_date
-                target_user.ban_reason = reason
-                notification_message = _('Tu cuenta ha sido suspendida hasta el %(date)s. Motivo: "%(reason)s"', date=fecha_fin_sancion, reason=reason)
-                log_details = f"Suspendió al usuario ID {user_id} hasta {fecha_fin_sancion}. Motivo: {reason}"
-                flash_message = _("Usuario suspendido correctamente.")
-        except (ValueError, IndexError):
-            return jsonify(success=False, error=_("Duración de sanción no válida.")), 400
-
-    create_system_notification(user_id, notification_message, 'sanction', user_id)
-    log_admin_action(admin_id, log_action, target_user_id=user_id, details=log_details)
-    db.session.commit()
-
-    flash(flash_message, 'success')
-    return jsonify(success=True)
-
-@app.route('/admin/posts')
-@moderator_or_higher_required
-def admin_list_posts():
-    posts = Post.query.order_by(Post.timestamp.desc()).all()
-    # Para simplificar, no incluimos shared_posts en esta lista. Se pueden gestionar desde los reportes.
-    return render_template('admin/posts_list.html', posts_list=posts)
-
-@app.route('/admin/comments')
-@moderator_or_higher_required
-def admin_list_comments():
-    comments = Comment.query.order_by(Comment.timestamp.desc()).all()
-    return render_template('admin/comments_list.html', comments_list=comments)
-
-@app.route('/admin/reports')
-@moderator_or_higher_required
-def admin_list_reports():
-    pending_reports = Report.query.filter_by(status='pending').order_by(Report.created_at.asc()).all()
-    reports_list = []
-    for report in pending_reports:
-        content = None
-        content_url = "#"
-        reported_user = None
-        if report.content_type == 'post':
-            content = Post.query.get(report.content_id)
-            if content: content_url = url_for('ver_publicacion_individual', post_id_vista=content.id)
-        elif report.content_type == 'comment':
-            content = Comment.query.get(report.content_id)
-            if content: content_url = url_for('ver_publicacion_individual', post_id_vista=content.post_id, _anchor=f"comment-{content.id}")
-        
-        if content:
-            reported_user = content.author
-        
-        reports_list.append({
-            'report': report,
-            'content': content,
-            'reported_user': reported_user,
-            'content_url': content_url
-        })
-    
-    return render_template('admin/reports_list.html', reports_list=reports_list)
-
 @app.route('/admin/report/<int:report_id>/resolve', methods=['POST'])
 @moderator_or_higher_required
 def resolve_report(report_id):
@@ -2370,26 +2025,11 @@ def resolve_report(report_id):
     # las llamadas a c.execute por db.session.query, .add, .commit, etc.)
     return jsonify(success=True) # Respuesta simplificada
 
-@app.route('/admin/appeals')
-@coordinator_or_admin_required
-def admin_list_appeals():
-    pending_appeals = Appeal.query.filter_by(status='pending').order_by(Appeal.created_at.asc()).all()
-    # ... lógica similar a admin_list_reports para obtener detalles ...
-    return render_template('admin/appeals_list.html', appeals_list=pending_appeals)
-
 @app.route('/admin/appeal/<int:appeal_id>/resolve', methods=['POST'])
 @coordinator_or_admin_required
 def resolve_appeal(appeal_id):
     # ... Lógica adaptada para resolver apelaciones ...
     return jsonify(success=True) # Respuesta simplificada
-
-@app.route('/admin/log')
-@coordinator_or_admin_required
-def admin_view_log():
-    logs = ActionLog.query.order_by(ActionLog.timestamp.desc()).limit(200).all()
-    return render_template('admin/log_list.html', logs=logs)
-
-# Inserta este bloque al final de tu app.py
 
 # --- RUTAS DE ADMINISTRACIÓN Y MODERACIÓN ---
 
@@ -2554,12 +2194,12 @@ def admin_list_reports():
         if report.content_type == 'post':
             content_obj = Post.query.get(report.content_id)
             if content_obj:
-                content_url = url_for('ver_publicacion_individual', post_id_vista=content_obj.id)
+                content_url = url_for('ver_publicacion_individual', post_id=content_obj.id)
                 reported_user = content_obj.author
         elif report.content_type == 'comment':
             content_obj = Comment.query.get(report.content_id)
             if content_obj:
-                content_url = url_for('ver_publicacion_individual', post_id_vista=content_obj.post_id, _anchor=f"comment-{content_obj.id}")
+                content_url = url_for('ver_publicacion_individual', post_id=content_obj.post_id, _anchor=f"comment-{content_obj.id}")
                 reported_user = content_obj.author
         
         # Se añade esta lógica para que el template no falle
@@ -2590,11 +2230,11 @@ def admin_list_appeals():
         content_url = "#"
         original_report = appeal.original_report
         if original_report.content_type == 'post':
-            content_url = url_for('ver_publicacion_individual', post_id_vista=original_report.content_id)
+            content_url = url_for('ver_publicacion_individual', post_id=original_report.content_id)
         elif original_report.content_type == 'comment':
             comment = Comment.query.get(original_report.content_id)
             if comment:
-                content_url = url_for('ver_publicacion_individual', post_id_vista=comment.post_id, _anchor=f"comment-{comment.id}")
+                content_url = url_for('ver_publicacion_individual', post_id=comment.post_id, _anchor=f"comment-{comment.id}")
         
         item_for_template = {
             'appeal_id': appeal.id,
@@ -2621,7 +2261,74 @@ def admin_view_log():
     ).order_by(ActionLog.timestamp.desc()).limit(200).all()
     return render_template('admin/log_list.html', logs=logs)
 
+# Inserta este bloque al final de tu app.py, antes de la última línea
 
+@app.route('/dev-login/<username>')
+def dev_login(username):
+    # --- ¡MUY IMPORTANTE! ---
+    # Esta ruta solo funciona si la app se ejecuta en MODO DEBUG.
+    # En producción (donde DEBUG=False), esta ruta devolverá un error de acceso denegado.
+    if not app.debug:
+        return "Acceso denegado. Ruta solo para desarrollo.", 403
+
+    # Buscamos al usuario por su nombre de usuario de Pi (el que no es público)
+    user = User.query.filter_by(username=username).first()
+    
+    if user:
+        # Creamos la sesión para ese usuario
+        session['user_id'] = user.id
+        session['username_login'] = user.username
+        
+        # Guardamos su nombre de perfil público en la sesión si existe
+        if user.profile and user.profile.username:
+            session['display_username'] = user.profile.username
+        else:
+            session['display_username'] = user.username
+
+        flash(f"Inicio de sesión de desarrollo exitoso como: {user.username} (Rol: {user.role})", 'success')
+        return redirect(url_for('feed'))
+    else:
+        flash(f'Usuario de desarrollo "{username}" no encontrado en la base de datos.', 'danger')
+        return redirect(url_for('index'))
+
+# Inserta este bloque ANTES de "if __name__ == '__main__':"
+
+@app.cli.command("create-test-users")
+def create_test_users_command():
+    """Crea un usuario admin y uno normal para pruebas de desarrollo."""
+    with app.app_context():
+        print("Buscando o creando usuarios de prueba...")
+        
+        # --- Crear un usuario Administrador ---
+        admin_user = User.query.filter_by(username='admin_dev').first()
+        if not admin_user:
+            admin_user = User(username='admin_dev', password=generate_password_hash('password'), role='admin', pi_uid='dev-admin-uid', accepted_policies=True)
+            db.session.add(admin_user)
+            db.session.flush() # Usamos flush para obtener el ID antes del commit
+            admin_profile = Profile(user_id=admin_user.id, username='AdminDev', slug='admindev')
+            db.session.add(admin_profile)
+            print(" -> Usuario 'admin_dev' creado.")
+        else:
+            print(" -> Usuario 'admin_dev' ya existía.")
+
+        # --- Crear un usuario Normal ---
+        normal_user = User.query.filter_by(username='user_test').first()
+        if not normal_user:
+            normal_user = User(username='user_test', password=generate_password_hash('password'), role='user', pi_uid='dev-user-uid', accepted_policies=True)
+            db.session.add(normal_user)
+            db.session.flush()
+            normal_profile = Profile(user_id=normal_user.id, username='UserTest', slug='usertest')
+            db.session.add(normal_profile)
+            print(" -> Usuario 'user_test' creado.")
+        else:
+            print(" -> Usuario 'user_test' ya existía.")
+
+        try:
+            db.session.commit()
+            print("¡Usuarios de prueba listos en la base de datos!")
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error al guardar los usuarios: {e}")
 
 if __name__ == '__main__':
     app.run(debug=True)

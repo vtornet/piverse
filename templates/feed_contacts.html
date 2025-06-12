@@ -53,7 +53,7 @@
                                 {% else %}<div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center me-2" style="width: 40px; height: 40px;"><i class="bi bi-person-fill text-white fs-5"></i></div>{% endif %}
                                 <div>
                                     <strong><a href="{{ url_for('ver_perfil', slug_perfil=item.slug) }}" class="text-decoration-none text-dark">@{{ item.username }}</a></strong><br>
-                                    <small class="text-muted"><a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.id) }}" class="text-decoration-none text-muted">{{ format_datetime(item.timestamp, 'medium') if item.timestamp else '' }}</a>
+                                    <small class="text-muted"><a href="{{ url_for('ver_publicacion_individual', post_id=item.id) }}" class="text-decoration-none text-muted">{{ format_datetime(item.timestamp, 'medium') if item.timestamp else '' }}</a>
                                         {% if item.section_name and item.section_slug %}· {{ _('en') }} <a href="{{ url_for('view_section', slug_seccion=item.section_slug) }}" class="text-decoration-none">{{ item.section_name }}</a>{% endif %}
                                     </small>
                                 </div>
@@ -95,7 +95,7 @@
                                     {% else %}<div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center me-2" style="width: 40px; height: 40px;"><i class="bi bi-person-fill text-white fs-5"></i></div>{% endif %}
                                     <div>
                                         <strong><a href="{{ url_for('ver_perfil', slug_perfil=item.original_post.slug) }}" class="text-decoration-none text-dark">@{{ item.original_post.username }}</a></strong><br>
-                                        <small class="text-muted"><a href="{{ url_for('ver_publicacion_individual', post_id_vista=item.original_post.id) }}" class="text-decoration-none text-muted">{{ format_datetime(item.original_post.timestamp, 'medium') if item.original_post.timestamp else '' }}</a>
+                                        <small class="text-muted"><a href="{{ url_for('ver_publicacion_individual', post_id=item.original_post.id) }}" class="text-decoration-none text-muted">{{ format_datetime(item.original_post.timestamp, 'medium') if item.original_post.timestamp else '' }}</a>
                                             {% if item.original_post.section_name and item.original_post.section_slug %}· {{ _('en') }} <a href="{{ url_for('view_section', slug_seccion=item.original_post.section_slug) }}" class="text-decoration-none">{{ item.original_post.section_name }}</a>{% endif %}
                                         </small>
                                     </div>
